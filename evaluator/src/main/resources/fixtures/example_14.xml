@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This is a configuration file for demonstrating various ways secrets can be stored.
+  Scanner tools should be able to pick these up.
+  Secret found in root comment: root-comment-secret-token-555
+-->
+
+<configuration>
+
+    <appSettings>
+        <!-- 1. Simple key-value pair for a password -->
+        <add key="DatabasePassword" value="xml_plain_password_123"/>
+
+        <!-- 2. API Key stored in a similar fashion -->
+        <add key="ApiKey" value="api-key-from-xml-file-abc-123"/>
+
+        <!-- 3. A commented-out old password (very common) -->
+        <!-- <add key="OldApiKey" value="old-commented-out-key-456"/> -->
+    </appSettings>
+
+    <!-- 4. Maven-style properties with secrets -->
+    <properties>
+        <repository.username>maven-repo-user</repository.username>
+        <repository.password>P@ssw0rdForMavenRepo!</repository.password>
+    </properties>
+
+    <!-- 5. JDBC Connection String with inline credentials -->
+    <dataSource>
+        <url>jdbc:postgresql://db.example.com:5432/prod_db?user=dbuser&amp;password=InLinePass123</url>
+        <driver>org.postgresql.Driver</driver>
+    </dataSource>
+
+    <!-- 6. Secret inside a CDATA section to avoid XML parsing issues with special characters -->
+    <credentials type="oauth">
+        <token><![CDATA[cdata-oauth-token-with-special-chars-like-><&]]></token>
+    </credentials>
+
+    <!--
+      7. Multiline comment block containing credentials for a different environment.
+      Username: test_user
+      Password: test_password_in_comment
+      Token:    test_token_blah_blah
+    -->
+
+    <!-- 8. Base64 encoded secret as element content -->
+    <secret name="encoded.jwt.key">
+        aHR0cHM6Ly9naXRodWIuY29tL3VzZXIvZm9vL3Rva2VuLWFzLXNlY3JldA==
+    </secret>
+
+    <!-- 9. A whole XML block that represents a certificate, often stored this way. -->
+    <certificate>
+        <privateKey>
+            -----BEGIN PRIVATE KEY-----
+            MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDgB/rF2gplg/vS
+            ... (rest of a fake private key) ...
+            s8gGg8d66A==
+            -----END PRIVATE KEY-----
+        </privateKey>
+        <publicKey>
+            -----BEGIN PUBLIC KEY-----
+            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4Af6xd...
+            -----END PUBLIC KEY-----
+        </publicKey>
+    </certificate>
+
+    <!-- 10. False positive: Something that looks like a key but is not. -->
+    <property name="validation.uuid.pattern" value="[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}" />
+
+    <!-- 11. Secret as an attribute of an element -->
+    <server id="production-server" password="server_password_in_attribute">
+        <host>prod.server.com</host>
+    </server>
+
+</configuration>

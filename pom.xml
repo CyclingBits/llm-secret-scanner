@@ -1,0 +1,265 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.cyclingbits</groupId>
+    <artifactId>llm-secret-scanner-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>llm-secret-scanner-parent</name>
+    <url>https://cyclingbits.net</url>
+
+    <modules>
+        <module>core</module>
+        <module>maven-plugin</module>
+        <module>evaluator</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--    core    -->
+            <dependency>
+                <groupId>net.cyclingbits</groupId>
+                <artifactId>llm-secret-scanner-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!--    maven-plugin    -->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>3.9.10</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>3.9.10</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>3.15.1</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-utils</artifactId>
+                <version>3.5.1</version>
+            </dependency>
+
+            <!--    kotlin    -->
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-jdk8</artifactId>
+                <version>2.1.10</version>
+            </dependency>
+
+            <!--    fuel    -->
+            <dependency>
+                <groupId>com.github.kittinunf.fuel</groupId>
+                <artifactId>fuel</artifactId>
+                <version>2.3.1</version>
+            </dependency>
+
+            <!--    jackson    -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.19.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>2.19.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.19.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-kotlin</artifactId>
+                <version>2.19.0</version>
+            </dependency>
+
+            <!--    testcontainers    -->
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <version>1.21.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>5.13.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>1.21.1</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!--    slf4j   -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>2.0.17</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>2.0.17</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.mockk</groupId>
+                <artifactId>mockk-jvm</artifactId>
+                <version>1.14.2</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>kotlin-maven-plugin</artifactId>
+                    <version>2.1.10</version>
+                    <executions>
+                        <execution>
+                            <id>compile</id>
+                            <phase>process-sources</phase>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>test-compile</id>
+                            <phase>process-test-sources</phase>
+                            <goals>
+                                <goal>test-compile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <jvmTarget>17</jvmTarget>
+                        <compilerPlugins>
+                            <plugin>kotlinx-serialization</plugin>
+                        </compilerPlugins>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.jetbrains.kotlin</groupId>
+                            <artifactId>kotlin-maven-serialization</artifactId>
+                            <version>2.1.10</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>3.9.0</version>
+                    <configuration>
+                        <goalPrefix>llm-secret-scanner</goalPrefix>
+                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>mojo-descriptor</id>
+                            <goals>
+                                <goal>descriptor</goal>
+                            </goals>
+                            <phase>process-classes</phase>
+                        </execution>
+                        <execution>
+                            <id>help-goal</id>
+                            <goals>
+                                <goal>helpmojo</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                    <executions>
+                        <execution>
+                            <id>default-compile</id>
+                            <phase>none</phase>
+                        </execution>
+                        <execution>
+                            <id>default-testCompile</id>
+                            <phase>none</phase>
+                        </execution>
+                        <execution>
+                            <id>java-compile</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>java-test-compile</id>
+                            <phase>test-compile</phase>
+                            <goals>
+                                <goal>testCompile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.2.5</version>
+                    <configuration>
+                        <includes>
+                            <include>**/*Test.kt</include>
+                            <include>**/*Test.java</include>
+                            <include>**/*Tests.kt</include>
+                            <include>**/*Tests.java</include>
+                        </includes>
+                        <useSystemClassLoader>false</useSystemClassLoader>
+                        <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                        <reportFormat>brief</reportFormat>
+                        <useFile>false</useFile>
+                        <printSummary>true</printSummary>
+                        <consoleOutputReporter>
+                            <disable>true</disable>
+                        </consoleOutputReporter>
+                        <properties>
+                            <property>
+                                <name>junit.platform.output.capture.stdout</name>
+                                <value>true</value>
+                            </property>
+                            <property>
+                                <name>junit.platform.output.capture.stderr</name>
+                                <value>true</value>
+                            </property>
+                        </properties>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+
+</project>

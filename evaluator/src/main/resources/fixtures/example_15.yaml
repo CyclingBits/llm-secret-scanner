@@ -1,0 +1,61 @@
+# This is a YAML configuration file demonstrating various secret storage patterns.
+# A scanner should be able to identify these secrets.
+# Top-level comment secret: yaml-comment-secret-token-a1b2c3
+
+# 1. Simple key-value pairs
+database:
+  username: admin_user
+  password: 'yaml_password_in_quotes' # A password in single quotes
+  host: db.prod.svc.cluster.local
+
+api_key: "api-key-in-double-quotes-xyz789"
+
+# 2. Nested configuration with sensitive data
+spring:
+  datasource:
+    url: "jdbc:mysql://user:PasswordFromUrl@prod-db:3306/maindb"
+    password: ${DB_PASSWORD:default_pass_if_env_not_set} # Default value can be a secret
+
+# 3. Multiline string for a private key using the literal block scalar `|`
+tls:
+  private_key: |
+    -----BEGIN EC PRIVATE KEY-----
+    MHcCAQEEIIDC0C5s9QyN9f7Tq4G5g8fJ8cW7c8Q8fI8fI8fI8fI8fI8fI8fI8fI8
+    oAoGCCqGSM49AwEHoUQDQgAEWJ7z+a4O/0Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+
+    3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z+3Z
+    -----END EC PRIVATE KEY-----
+
+# 4. A list/array containing tokens
+service_tokens:
+  - name: service-a
+    token: token_for_service_a_in_a_list
+  - name: service-b
+    # Commented out token in a list
+    # token: commented_token_for_service_b
+    token: active_token_for_service_b_456
+
+# 5. Base64 encoded secret, potentially with a non-descriptive key
+app_data:
+  encoded_blob: ZW5jb2RlZF9zZWNyZXRfaW5feWFtbA== # "encoded_secret_in_yaml"
+
+# 6. False positive: A pattern that looks like a secret
+validation_rules:
+  credit_card: '^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$'
+
+# 7. Using YAML anchors and aliases to define a secret once and reuse it (can be tricky for scanners)
+x-credentials: &default-credentials
+  user: reusable_user
+  pass: ReusablePa$$w0rd!
+
+environments:
+  staging:
+    db:
+      <<: *default-credentials # Reuse of the secret
+  production:
+    db:
+      <<: *default-credentials # Reuse of the secret again
+
+# 8. A very long and complex value that could be a secret
+# Secret in a value comment: inline-comment-secret-xyz
+some_config: "long-value-that-might-be-a-hardcoded-session-key-or-something-similar-askjdhaksjdhasdkjahsdkjhasd"
+

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Secrets Demo</title>
+
+    <!-- 1. Secret in an HTML comment. Very common. -->
+    <!-- API_KEY: html-comment-api-key-1a2b3c -->
+
+    <script>
+        // 2. Secret hardcoded in an inline JavaScript block.
+        const authToken = 'jwt-token-from-inline-script-xyz';
+        console.log('Auth token is set.');
+
+        // Old, commented-out key
+        // const oldApiKey = 'old-key-in-js-comment';
+    </script>
+</head>
+<body>
+
+<h1>HTML Secrets Demonstration</h1>
+<p>This file shows various ways secrets can be embedded in HTML.</p>
+
+<!-- 3. A whole block of commented-out code that might contain secrets. -->
+<!--
+<div class="debug-panel">
+    <p>Debug Info:</p>
+    <span>Username: debug_user</span>
+    <span>Password: DebugPassword123!</span>
+</div>
+-->
+
+<!-- 4. Secret in a custom data-* attribute. -->
+<div id="user-profile" data-api-key="data-attribute-api-key-4d5e6f">
+    User Profile Section
+</div>
+
+<!-- 5. Hidden form fields are a classic way to store sensitive data (that gets submitted). -->
+<form action="/submit-data" method="post">
+    <input type="hidden" name="session_token" value="hidden-form-field-session-token-7g8h9i">
+    <input type="text" name="username" placeholder="Username">
+    <button type="submit">Submit</button>
+</form>
+
+<!-- 6. Secret in a URL (e.g., for loading a script or resource). -->
+<script src="https://third-party.com/analytics.js?token=analytics-token-in-url-jkl"></script>
+
+<!-- 7. Base64 encoded secret inside an element. -->
+<div id="encoded-data" style="display:none;">
+    aHRtbF9zZWNyZXRfYmFzZTY0Cg==
+</div>
+
+<!-- 8. False positive: A long string that is not a secret. -->
+<img src="logo.png" alt="Company Logo" xintegrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC">
+
+<!-- 9. Inline style that might contain some encoded information (less common). -->
+<div style="--secret-background-url: url('https://example.com/background?key=background-key-mno');">
+    Styled div
+</div>
+
+</body>
+</html>
