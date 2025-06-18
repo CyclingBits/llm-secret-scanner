@@ -1,0 +1,56 @@
+[
+  {
+    "filePath": "example.sql",
+    "lineNumber": 1,
+    "issueType": "Token",
+    "description": "SQL header token: sql-header-token-1a2b3c"
+  },
+  {
+    "filePath": "example.sql",
+    "lineNumber": 7,
+    "issueType": "Password",
+    "description": "Default temporary password: default_temporary_password123"
+  },
+  {
+    "filePath": "example.sql",
+    "lineNumber": 11,
+    "issueType": "Password",
+    "description": "Plain text password in INSERT: plain_text_not_a_hash_password!"
+  },
+  {
+    "filePath": "example.sql",
+    "lineNumber": 12,
+    "issueType": "API Key",
+    "description": "API key in inline comment: api-key-in-inline-comment"
+  },
+  {
+    "filePath": "example.sql",
+    "lineNumber": 18,
+    "issueType": "Password",
+    "description": "Reporting database password: ReportingDB_P@ssw0rd"
+  },
+  {
+    "filePath": "example.sql",
+    "lineNumber": 21,
+    "issueType": "Password",
+    "description": "Old password hash in comment: plain_text_not_a_hash_password!"
+  },
+  {
+    "filePath": "example.sql",
+    "lineNumber": 30,
+    "issueType": "Secret Key",
+    "description": "Hardcoded secret key in stored procedure: hardcoded-secret-key-in-stored-procedure"
+  },
+  {
+    "filePath": "example.sql",
+    "lineNumber": 39,
+    "issueType": "JWT Secret",
+    "description": "Base64 JWT secret: c3FsaXplX3NlY3JldF9iYXNlNjQ="
+  },
+  {
+    "filePath": "example.sql",
+    "lineNumber": 42,
+    "issueType": "Password",
+    "description": "Root password in backup command: root_password_in_backup_command"
+  }
+]

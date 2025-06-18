@@ -1,0 +1,68 @@
+[
+  {
+    "filePath": "example.kt",
+    "lineNumber": 3,
+    "issueType": "API Key",
+    "description": "Global Kotlin API key: global-kotlin-api-key-12345"
+  },
+  {
+    "filePath": "example.kt",
+    "lineNumber": 6,
+    "issueType": "Access Token",
+    "description": "Temporary access token in comment: temporary-access-token-from-file-comment"
+  },
+  {
+    "filePath": "example.kt",
+    "lineNumber": 11,
+    "issueType": "JWT Secret",
+    "description": "JWT secret from companion object: jwt_secret_from_companion_object_!@#$%"
+  },
+  {
+    "filePath": "example.kt",
+    "lineNumber": 12,
+    "issueType": "Password",
+    "description": "Old database password in comment: OldPass123_commented"
+  },
+  {
+    "filePath": "example.kt",
+    "lineNumber": 15,
+    "issueType": "Password",
+    "description": "Database password in Kotlin: db_password_in_kotlin"
+  },
+  {
+    "filePath": "example.kt",
+    "lineNumber": 17,
+    "issueType": "Encoded Secret",
+    "description": "Base64 encoded secret: S290bGluU2VjcmV0RW5jb2RlZA=="
+  },
+  {
+    "filePath": "example.kt",
+    "lineNumber": 20,
+    "issueType": "Password",
+    "description": "User password for connection string: UserPassForConnectionString"
+  },
+  {
+    "filePath": "example.kt",
+    "lineNumber": 24,
+    "issueType": "Session Token",
+    "description": "Admin session token: admin-session-token-abcdef"
+  },
+  {
+    "filePath": "example.kt",
+    "lineNumber": 27,
+    "issueType": "AWS Access Key",
+    "description": "AWS access key: AKIAIOSFODNN7EXAMPLE"
+  },
+  {
+    "filePath": "example.kt",
+    "lineNumber": 28,
+    "issueType": "AWS Secret Key",
+    "description": "AWS secret key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  },
+  {
+    "filePath": "example.kt",
+    "lineNumber": 44,
+    "issueType": "Password",
+    "description": "Keystore password for signing: keystore_password_for_signing_!@#"
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "filePath": "example.sh",
+    "lineNumber": 3,
+    "issueType": "Token",
+    "description": "Shell script token: shell-script-token-xyz-123"
+  },
+  {
+    "filePath": "example.sh",
+    "lineNumber": 5,
+    "issueType": "Password",
+    "description": "Database password from export: PasswordFromExport_!@#"
+  },
+  {
+    "filePath": "example.sh",
+    "lineNumber": 8,
+    "issueType": "API Key",
+    "description": "API key directly in script: api-key-directly-in-script-abcdef123"
+  },
+  {
+    "filePath": "example.sh",
+    "lineNumber": 14,
+    "issueType": "Password",
+    "description": "SSH password in comment: old_ssh_password_123"
+  },
+  {
+    "filePath": "example.sh",
+    "lineNumber": 16,
+    "issueType": "Password",
+    "description": "Secret password for piping: MySuperSecretPasswordForPiping"
+  },
+  {
+    "filePath": "example.sh",
+    "lineNumber": 18,
+    "issueType": "Token",
+    "description": "Base64 encoded token: dG9rZW4tZnJvbS1hLXNoZWxsLXNjcmlwdA=="
+  },
+  {
+    "filePath": "example.sh",
+    "lineNumber": 24,
+    "issueType": "Password",
+    "description": "FTP password in heredoc: FtpPasswordInHereDoc123"
+  },
+  {
+    "filePath": "example.sh",
+    "lineNumber": 30,
+    "issueType": "Private Key",
+    "description": "OpenSSH private key"
+  },
+  {
+    "filePath": "example.sh",
+    "lineNumber": 35,
+    "issueType": "Password",
+    "description": "Docker Hub password: DockerHubPassword123"
+  }
+]

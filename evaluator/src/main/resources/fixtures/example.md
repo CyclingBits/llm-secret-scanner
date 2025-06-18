@@ -1,14 +1,7 @@
-# Examples of Secrets in a Markdown File
 
-This document shows how secrets can be embedded in `.md` files. Scanners should be able to detect these patterns.
-
-> **Secret in a blockquote:** `block-quote-secret-token-112233`
+> `block-quote-secret-token-112233`
 
 ---
-
-## 1. Database Access Credentials
-
-Login credentials are often found in configuration documentation.
 
 - **User:** `json_user`
 - **Password:** `PasswordFromJsonFile123#`
@@ -22,18 +15,10 @@ Login credentials are often found in configuration documentation.
 
 ---
 
-## 2. API Keys and Connection Strings
-
-API keys are often pasted directly into README files for a quick start.
-
 - **API Key:** `json-api-key-abcdef123456`
 - **Connection String:** `amqp://guest:guest-password-in-url@rabbitmq-host:5672/`
 
 ---
-
-## 3. Tokens and Certificates
-
-JWT tokens and private keys can be embedded in code blocks.
 
 ### JWT Token
 Secret for signing JWT tokens: `super_secret_jwt_key_from_nested_json`
@@ -49,8 +34,6 @@ MIIEogIBAAKCAQEAr...rest of key...
 
 ---
 
-## 4. List of Credentials
-
 A table is a common way to present a list of credentials.
 
 | Service      | Access Key            | Secret                                      |
@@ -65,4 +48,4 @@ A table is a common way to present a list of credentials.
 - **Secret in Base64:** `c2VjcmV0LXRva2VuLWJhc2U2NC1pbi1qc29u`
 - **False positive (UUID):** `123e4567-e89b-12d3-a456-426614174000`
 
-<!-- Secret in an HTML comment: html-comment-secret-in-md-file-xyz -->
+<!-- html-comment-secret-in-md-file-xyz -->

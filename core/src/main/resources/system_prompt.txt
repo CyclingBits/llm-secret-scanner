@@ -39,7 +39,7 @@ Pay special attention to:
 
 For each identified issue, provide the following information in JSON format:
 - "filePath": (string) path to the file (leave empty if not applicable)
-- "lineNumber": (integer) line number where the issue was identified
+- "lineNumber": (integer) line number where the issue was identified (count from line 1 of the actual source code file, including all empty lines and comments)
 - "issueType": (string) type of secret found (e.g., "API Key", "Password", "Private Key", "Token")
 - "description": (string) very short (max 10 words) description of the issue and its potential impact
 

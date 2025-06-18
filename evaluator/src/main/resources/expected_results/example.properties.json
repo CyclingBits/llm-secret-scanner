@@ -1,0 +1,68 @@
+[
+  {
+    "filePath": "example.properties",
+    "lineNumber": 1,
+    "issueType": "Token",
+    "description": "Header token for testing: header-token-for-testing-78910"
+  },
+  {
+    "filePath": "example.properties",
+    "lineNumber": 3,
+    "issueType": "Password",
+    "description": "Database password: PlaintextPassword123!"
+  },
+  {
+    "filePath": "example.properties",
+    "lineNumber": 5,
+    "issueType": "API Key",
+    "description": "Service API key: abcdef1234567890abcdef1234567890"
+  },
+  {
+    "filePath": "example.properties",
+    "lineNumber": 7,
+    "issueType": "Password",
+    "description": "Old database password in comment: OldPassword456"
+  },
+  {
+    "filePath": "example.properties",
+    "lineNumber": 8,
+    "issueType": "Password",
+    "description": "SMTP password in exclamation comment: SmtpPass_commented_with_exclamation"
+  },
+  {
+    "filePath": "example.properties",
+    "lineNumber": 10,
+    "issueType": "Password",
+    "description": "MySQL password in URL: PasswordInUrl@123"
+  },
+  {
+    "filePath": "example.properties",
+    "lineNumber": 14,
+    "issueType": "Encoded Data",
+    "description": "Base64 encoded config data: dG9rZW4tZnJvbS1wcm9wZXJ0aWVzLWZpbGU="
+  },
+  {
+    "filePath": "example.properties",
+    "lineNumber": 16,
+    "issueType": "JWT Token",
+    "description": "JWT authentication token with embedded secret"
+  },
+  {
+    "filePath": "example.properties",
+    "lineNumber": 18,
+    "issueType": "Private Key",
+    "description": "Certificate private key in properties file"
+  },
+  {
+    "filePath": "example.properties",
+    "lineNumber": 23,
+    "issueType": "Secret Access Key",
+    "description": "AWS secret access key: aws_secret_key_from_props"
+  },
+  {
+    "filePath": "example.properties",
+    "lineNumber": 24,
+    "issueType": "Auth Token",
+    "description": "Legacy authentication token: legacy-token-value-xyz"
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "filePath": "example.bat",
+    "lineNumber": 2,
+    "issueType": "Token",
+    "description": "Token in comment: bat-script-token-abc-456"
+  },
+  {
+    "filePath": "example.bat",
+    "lineNumber": 4,
+    "issueType": "Password",
+    "description": "Database password in environment variable: PasswordFromSetCommand_!@#"
+  },
+  {
+    "filePath": "example.bat",
+    "lineNumber": 7,
+    "issueType": "API Key",
+    "description": "API key in environment variable: api-key-in-bat-script-ghijkl"
+  },
+  {
+    "filePath": "example.bat",
+    "lineNumber": 13,
+    "issueType": "Password",
+    "description": "Old FTP password in comment: old_ftp_password_789"
+  },
+  {
+    "filePath": "example.bat",
+    "lineNumber": 14,
+    "issueType": "Secret",
+    "description": "Commented secret: comment_secret_lmn"
+  },
+  {
+    "filePath": "example.bat",
+    "lineNumber": 17,
+    "issueType": "Password",
+    "description": "Network password in net use command: MySecretPassword123"
+  },
+  {
+    "filePath": "example.bat",
+    "lineNumber": 19,
+    "issueType": "Token",
+    "description": "Base64 encoded token: dG9rZW4tZnJvbS1hLWJhdC1zY3JpcHQ="
+  },
+  {
+    "filePath": "example.bat",
+    "lineNumber": 28,
+    "issueType": "Private Key",
+    "description": "RSA private key beginning marker"
+  },
+  {
+    "filePath": "example.bat",
+    "lineNumber": 33,
+    "issueType": "Password",
+    "description": "Service account password in comment: TempPass2024!"
+  }
+]

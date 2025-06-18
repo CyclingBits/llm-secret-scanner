@@ -47,7 +47,7 @@ class ScanReporter {
     }
     
     fun reportContainerStart() {
-        logger.info("{} Starting Docker container", LogColors.DOCKER_ICON)
+        logger.info("{} Starting Docker container...", LogColors.DOCKER_ICON)
     }
     
     fun reportContainerStarted() {

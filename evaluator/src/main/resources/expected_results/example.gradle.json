@@ -1,0 +1,68 @@
+[
+  {
+    "filePath": "example.gradle",
+    "lineNumber": 2,
+    "issueType": "Token",
+    "description": "Gradle comment token: gradle-comment-token-12345"
+  },
+  {
+    "filePath": "example.gradle",
+    "lineNumber": 11,
+    "issueType": "API Token",
+    "description": "API token in ext block: secret-token-from-ext-block-abc"
+  },
+  {
+    "filePath": "example.gradle",
+    "lineNumber": 13,
+    "issueType": "Token",
+    "description": "Old API token in comment: old-token-xyz"
+  },
+  {
+    "filePath": "example.gradle",
+    "lineNumber": 21,
+    "issueType": "Password",
+    "description": "Private repository password: PasswordForPrivateRepo123!"
+  },
+  {
+    "filePath": "example.gradle",
+    "lineNumber": 34,
+    "issueType": "Password",
+    "description": "Keystore password: keystore_password_!@#$"
+  },
+  {
+    "filePath": "example.gradle",
+    "lineNumber": 36,
+    "issueType": "Password",
+    "description": "Key alias password: key_for_alias_password"
+  },
+  {
+    "filePath": "example.gradle",
+    "lineNumber": 41,
+    "issueType": "API Key",
+    "description": "Hardcoded API key in build config: hardcoded_api_key_in_gradle_buildconfig"
+  },
+  {
+    "filePath": "example.gradle",
+    "lineNumber": 47,
+    "issueType": "API Key",
+    "description": "Default Maps API key: default_maps_key_if_missing"
+  },
+  {
+    "filePath": "example.gradle",
+    "lineNumber": 54,
+    "issueType": "Token",
+    "description": "Auth token for deployment: auth_token_for_deployment_task_xyz987"
+  },
+  {
+    "filePath": "example.gradle",
+    "lineNumber": 59,
+    "issueType": "Webhook URL",
+    "description": "Slack webhook URL with token"
+  },
+  {
+    "filePath": "example.gradle",
+    "lineNumber": 61,
+    "issueType": "Encoded Secret",
+    "description": "Base64 encoded secret: Z3JhZGxlX3NlY3JldF9iNjQ="
+  }
+]

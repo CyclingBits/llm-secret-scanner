@@ -23,7 +23,11 @@ object EvaluationService {
 
             val detectionRate = DetectionRateCalculator.calculate(scanResult)
 
-            EvaluationResult(modelName, detectionRate, scanTime)
+            EvaluationResult(
+                modelName = modelName,
+                detectionRate = detectionRate,
+                scanTime = scanTime
+            )
         }
     }
 

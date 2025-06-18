@@ -55,6 +55,7 @@ function Authorize(secret: string) {
 }
 
 class ApiClient {
+    // @ts-ignore
     @Authorize('decorator-secret-key-pqrst')
     fetchSensitiveData() {
         // ... logic

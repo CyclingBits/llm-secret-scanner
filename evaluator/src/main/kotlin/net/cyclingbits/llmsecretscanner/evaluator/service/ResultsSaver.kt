@@ -15,8 +15,7 @@ object ResultsSaver {
 
         val newRows = buildString {
             results.forEach { result ->
-                val detectionRateDisplay =
-                    if (result.detectionRate == 0.0) "fail" else "${String.format("%.1f", result.detectionRate)}%"
+                val detectionRateDisplay = "${String.format("%.1f", result.detectionRate)}%"
                 val timeDisplay = formatTime(result.scanTime)
                 val modelData = ModelDataProvider.findModelData(result.modelName)
                 val parameters = modelData?.parameters ?: "N/A"

@@ -48,12 +48,12 @@ class CodeAnalyzer(
             throw AnalysisException("File ${file.path} is too large (${file.length()} bytes). Maximum size is ${config.maxFileSizeBytes} bytes.")
         }
         
-        return """
-            Analyze the following code from file '${file.path}':
-            ```
-            ${file.readText()}
-            ```
-        """.trimIndent()
+        val fileContent = file.readText()
+        val numberedLines = fileContent.lines().mapIndexed { index, line ->
+            "${(index + 1).toString().padStart(3, ' ')}: $line"
+        }.joinToString("\n")
+        
+        return "Analyze the following code from file '${file.path}':\n```\n$numberedLines\n```"
     }
 
     private fun readSystemPrompt(): String {

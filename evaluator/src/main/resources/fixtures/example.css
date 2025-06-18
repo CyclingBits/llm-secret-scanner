@@ -1,10 +1,7 @@
 /*
-  CSS file for demonstrating secret storage patterns.
-  Secrets are less common in CSS, but can still be found.
-  Secret in header comment: css-header-token-112233
+  css-header-token-112233
 */
 
-/* 1. API key for a mapping service, left in a comment. */
 /* Google Maps API Key: AIzaSyA... (rest of a fake key) */
 
 body {
@@ -12,31 +9,24 @@ body {
 }
 
 .sensitive-data-background {
-    /* 2. A background image URL containing an access token. */
     background-image: url("https://api.example.com/v1/user_content/background.png?auth_token=background-image-token-abcdef");
 }
 
-/* 3. A secret hidden inside a custom property (CSS variable). */
 :root {
     --api-endpoint-key: "var-api-key-xyz987";
-    /* Old, commented-out key */
     /* --old-api-key: "old-key-456"; */
 }
 
-/* 4. Using a secret from a custom property. */
 .widget::before {
     content: var(--api-endpoint-key);
-    color: red; /* To make it visible for the demo */
+    color: red;
 }
 
-
-/* 5. A Base64-encoded resource (like a font or image) that could contain sensitive info. */
 @font-face {
     font-family: 'SecretFont';
     src: url('data:application/font-woff;charset=utf-8;base64,d09GRgABAAAAAA... (fake base64 font data) ...');
 }
 
-/* 6. A commented-out block with potentially sensitive information. */
 /*
 .legacy-widget {
     background: #eee;
@@ -44,14 +34,12 @@ body {
 }
 */
 
-/* 7. Using the content property to directly display a secret (very unlikely, but possible). */
 .debug-info::after {
     content: "Debug password: PasswordInContentProperty";
     display: block;
     margin-top: 10px;
 }
 
-/* 8. False positive: A complex selector or filter that might trigger a naive scanner. */
 .element[data-id^="a1b2c3d4-"] {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a1b2c3d4', endColorstr='#e5f6a1b2', GradientType=1);
 }

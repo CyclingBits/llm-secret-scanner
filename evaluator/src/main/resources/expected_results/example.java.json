@@ -1,0 +1,86 @@
+[
+  {
+    "filePath": "example.java",
+    "lineNumber": 7,
+    "issueType": "Token",
+    "description": "Deploy token in javadoc: deploy-token-from-javadoc-qwerty12345"
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 12,
+    "issueType": "Password",
+    "description": "Database password: simple_password_123!"
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 14,
+    "issueType": "API Key",
+    "description": "API key constant: api-key-xyz-789-abc"
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 16,
+    "issueType": "Token",
+    "description": "Bearer token in char array"
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 18,
+    "issueType": "Encoded Secret",
+    "description": "Base64 encoded secret: cGFzc3dvcmQtb2JmdXNjYXRlZC1ieS1iNjQ="
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 20,
+    "issueType": "Private Key",
+    "description": "RSA private key in PEM format"
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 31,
+    "issueType": "Database Credential",
+    "description": "MySQL connection string with password: HardPass_in_URL"
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 33,
+    "issueType": "Password",
+    "description": "Temporary debug password in comment: temp_debug_password"
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 39,
+    "issueType": "Session Key",
+    "description": "Session key in comment: session_key_445566_commented"
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 45,
+    "issueType": "API Token",
+    "description": "Deprecated API token in annotation: deprecated_token_in_annotation"
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 53,
+    "issueType": "Token",
+    "description": "Auth token in map value: auth_token_from_map_value"
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 65,
+    "issueType": "Password",
+    "description": "Complex password with special characters: P@$$w0rd_With_!#$&*()[]{}<>`~"
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 67,
+    "issueType": "Encoded Data",
+    "description": "Base64 encoded token: dG9rZW4tbm9uLW9idmlvdXMtbmFtZQ=="
+  },
+  {
+    "filePath": "example.java",
+    "lineNumber": 72,
+    "issueType": "Secret",
+    "description": "Secret from static block: secret_from_static_block_112233"
+  }
+]

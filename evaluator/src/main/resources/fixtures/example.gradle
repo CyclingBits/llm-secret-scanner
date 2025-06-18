@@ -1,7 +1,5 @@
 package fixtures
-// build.gradle file for demonstrating secret storage patterns.
-// This is a common place for secrets in Java/Kotlin projects using Gradle.
-// Secret in a comment: gradle-comment-token-12345
+// gradle-comment-token-12345
 
 plugins {
     // Applying a plugin is standard. Secrets can be anywhere in this file.
@@ -9,7 +7,6 @@ plugins {
     // id 'com.android.application' // This would be needed for the android block to work.
 }
 
-// 1. Storing secrets in an `ext` block (extra properties).
 ext {
     myApiToken = 'secret-token-from-ext-block-abc'
     // A commented-out old token
@@ -17,7 +14,6 @@ ext {
 }
 
 repositories {
-    // 2. A very common pattern: credentials for a private Maven repository.
     maven {
         url "https://private-repo.example.com/maven"
         credentials {
@@ -28,14 +24,11 @@ repositories {
     mavenCentral()
 }
 
-// The 'android' block is a prime location for secrets in mobile app projects.
-// This section is for demonstration and would require the Android plugin.
 /*
 android {
     compileSdkVersion 33
 
     signingConfigs {
-        // 3. Keystore credentials for signing an Android app. A huge source of leaks.
         release {
             storeFile file('my-release-key.keystore')
             storePassword "keystore_password_!@#$"
@@ -45,10 +38,8 @@ android {
     }
 
     defaultConfig {
-        // 4. Injecting a secret directly into the app's build config.
         buildConfigField "String", "API_KEY", '"hardcoded_api_key_in_gradle_buildconfig"'
 
-        // 5. Reading from a properties file (the file itself can be leaked).
         def props = new Properties()
         if (rootProject.file('local.properties').exists()) {
             props.load(rootProject.file('local.properties').newDataInputStream())
@@ -58,7 +49,6 @@ android {
 }
 */
 
-// 6. A custom task that might use a secret.
 task deployToProduction {
     doLast {
         def authToken = 'auth_token_for_deployment_task_xyz987'
@@ -66,22 +56,14 @@ task deployToProduction {
     }
 }
 
-// 7. Reading a secret from an environment variable with a hardcoded fallback.
-// The fallback value is the secret here.
 def slackWebhookUrl = System.getenv("SLACK_WEBHOOK") ?: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
 
-// 8. A Base64 encoded secret.
 def encodedSecret = "Z3JhZGxlX3NlY3JldF9iNjQ="
 
-// 9. A secret split into parts.
 def partA = "split_"
 def partB = "secret_"
 def partC = "in_gradle"
 def fullSecret = partA + partB + partC
 
-// 10. False positive: a string that may look like a secret.
-version = '2.0.1-alpha.rc1.build.12345.sha.a1b2c3d'
-
 println "This build script uses the API token: ${myApiToken}"
 println "Full secret from parts: ${fullSecret}"
-

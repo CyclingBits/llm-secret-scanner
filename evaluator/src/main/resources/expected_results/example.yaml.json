@@ -1,0 +1,74 @@
+[
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 1,
+    "issueType": "Token",
+    "description": "YAML comment secret token: yaml-comment-secret-token-a1b2c3"
+  },
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 5,
+    "issueType": "Password",
+    "description": "YAML password in quotes: yaml_password_in_quotes"
+  },
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 8,
+    "issueType": "API Key",
+    "description": "API key in double quotes: api-key-in-double-quotes-xyz789"
+  },
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 12,
+    "issueType": "Password",
+    "description": "Password from URL in YAML: PasswordFromUrl"
+  },
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 13,
+    "issueType": "Password",
+    "description": "Default password if env not set: default_pass_if_env_not_set"
+  },
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 17,
+    "issueType": "Private Key",
+    "description": "EC private key in YAML multiline"
+  },
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 25,
+    "issueType": "Token",
+    "description": "Service A token: token_for_service_a_in_a_list"
+  },
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 28,
+    "issueType": "Token",
+    "description": "Commented token for service B: commented_token_for_service_b"
+  },
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 29,
+    "issueType": "Token",
+    "description": "Active token for service B: active_token_for_service_b_456"
+  },
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 32,
+    "issueType": "Encoded Secret",
+    "description": "Base64 encoded secret in YAML: ZW5jb2RlZF9zZWNyZXRfaW5feWFtbA=="
+  },
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 36,
+    "issueType": "Password",
+    "description": "Reusable password in YAML anchor: ReusablePa$$w0rd!"
+  },
+  {
+    "filePath": "example.yaml",
+    "lineNumber": 46,
+    "issueType": "Session Key",
+    "description": "Long hardcoded session key: long-value-that-might-be-a-hardcoded-session-key-or-something-similar-askjdhaksjdhasdkjahsdkjhasd"
+  }
+]
