@@ -7,7 +7,8 @@ fun main() {
     println("🚀 Quick evaluation: Java files only, single model")
     val results = EvaluationService.evaluateModels(
         models = listOf("ai/gemma3:latest"),
-        includes = "**/*.java"
+        includes = "**/*.java",
+        fileAnalysisTimeout = 30
     )
     ResultsSaver.saveResultsToMarkdown(results)
 }

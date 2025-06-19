@@ -3,6 +3,7 @@ package net.cyclingbits.llmsecretscanner.core
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import java.io.File
 
 class ScannerTest {
@@ -18,13 +19,12 @@ class ScannerTest {
         val scanner = Scanner(config)
         
         assertNotNull(scanner)
-        scanner.close()
         
         tempDir.deleteRecursively()
     }
 
     @Test
-    fun executeScan_emptyDirectory_returnsEmptyList() {
+    fun executeScan_emptyFilesList_returnsEmptyList() {
         val tempDir = createTempDir()
         val config = ScannerConfiguration(
             sourceDirectory = tempDir,
@@ -32,24 +32,10 @@ class ScannerTest {
         )
         val scanner = Scanner(config)
         
-        val result = scanner.executeScan()
+        val result = scanner.executeScan(emptyList())
         
         assertNotNull(result)
-        scanner.close()
-        
-        tempDir.deleteRecursively()
-    }
-
-    @Test
-    fun close_succeeds() {
-        val tempDir = createTempDir()
-        val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
-            modelName = "ai/phi4:latest"
-        )
-        val scanner = Scanner(config)
-        
-        scanner.close()
+        assertTrue(result.isEmpty())
         
         tempDir.deleteRecursively()
     }

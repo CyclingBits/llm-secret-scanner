@@ -18,7 +18,7 @@ class ScannerConfigurationTest {
         
         assertEquals(tempDir, config.sourceDirectory)
         assertEquals("ai/phi4:latest", config.modelName)
-        assertEquals(60_000, config.timeout)
+        assertEquals(1, config.timeout)
         
         tempDir.deleteRecursively()
     }
@@ -72,7 +72,7 @@ class ScannerConfigurationTest {
             ScannerConfiguration(
                 sourceDirectory = tempDir,
                 modelName = "ai/phi4:latest",
-                timeout = 400_000
+                timeout = 40
             )
         }
         

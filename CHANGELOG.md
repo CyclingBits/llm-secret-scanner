@@ -5,11 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.1] - 2025-06-18
+## [1.0.1] - 2025-06-19
 
 ### ✨ Improved
 
 - **Enhanced accuracy validation** - Evaluator now validates detected issues against reference results with precise line number matching
+
+### 🔧 Refactored
+
+- **Reduced code complexity** - Simplified Scanner class by extracting logic and reducing overall codebase by ~75 lines
+- **Simplified container management** - Renamed `DockerContainerProvider` to `ContainerManager` for better clarity
+- **Improved error handling** - Added new `ContainerStartupException` for better container startup error reporting
+- **Code cleanup** - Removed unnecessary logger instances and println statements across all modules
+
 
 ## [1.0.0] - 2025-06-17
 

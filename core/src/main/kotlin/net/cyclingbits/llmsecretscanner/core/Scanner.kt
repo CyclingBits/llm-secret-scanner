@@ -1,97 +1,45 @@
 package net.cyclingbits.llmsecretscanner.core
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
-import net.cyclingbits.llmsecretscanner.core.exception.*
+import net.cyclingbits.llmsecretscanner.core.exception.ScannerException
 import net.cyclingbits.llmsecretscanner.core.model.Issue
-import net.cyclingbits.llmsecretscanner.core.service.*
-import org.slf4j.LoggerFactory
+import net.cyclingbits.llmsecretscanner.core.service.CodeAnalyzer
+import net.cyclingbits.llmsecretscanner.core.service.ContainerManager
+import net.cyclingbits.llmsecretscanner.core.service.ScanReporter
+import java.io.File
 
 /**
  * Main scanner orchestrator that coordinates file discovery, container management,
  * code analysis, and progress reporting.
  */
-class Scanner(private val config: ScannerConfiguration) : AutoCloseable {
+class Scanner(config: ScannerConfiguration) {
 
-    private val logger = LoggerFactory.getLogger(Scanner::class.java)
-    
-    private val fileScanner = FileScanner(config)
-    private val reporter = ScanReporter()
-    private val containerManager = ContainerManager(config, reporter)
-    
-    init {
-        // Disable TestContainers verbose logging
-        System.setProperty("testcontainers.reuse.enable", "false")
-        System.setProperty("org.slf4j.simpleLogger.log.org.testcontainers", "off")
-        System.setProperty("org.slf4j.simpleLogger.log.testcontainers", "off")
-        System.setProperty("org.slf4j.simpleLogger.log.tc", "off")
-        System.setProperty("org.slf4j.simpleLogger.log.com.github.dockerjava", "off")
-    }
+    private val container = ContainerManager(config).startContainer()
+    private val codeAnalyzer = CodeAnalyzer(config, container)
 
-    /**
-     * Executes the complete scanning workflow:
-     * 1. Reports scan start
-     * 2. Discovers files to scan
-     * 3. Starts Docker container
-     * 4. Analyzes files with LLM
-     * 5. Reports results
-     */
-    fun executeScan(): List<Issue> {
-        return try {
-            // Report scan configuration
-            reporter.reportScanStart(config)
-            
-            // Discover files to scan
-            val filesToScan = fileScanner.findFiles()
-            
-            if (filesToScan.isEmpty()) {
-                reporter.reportNoFilesFound()
-                return emptyList()
-            }
-            
-            reporter.reportFilesFound(filesToScan.size)
-            
-            // Start container
-            val container = containerManager.startContainer()
+    fun executeScan(filesToScan: List<File>): List<Issue> {
+        val analysisStartTime = System.currentTimeMillis()
 
-            // Analyze files
-            val scanStartTime = System.currentTimeMillis()
-            val codeAnalyzer = CodeAnalyzer(config, container, reporter)
-            val issues = codeAnalyzer.analyzeFiles(filesToScan)
-            
-            // Report final results
-            val totalTime = System.currentTimeMillis() - scanStartTime
-            reporter.reportScanComplete(issues.size, totalTime)
-            
-            issues
+        ScanReporter.reportAnalysisStart(filesToScan.size)
 
-        } catch (e: NoFilesFoundException) {
-            logger.warn("No files found to scan: {}", e.message)
-            reporter.reportNoFilesFound()
-            emptyList()
-        } catch (e: DockerContainerException) {
-            logger.error("Failed to start Docker container: {}", e.message, e)
-            reporter.reportError("Docker container startup failed")
-            emptyList()
-        } catch (e: TimeoutException) {
-            logger.error("LLM analysis timed out: {}", e.message, e)
-            reporter.reportError("Analysis timed out")
-            emptyList()
-        } catch (e: AnalysisException) {
-            logger.error("Analysis failed: {}", e.message, e)
-            reporter.reportError("Code analysis failed")
-            emptyList()
-        } catch (e: JsonParserException) {
-            logger.error("Failed to parse LLM response: {}", e.message, e)
-            reporter.reportError("Response parsing failed")
-            emptyList()
-        } catch (e: Exception) {
-            logger.error("Unexpected error during scan: {}", e.message, e)
-            reporter.reportError("Unexpected error occurred")
-            emptyList()
+        val results = filesToScan.mapIndexed { fileIndex, file ->
+            scanFile(file, fileIndex + 1, filesToScan.size)
         }
+        
+        val issues = results.mapNotNull { it.getOrNull() }.flatten()
+        val filesAnalyzed = results.count { it.isSuccess }
+
+        ScanReporter.reportScanComplete(issues.size, filesAnalyzed, filesToScan.size, System.currentTimeMillis() - analysisStartTime)
+
+        return issues
     }
 
-    override fun close() {
-        containerManager.close()
+    private fun scanFile(file: File, fileIndex: Int, totalFiles: Int): Result<List<Issue>> {
+        return try {
+            Result.success(codeAnalyzer.analyzeFile(file, fileIndex, totalFiles))
+        } catch (e: ScannerException) {
+            ScanReporter.reportError("Error analyzing file ${file.name}: ${e.message}")
+            Result.failure(RuntimeException(e.message))
+        }
     }
 }

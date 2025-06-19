@@ -14,39 +14,29 @@ class ScanReporterTest {
             sourceDirectory = tempDir,
             modelName = "ai/phi4:latest"
         )
-        val reporter = ScanReporter()
-        
-        reporter.reportScanStart(config)
+        ScanReporter.reportScanStart(config)
         
         tempDir.deleteRecursively()
     }
 
     @Test
     fun reportFilesFound_positiveCount_succeeds() {
-        val reporter = ScanReporter()
-        
-        reporter.reportFilesFound(5)
+        ScanReporter.reportFilesFound(5)
     }
 
     @Test
     fun reportNoFilesFound_succeeds() {
-        val reporter = ScanReporter()
-        
-        reporter.reportNoFilesFound()
+        ScanReporter.reportNoFilesFound()
     }
 
     @Test
     fun reportScanComplete_withResults_succeeds() {
-        val reporter = ScanReporter()
-        
-        reporter.reportScanComplete(3, 5000)
+        ScanReporter.reportScanComplete(3, 8, 10, 5000)
     }
 
     @Test
     fun reportError_withMessage_succeeds() {
-        val reporter = ScanReporter()
-        
-        reporter.reportError("Test error message")
+        ScanReporter.reportError("Test error message")
     }
 
     @Test
@@ -63,25 +53,19 @@ class ScanReporterTest {
                 description = "Test issue"
             )
         )
-        val reporter = ScanReporter()
-        
-        reporter.reportFileIssues(testFile, issues, 1500, 1, 5, tempDir)
+        ScanReporter.reportFileIssues(testFile, issues, 1500, 1, 5, tempDir)
         
         tempDir.deleteRecursively()
     }
 
     @Test
     fun reportContainerStart_succeeds() {
-        val reporter = ScanReporter()
-        
-        reporter.reportContainerStart()
+        ScanReporter.reportContainerStart()
     }
 
     @Test
     fun reportContainerStarted_succeeds() {
-        val reporter = ScanReporter()
-        
-        reporter.reportContainerStarted()
+        ScanReporter.reportContainerStarted()
     }
 
     private fun createTempDir(): File {

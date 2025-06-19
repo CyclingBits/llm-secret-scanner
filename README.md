@@ -49,7 +49,7 @@ Add the plugin to your `pom.xml` (minimal configuration):
 <plugin>
     <groupId>net.cyclingbits</groupId>
     <artifactId>llm-secret-scanner-maven-plugin</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </plugin>
 ```
 
@@ -83,7 +83,7 @@ mvn llm-secret-scanner:scan
 
 ### Custom Model
 ```bash
-mvn llm-secret-scanner:scan -Dscan.model=ai/gemma3:4B-Q4_K_M
+mvn llm-secret-scanner:scan -Dscan.modelName=ai/gemma3:4B-Q4_K_M
 ```
 
 ### Fail Build on Issues
@@ -104,7 +104,7 @@ For more control, you can customize the plugin configuration:
 <plugin>
     <groupId>net.cyclingbits</groupId>
     <artifactId>llm-secret-scanner-maven-plugin</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <configuration>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
         <includes>**/*.java,**/*.kt,**/*.properties,**/*.yml,**/*.env</includes>
@@ -112,7 +112,7 @@ For more control, you can customize the plugin configuration:
         <modelName>ai/phi4:latest</modelName>
         <systemPrompt>Find API keys and secrets in the provided code</systemPrompt>
         <failOnError>false</failOnError>
-        <timeout>60000</timeout>
+        <fileAnalysisTimeout>60</fileAnalysisTimeout>
         <maxTokens>10000</maxTokens>
         <temperature>0.0</temperature>
         <maxFileSizeBytes>102400</maxFileSizeBytes>
@@ -138,7 +138,7 @@ For more control, you can customize the plugin configuration:
 | `modelName` | `ai/phi4:latest` | LLM model to use |
 | `systemPrompt` | _null_ | Custom system prompt (optional) |
 | `failOnError` | `false` | Fail build when issues found |
-| `timeout` | `60000` | Analysis timeout (ms) |
+| `fileAnalysisTimeout` | `60` | File analysis timeout (seconds) |
 | `maxTokens` | `10000` | Maximum tokens per request |
 | `temperature` | `0.0` | LLM temperature (0.0-2.0) |
 | `maxFileSizeBytes` | `102400` | Maximum file size (100KB) |
@@ -149,7 +149,7 @@ For more control, you can customize the plugin configuration:
 🔍 Starting LLM Secret Scanner with configuration:
        📄 Source directory: /project/src
        🐳 Model: ai/gemma3:latest
-       ⏱️ Timeout: 60000ms
+       ⏱️ File analysis timeout: 60s
        ✅ Include patterns: **/*.java
        ❌ Exclude patterns: **/target/**
 

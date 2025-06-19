@@ -2,6 +2,7 @@ package net.cyclingbits.llmsecretscanner.maven.plugin
 
 import net.cyclingbits.llmsecretscanner.core.Scanner
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
+import net.cyclingbits.llmsecretscanner.core.service.FileScanner
 import org.apache.maven.plugin.AbstractMojo
 import org.apache.maven.plugin.MojoFailureException
 import org.apache.maven.plugins.annotations.LifecyclePhase
@@ -27,8 +28,8 @@ class LLMSecretScanner : AbstractMojo() {
     @Parameter(property = "scan.modelName", defaultValue = "ai/phi4:latest")
     private lateinit var modelName: String
 
-    @Parameter(property = "scan.timeout", defaultValue = "60000")
-    private var timeout: Int = 60_000
+    @Parameter(property = "scan.fileAnalysisTimeout", defaultValue = "60")
+    private var fileAnalysisTimeout: Int = 60
 
     @Parameter(property = "scan.maxTokens", defaultValue = "10000")
     private var maxTokens: Int = 10_000
@@ -50,30 +51,26 @@ class LLMSecretScanner : AbstractMojo() {
 
     override fun execute() {
         try {
-            val scanner = Scanner(
-                config = ScannerConfiguration(
-                    sourceDirectory = sourceDirectory,
-                    includes = includes,
-                    excludes = excludes,
-                    modelName = modelName,
-                    timeout = timeout,
-                    maxTokens = maxTokens,
-                    temperature = temperature,
-                    dockerImage = dockerImage,
-                    maxFileSizeBytes = maxFileSizeBytes,
-                    systemPrompt = systemPrompt
-                )
+            val config = ScannerConfiguration(
+                sourceDirectory = sourceDirectory,
+                includes = includes,
+                excludes = excludes,
+                modelName = modelName,
+                fileAnalysisTimeout = fileAnalysisTimeout,
+                maxTokens = maxTokens,
+                temperature = temperature,
+                dockerImage = dockerImage,
+                maxFileSizeBytes = maxFileSizeBytes,
+                systemPrompt = systemPrompt
             )
-            
-            scanner.use { 
-                val issues = it.executeScan()
-                
-                if (issues.isNotEmpty() && failOnError) {
-                    throw MojoFailureException(
-                        "LLM Secret Scanner found ${issues.size} security issues. " +
-                        "Build failed due to failOnError=true setting."
-                    )
-                }
+
+            val fileScanner = FileScanner(config).findFiles()
+            val scanner = Scanner(config)
+
+            val issues = scanner.executeScan(fileScanner)
+
+            if (issues.isNotEmpty() && failOnError) {
+                throw MojoFailureException("LLM Secret Scanner found ${issues.size} security issues. Build failed due to failOnError=true setting.")
             }
 
         } catch (e: MojoFailureException) {

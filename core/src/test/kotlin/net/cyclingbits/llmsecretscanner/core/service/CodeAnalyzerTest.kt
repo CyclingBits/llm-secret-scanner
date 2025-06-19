@@ -4,7 +4,8 @@ import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import net.cyclingbits.llmsecretscanner.core.exception.AnalysisException
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -18,7 +19,6 @@ class CodeAnalyzerTest {
     private lateinit var testDir: File
     private lateinit var config: ScannerConfiguration
     private lateinit var mockContainer: DockerModelRunnerContainer
-    private lateinit var mockReporter: ScanReporter
 
     @BeforeEach
     fun setUp() {
@@ -28,14 +28,12 @@ class CodeAnalyzerTest {
         config = ScannerConfiguration(
             sourceDirectory = testDir,
             modelName = "ai/phi4:latest",
-            timeout = 60_000,
+            fileAnalysisTimeout = 60,
             maxFileSizeBytes = 10_000
         )
         
         mockContainer = mockk<DockerModelRunnerContainer>()
         every { mockContainer.openAIEndpoint } returns "http://localhost:8080"
-        
-        mockReporter = mockk<ScanReporter>(relaxed = true)
     }
 
     @AfterEach
@@ -55,24 +53,34 @@ class CodeAnalyzerTest {
         
         val files = listOf(file1, file2)
         
-        val analyzer = CodeAnalyzer(config, mockContainer, mockReporter)
+        mockkObject(ScanReporter)
+        
+        val analyzer = CodeAnalyzer(config, mockContainer)
         
         try {
-            analyzer.analyzeFiles(files)
+            files.forEachIndexed { index, file ->
+                analyzer.analyzeFile(file, index + 1, files.size)
+            }
         } catch (e: Exception) {
             // Expected to fail due to mock container, but should report progress
         }
         
-        verify { mockReporter.reportAnalysisStart(2) }
+        io.mockk.verify(atLeast = 1) { ScanReporter.reportFileAnalysisStart(any(), any(), any(), any()) }
+        
+        unmockkObject(ScanReporter)
     }
 
     @Test
     fun analyzeFiles_withEmptyFileList_reportsZeroFiles() {
-        val analyzer = CodeAnalyzer(config, mockContainer, mockReporter)
+        mockkObject(ScanReporter)
         
-        val issues = analyzer.analyzeFiles(emptyList())
+        val analyzer = CodeAnalyzer(config, mockContainer)
         
-        verify { mockReporter.reportAnalysisStart(0) }
+        val issues = emptyList<File>().map { file ->
+            analyzer.analyzeFile(file, 1, 0)
+        }.flatten()
+        
+        unmockkObject(ScanReporter)
         assertTrue(issues.isEmpty())
     }
 
@@ -82,10 +90,10 @@ class CodeAnalyzerTest {
         val largeContent = "// ".repeat(10_000) + "password=\"secret\""
         largeFile.writeText(largeContent)
         
-        val analyzer = CodeAnalyzer(config, mockContainer, mockReporter)
+        val analyzer = CodeAnalyzer(config, mockContainer)
         
         assertThrows<AnalysisException> {
-            analyzer.analyzeFiles(listOf(largeFile))
+            analyzer.analyzeFile(largeFile, 1, 1)
         }
     }
 
@@ -97,7 +105,7 @@ class CodeAnalyzerTest {
         val file = File(testDir, "Test.java")
         file.writeText("public class Test { private String key = \"secret\"; }")
         
-        val analyzer = CodeAnalyzer(configWithPrompt, mockContainer, mockReporter)
+        val analyzer = CodeAnalyzer(configWithPrompt, mockContainer)
         
         assertEquals(customPrompt, configWithPrompt.systemPrompt)
         assertNotNull(analyzer)
@@ -108,7 +116,7 @@ class CodeAnalyzerTest {
         val file = File(testDir, "Test.java")
         file.writeText("public class Test { private String key = \"secret\"; }")
         
-        val analyzer = CodeAnalyzer(config, mockContainer, mockReporter)
+        val analyzer = CodeAnalyzer(config, mockContainer)
         
         assertNull(config.systemPrompt)
         assertNotNull(analyzer)
@@ -119,10 +127,10 @@ class CodeAnalyzerTest {
         val file = File(testDir, "Test.java")
         file.writeText("public class Test { private String key = \"secret\"; }")
         
-        val analyzer = CodeAnalyzer(config, mockContainer, mockReporter)
+        val analyzer = CodeAnalyzer(config, mockContainer)
         
         assertThrows<Exception> {
-            analyzer.analyzeFiles(listOf(file))
+            analyzer.analyzeFile(file, 1, 1)
         }
     }
 
@@ -133,10 +141,10 @@ class CodeAnalyzerTest {
         
         every { mockContainer.openAIEndpoint } returns "invalid-url"
         
-        val analyzer = CodeAnalyzer(config, mockContainer, mockReporter)
+        val analyzer = CodeAnalyzer(config, mockContainer)
         
         assertThrows<Exception> {
-            analyzer.analyzeFiles(listOf(file))
+            analyzer.analyzeFile(file, 1, 1)
         }
     }
 

@@ -1,6 +1,7 @@
 package net.cyclingbits.llmsecretscanner.core
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
+import net.cyclingbits.llmsecretscanner.core.service.FileScanner
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -42,15 +43,17 @@ class ScannerIntegrationTest {
             sourceDirectory = testDir,
             modelName = "ai/phi4:latest",
             includes = "**/*.java",
-            timeout = 120_000
+            fileAnalysisTimeout = 120
         )
 
-        Scanner(config).use { scanner ->
-            val issues = scanner.executeScan()
-            
-            assertTrue(issues.isNotEmpty(), "Should find at least one security issue")
-            assertTrue(issues.any { it.filePath.contains("TestFile.java") }, "Should find issues in TestFile.java")
-        }
+        val fileScanner = FileScanner(config)
+        val filesToScan = fileScanner.findFiles()
+        
+        val scanner = Scanner(config)
+        val issues = scanner.executeScan(filesToScan)
+        
+        assertTrue(issues.isNotEmpty(), "Should find at least one security issue")
+        assertTrue(issues.any { it.filePath.contains("TestFile.java") }, "Should find issues in TestFile.java")
     }
 
     @Test
@@ -62,14 +65,16 @@ class ScannerIntegrationTest {
             modelName = "ai/phi4:latest",
             includes = "**/*.java",
             systemPrompt = customPrompt,
-            timeout = 120_000
+            fileAnalysisTimeout = 120
         )
 
-        Scanner(config).use { scanner ->
-            val issues = scanner.executeScan()
-            
-            assertNotNull(issues)
-        }
+        val fileScanner = FileScanner(config)
+        val filesToScan = fileScanner.findFiles()
+        
+        val scanner = Scanner(config)
+        val issues = scanner.executeScan(filesToScan)
+        
+        assertNotNull(issues)
     }
 
     @Test
@@ -78,14 +83,16 @@ class ScannerIntegrationTest {
             sourceDirectory = testDir,
             modelName = "ai/phi4:latest",
             includes = "**/*.xyz",
-            timeout = 120_000
+            fileAnalysisTimeout = 120
         )
 
-        Scanner(config).use { scanner ->
-            val issues = scanner.executeScan()
-            
-            assertTrue(issues.isEmpty(), "Should return empty list when no files match")
-        }
+        val fileScanner = FileScanner(config)
+        val filesToScan = fileScanner.findFiles()
+        
+        val scanner = Scanner(config)
+        val issues = scanner.executeScan(filesToScan)
+        
+        assertTrue(issues.isEmpty(), "Should return empty list when no files match")
     }
 
     @Test
@@ -99,14 +106,16 @@ class ScannerIntegrationTest {
             modelName = "ai/phi4:latest",
             includes = "**/*.java",
             maxFileSizeBytes = 1000,
-            timeout = 120_000
+            fileAnalysisTimeout = 120
         )
 
-        Scanner(config).use { scanner ->
-            val issues = scanner.executeScan()
-            
-            assertNotNull(issues)
-        }
+        val fileScanner = FileScanner(config)
+        val filesToScan = fileScanner.findFiles()
+        
+        val scanner = Scanner(config)
+        val issues = scanner.executeScan(filesToScan)
+        
+        assertNotNull(issues)
     }
 
     @Test
@@ -121,14 +130,16 @@ class ScannerIntegrationTest {
             sourceDirectory = testDir,
             modelName = "ai/phi4:latest",
             includes = "**/*.java",
-            timeout = 120_000
+            fileAnalysisTimeout = 120
         )
 
-        Scanner(config).use { scanner ->
-            val issues = scanner.executeScan()
-            
-            assertNotNull(issues)
-        }
+        val fileScanner = FileScanner(config)
+        val filesToScan = fileScanner.findFiles()
+        
+        val scanner = Scanner(config)
+        val issues = scanner.executeScan(filesToScan)
+        
+        assertNotNull(issues)
     }
 
     private fun createTempDir(): File {

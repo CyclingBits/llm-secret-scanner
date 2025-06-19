@@ -7,7 +7,8 @@ fun main() {
     println("🔍 Full evaluation: All file types, all models")
     val results = EvaluationService.evaluateModels(
         models = getAllModels(),
-        includes = "**/*.java,**/*.kt,**/*.xml,**/*.properties,**/*.yml,**/*.yaml,**/*.json,**/*.md,**/*.sql,**/*.gradle,**/*.kts,**/*.env,**/*.sh,**/*.bat,**/*.html,**/*.css,**/*.js,**/*.ts,**/*.dockerfile"
+        includes = "**/*.java,**/*.kt,**/*.xml,**/*.properties,**/*.yml,**/*.yaml,**/*.json,**/*.md,**/*.sql,**/*.gradle,**/*.kts,**/*.env,**/*.sh,**/*.bat,**/*.html,**/*.css,**/*.js,**/*.ts,**/*.dockerfile",
+        fileAnalysisTimeout = 120
     )
     ResultsSaver.saveResultsToMarkdown(results)
 }

@@ -1,7 +1,6 @@
 package net.cyclingbits.llmsecretscanner.core.service
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
-import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -15,9 +14,8 @@ class ContainerManagerTest {
             sourceDirectory = tempDir,
             modelName = "ai/phi4:latest"
         )
-        val reporter = mockk<ScanReporter>(relaxed = true)
 
-        val containerManager = ContainerManager(config, reporter)
+        val containerManager = ContainerManager(config)
 
         assertNotNull(containerManager)
 
@@ -31,8 +29,7 @@ class ContainerManagerTest {
             sourceDirectory = tempDir,
             modelName = "ai/phi4:latest"
         )
-        val reporter = mockk<ScanReporter>(relaxed = true)
-        val containerManager = ContainerManager(config, reporter)
+        val containerManager = ContainerManager(config)
 
         containerManager.close()
 

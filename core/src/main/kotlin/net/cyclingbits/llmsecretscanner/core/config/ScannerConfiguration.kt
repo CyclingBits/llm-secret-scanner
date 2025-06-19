@@ -1,5 +1,6 @@
 package net.cyclingbits.llmsecretscanner.core.config
 
+import net.cyclingbits.llmsecretscanner.core.service.ScanReporter
 import java.io.File
 
 data class ScannerConfiguration(
@@ -7,12 +8,12 @@ data class ScannerConfiguration(
     val includes: String = "**/*.java,**/*.kt,**/*.xml,**/*.properties,**/*.yml,**/*.yaml,**/*.json,**/*.md,**/*.sql,**/*.gradle,**/*.kts,**/*.env,**/*.sh,**/*.bat,**/*.html,**/*.css,**/*.js,**/*.ts,**/*.dockerfile",
     val excludes: String = "**/target/**",
     val modelName: String = "ai/phi4:latest",
-    val timeout: Int = 60_000,
+    val timeout: Int = 1, // connection timeout in seconds
+    val fileAnalysisTimeout: Int = 60,
     val maxTokens: Int = 10_000,
     val temperature: Double = 0.0,
     val dockerImage: String = "alpine/socat:1.7.4.3-r0",
     val maxFileSizeBytes: Int = 100 * 1024, // 100KB
-    val connectionTimeoutMs: Int = 1_000, // 1 second
     val systemPrompt: String? = null
 ) {
     init {
@@ -40,8 +41,14 @@ data class ScannerConfiguration(
         require(timeout > 0) {
             "Timeout must be positive: $timeout"
         }
-        require(timeout <= 300_000) {
-            "Timeout too large (max 5 minutes): $timeout"
+        require(timeout <= 30) {
+            "Connection timeout too large (max 30s): $timeout"
+        }
+        require(fileAnalysisTimeout > 0) {
+            "File analysis timeout must be positive: $fileAnalysisTimeout"
+        }
+        require(fileAnalysisTimeout <= 600) {
+            "File analysis timeout too large (max 10 minutes): $fileAnalysisTimeout"
         }
         require(maxTokens > 0) {
             "Max tokens must be positive: $maxTokens"
@@ -61,12 +68,7 @@ data class ScannerConfiguration(
         require(maxFileSizeBytes <= 10 * 1024 * 1024) {
             "Max file size too large (max 10MB): $maxFileSizeBytes"
         }
-        require(connectionTimeoutMs > 0) {
-            "Connection timeout must be positive: $connectionTimeoutMs"
-        }
-        require(connectionTimeoutMs <= 30_000) {
-            "Connection timeout too large (max 30s): $connectionTimeoutMs"
-        }
+        ScanReporter.reportScanStart(this)
     }
 
     companion object {
