@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2025-06-20
 
+### Added
+- **Scan Success Rate Tracking** - Added metrics to evaluation results
+- **Enhanced Accuracy Validation** - Precise line number matching (±1 tolerance)
+- **Proper Resource Management** - Scanner implements AutoCloseable for container cleanup
+- **SOLID Principles** - All code changes follow SOLID design principles
+
+### Changed
+- Migrated from Result<> types to exception-based error handling
+- Moved DockerContainerProvider functionality to ContainerManager
+- Simplified Scanner architecture - no longer handles file discovery
+- Exception-based error handling with custom exceptions
+- Singleton ScanReporter pattern
+- Better separation of concerns
+- Updated test model to `ai/llama3.2:latest`
+- Improved .gitignore configuration
+
+### Removed
+- Redundant ScannerTest
+
 
 
 ## [1.0.0] - 2025-06-17
@@ -101,3 +120,6 @@ This is the first stable release of LLM Secret Scanner - an AI-powered security 
 ---
 
 For detailed usage instructions, see the [README.md](README.md) file.
+
+[1.1.0]: https://github.com/CyclingBits/llm-secret-scanner/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/CyclingBits/llm-secret-scanner/releases/tag/v1.0.0

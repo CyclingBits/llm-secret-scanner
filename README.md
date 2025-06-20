@@ -63,6 +63,16 @@ mvn llm-secret-scanner:scan
 
 The scanner supports various LLM models via [Docker Model Runner](https://hub.docker.com/u/ai). Below are performance benchmarks from our evaluation tests:
 
+### 🎯 **Recommended Models**
+
+**`ai/phi4:latest` ⭐ (Default Choice)**  
+With a 74.3% detection rate and 100% scan success, this **15B parameter** model offers the best balance of accuracy and performance. At **8.43 GB**, it provides excellent results in just 3m 50s analysis time, making it ideal for most use cases.
+
+**`ai/llama3.2:latest` 🚀 (Fast & Lightweight)**  
+Perfect for quick scans and resource-constrained environments. This **3B parameter** model delivers 70.4% detection rate with 100% reliability in only 1m 20s. At just **1.87 GB**, it's the smallest model that maintains high accuracy and speed.
+
+### 📊 **All Available Models**
+
 | Model | Detection Rate | Scan Success | Analysis Time | Parameters | Context Window | Size | Best For                                      |
 |-------|----------------|--------------|---------------|------------|----------------|------|-----------------------------------------------|
 | `ai/llama3.3:latest` | **82.7%** | 100% | 17m 26s | 70B | 131K tokens | 39.59 GB | Highest accuracy                              |
@@ -94,7 +104,7 @@ mvn llm-secret-scanner:scan
 
 ### Custom Model
 ```bash
-mvn llm-secret-scanner:scan -Dscan.modelName=ai/gemma3:4B-Q4_K_M
+mvn llm-secret-scanner:scan -Dscan.modelName=ai/llama3.2:latest
 ```
 
 ### Fail Build on Issues
@@ -158,32 +168,34 @@ For more control, you can customize the plugin configuration:
 
 ```
 🔍 Starting LLM Secret Scanner with configuration:
-       📄 Source directory: /project/src
-       🐳 Model: ai/gemma3:latest
+       📄 Source directory: /fixtures
+       🐳 Model: ai/llama3.2:latest
        ⏱️ File analysis timeout: 60s
        ✅ Include patterns: **/*.java
        ❌ Exclude patterns: **/target/**
 
 📄 Found 1 files matching patterns
-🐳 Starting Docker container
+🐳 Starting Docker container...
 ✅ Docker container started successfully
 🔍 Starting analysis of 1 files
 
-Found 12 issues in file: Example_15.java (analyzed in 11.7s)
-       🚨 #1 | Line 9 | Password | Hardcoded password 'simple_password_123!' in a private field.
-       🚨 #2 | Line 13 | API Key | API key 'api-key-xyz-789-abc' in a public constant.
-       🚨 #3 | Line 18 | Token | Token 'token-from-char-array' stored in a character array.
-       🚨 #4 | Line 26 | Private Key | PEM encoded RSA private key with sensitive material.
-       🚨 #5 | Line 37 | Database Credentials | Database connection string with credentials.
-       🚨 #6 | Line 44 | Password | Password 'temp_debug_password' in a single-line comment.
-       🚨 #7 | Line 55 | API Key | API token 'deprecated_token_in_annotation' in an annotation.
-       🚨 #8 | Line 68 | Token | Token 'auth_token_from_map_value' stored in a map.
-       🚨 #9 | Line 76 | Password | Secret parts combined to form a complete secret.
-       🚨 #10 | Line 91 | Password | Complex password with special characters.
-       🚨 #11 | Line 99 | Private Key | Base64 encoded string likely represents a key or secret.
-       🚨 #12 | Line 107 | Secret | Static variable likely holds a secret value.
+[1/1] Analyzing file example.java...
+       Found 13 issues (analyzed in 14,9s)
+       🚨 #1 | Line 12 | Password | Hardcoded password
+       🚨 #2 | Line 14 | API Key | Hardcoded API key
+       🚨 #3 | Line 16 | Base64 Encoded Secret | Base64 encoded secret
+       🚨 #4 | Line 20 | Private Key | Hardcoded private key
+       🚨 #5 | Line 31 | Database Connection String | Hardcoded database connection string
+       🚨 #6 | Line 33 | Password | Hardcoded password
+       🚨 #7 | Line 52 | Token | Hardcoded token
+       🚨 #8 | Line 54 | Token | Hardcoded token
+       🚨 #9 | Line 62 | Password | Hardcoded password
+       🚨 #10 | Line 64 | Password | Hardcoded password
+       🚨 #11 | Line 67 | Base64 Encoded Secret | Base64 encoded secret
+       🚨 #12 | Line 68 | Base64 Encoded Secret | Base64 encoded secret
+       🚨 #13 | Line 70 | Static Secret | Hardcoded static secret
 
-✅ Scan completed successfully. Found 12 total issues in 13.6s
+✅ Scan completed successfully. Analyzed 1 of 1 files, found 13 total issues in 14,9s
 ```
 
 ## 🏗️ Architecture
