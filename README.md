@@ -3,6 +3,7 @@
 > AI-powered security scanner that detects secrets, API keys, and sensitive data in source code using local Large Language Models.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Changelog](https://img.shields.io/badge/changelog-v1.1.0-blue.svg)](CHANGELOG.md)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/cyclingbits/llm-secret-scanner)
 [![Test Coverage](https://img.shields.io/badge/coverage-80%25-green.svg)](https://github.com/cyclingbits/llm-secret-scanner)
 [![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://openjdk.java.net/)
@@ -284,4 +285,4 @@ For questions, feedback, or support, please reach out to us at:
 
 ---
 
-Made with ❤️ by [Cycling Bits](https://cyclingbits.net)
+Made with ❤️ by [Cycling Bits](https://github.com/CyclingBits)

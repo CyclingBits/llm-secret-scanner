@@ -11,7 +11,9 @@
     <artifactId>llm-secret-scanner-evaluator</artifactId>
     <packaging>jar</packaging>
 
-    <name>llm-secret-scanner-evaluator</name>
+    <name>LLM Secret Scanner Evaluator</name>
+    <description>Performance benchmarking tools for testing LLM models</description>
+    <url>https://github.com/CyclingBits/llm-secret-scanner</url>
 
     <dependencies>
         <dependency>
