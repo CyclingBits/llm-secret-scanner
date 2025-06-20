@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
@@ -33,14 +33,11 @@ jobs:
       run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
     - name: Upload JAR artifacts to release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+      uses: softprops/action-gh-release@v1
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./maven-plugin/target/llm-secret-scanner-maven-plugin-${{ steps.version.outputs.version }}.jar
-        asset_name: llm-secret-scanner-maven-plugin-${{ steps.version.outputs.version }}.jar
-        asset_content_type: application/java-archive
+        files: ./maven-plugin/target/llm-secret-scanner-maven-plugin-${{ steps.version.outputs.version }}.jar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish to GitHub Packages
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
