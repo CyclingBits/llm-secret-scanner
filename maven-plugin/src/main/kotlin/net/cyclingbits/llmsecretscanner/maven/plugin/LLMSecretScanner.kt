@@ -2,6 +2,7 @@ package net.cyclingbits.llmsecretscanner.maven.plugin
 
 import net.cyclingbits.llmsecretscanner.core.Scanner
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
+import net.cyclingbits.llmsecretscanner.core.exception.DockerContainerException
 import net.cyclingbits.llmsecretscanner.core.service.FileScanner
 import org.apache.maven.plugin.AbstractMojo
 import org.apache.maven.plugin.MojoFailureException
@@ -50,6 +51,7 @@ class LLMSecretScanner : AbstractMojo() {
     private var failOnError: Boolean = false
 
     override fun execute() {
+        configureLogging()
         try {
             val config = ScannerConfiguration(
                 sourceDirectory = sourceDirectory,
@@ -75,15 +77,35 @@ class LLMSecretScanner : AbstractMojo() {
             }
 
         } catch (e: MojoFailureException) {
-            throw e // Re-throw MojoFailureException as-is
+            throw e
+        } catch (e: DockerContainerException) {
+            handleError("Please ensure Docker Desktop is running and Docker Model Runner is enabled", e)
         } catch (e: Exception) {
-            log.error("LLM Secret Scanner execution failed: ${e.message}", e)
-            if (failOnError) {
-                throw MojoFailureException("LLM Secret Scanner execution failed: ${e.message}", e)
-            } else {
-                log.warn("Continuing build despite scanner failure (failOnError=false)")
-            }
+            handleError("LLM Secret Scanner execution failed: ${e.message}", e)
         }
     }
 
+    private fun handleError(message: String, cause: Exception) {
+        log.error(message)
+        if (failOnError) {
+            throw MojoFailureException(message, cause)
+        } else {
+            log.warn("Continuing build despite error (failOnError=false)")
+        }
+    }
+
+    private fun configureLogging() {
+        // Disable TestContainers verbose logging before any container operations
+        System.setProperty("testcontainers.reuse.enable", "false")
+        System.setProperty("org.slf4j.simpleLogger.log.org.testcontainers", "off")
+        System.setProperty("org.slf4j.simpleLogger.log.testcontainers", "off")
+        System.setProperty("org.slf4j.simpleLogger.log.tc", "off")
+        System.setProperty("org.slf4j.simpleLogger.log.com.github.dockerjava", "off")
+        System.setProperty("org.slf4j.simpleLogger.log.docker", "off")
+        System.setProperty("org.slf4j.simpleLogger.log.com.github.dockerjava.api", "off")
+        System.setProperty("org.slf4j.simpleLogger.log.com.github.dockerjava.core", "off")
+        System.setProperty("org.slf4j.simpleLogger.log.org.testcontainers.utility", "off")
+        System.setProperty("org.slf4j.simpleLogger.log.org.testcontainers.dockerclient", "off")
+        System.setProperty("org.slf4j.simpleLogger.log.org.testcontainers.containers", "off")
+    }
 }

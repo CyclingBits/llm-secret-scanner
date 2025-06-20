@@ -34,8 +34,40 @@
 
 ### 1. Installation
 
-First, build and install the plugin locally:
+You can install the plugin using one of these methods:
 
+#### Option A: Use GitHub Packages Repository
+Add the GitHub Packages plugin repository to your `pom.xml`:
+
+```xml
+<pluginRepositories>
+    <pluginRepository>
+        <id>github</id>
+        <url>https://maven.pkg.github.com/cyclingbits/llm-secret-scanner</url>
+    </pluginRepository>
+</pluginRepositories>
+```
+
+You'll also need to authenticate with GitHub Packages. Add to your `~/.m2/settings.xml`:
+```xml
+<servers>
+    <server>
+        <id>github</id>
+        <username>YOUR_GITHUB_USERNAME</username>
+        <password>YOUR_GITHUB_TOKEN</password>
+    </server>
+</servers>
+```
+
+#### Option B: Download from GitHub Releases (Recommended)
+```bash
+# Download the latest release JARs
+wget https://github.com/cyclingbits/llm-secret-scanner/releases/latest/download/llm-secret-scanner-maven-plugin-1.1.0.jar
+# Install to local Maven repository
+mvn install:install-file -Dfile=llm-secret-scanner-maven-plugin-1.1.0.jar -DgroupId=net.cyclingbits -DartifactId=llm-secret-scanner-maven-plugin -Dversion=1.1.0 -Dpackaging=jar
+```
+
+#### Option C: Build from Source
 ```bash
 git clone https://github.com/cyclingbits/llm-secret-scanner.git
 cd llm-secret-scanner

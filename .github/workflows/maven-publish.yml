@@ -35,11 +35,15 @@ jobs:
     - name: Upload JAR artifacts to release
       uses: softprops/action-gh-release@v2
       with:
-        files: ./maven-plugin/target/llm-secret-scanner-maven-plugin-${{ steps.version.outputs.version }}.jar
+        files: |
+          ./core/target/llm-secret-scanner-core-${{ steps.version.outputs.version }}.jar
+          ./maven-plugin/target/llm-secret-scanner-maven-plugin-${{ steps.version.outputs.version }}.jar
+          ./evaluator/target/llm-secret-scanner-evaluator-${{ steps.version.outputs.version }}.jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish to GitHub Packages
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+      continue-on-error: true
       env:
         GITHUB_TOKEN: ${{ github.token }}
