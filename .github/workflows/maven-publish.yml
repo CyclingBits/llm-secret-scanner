@@ -13,6 +13,7 @@ jobs:
     permissions:
       contents: write
       packages: write
+      releases: write
 
     steps:
     - uses: actions/checkout@v4
@@ -33,7 +34,7 @@ jobs:
       run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
     - name: Upload JAR artifacts to release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: ./maven-plugin/target/llm-secret-scanner-maven-plugin-${{ steps.version.outputs.version }}.jar
       env:
