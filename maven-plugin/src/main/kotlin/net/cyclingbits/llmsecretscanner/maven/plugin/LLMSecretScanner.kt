@@ -67,10 +67,10 @@ class LLMSecretScanner : AbstractMojo() {
             val fileScanner = FileScanner(config).findFiles()
             val scanner = Scanner(config)
 
-            val issues = scanner.executeScan(fileScanner)
+            val scanResult = scanner.executeScan(fileScanner)
 
-            if (issues.isNotEmpty() && failOnError) {
-                throw MojoFailureException("LLM Secret Scanner found ${issues.size} security issues. Build failed due to failOnError=true setting.")
+            if (scanResult.issues.isNotEmpty() && failOnError) {
+                throw MojoFailureException("LLM Secret Scanner found ${scanResult.issues.size} security issues. Build failed due to failOnError=true setting.")
             }
 
         } catch (e: MojoFailureException) {

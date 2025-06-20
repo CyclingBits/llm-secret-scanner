@@ -63,16 +63,27 @@ mvn llm-secret-scanner:scan
 
 The scanner supports various LLM models via [Docker Model Runner](https://hub.docker.com/u/ai). Below are performance benchmarks from our evaluation tests:
 
-| Model | Detection Rate | Analysis Time | Parameters | Size | Context Window | Best For |
-|-------|----------------|---------------|------------|------|----------------|----------|
-| `ai/deepcoder-preview:latest` | **78.6%** | 10m 11s | 14B | 8.37 GB | 131K tokens | Highest accuracy |
-| `ai/mistral-nemo:latest` | **71.0%** | 4m 2s | 12B | 6.96 GB | 131K tokens | Great accuracy/speed balance |
-| `ai/phi4:latest` ⭐ | **70.0%** | 4m 27s | 15B | 8.43 GB | 16K tokens | **Default choice** |
-| `ai/llama3.1:latest` | **64.8%** | 2m 16s | 8B | 4.58 GB | 131K tokens | Fast processing |
-| `ai/deepseek-r1-distill-llama:latest` | **63.8%** | 5m 3s | 8B | 4.58 GB | 131K tokens | Fast & accurate |
-| `ai/gemma3:latest` | **62.9%** | 1m 56s | 4B | 2.31 GB | 131K tokens | Lightweight |
+| Model | Detection Rate | Scan Success | Analysis Time | Parameters | Context Window | Size | Best For                                      |
+|-------|----------------|--------------|---------------|------------|----------------|------|-----------------------------------------------|
+| `ai/llama3.3:latest` | **82.7%** | 100% | 17m 26s | 70B | 131K tokens | 39.59 GB | Highest accuracy                              |
+| `ai/phi4:latest` ⭐ | **74.3%** | 100% | 3m 50s | 15B | 16K tokens | 8.43 GB | **Default choice**                            |
+| `ai/llama3.2:latest` | **70.4%** | 100% | 1m 20s | 3B | 131K tokens | 1.87 GB | Fast & lightweight                            |
+| `ai/deepcoder-preview:latest` | **69.3%** | 100% | 11m 15s | 14B | 131K tokens | 8.37 GB | -                                             |
+| `ai/mistral-nemo:latest` | **65.7%** | 100% | 3m 5s | 12B | 131K tokens | 6.96 GB | -                                             |
+| `ai/llama3.1:latest` | **64.8%** | 100% | 2m 1s | 8B | 131K tokens | 4.58 GB | -                                             |
+| `ai/qwq:latest` | **64.3%** | 52.9% | 88m 22s | 32B | 41K tokens | 18.48 GB | JSON generation errors and model API timeouts |
+| `ai/qwen3:latest` | **64.2%** | 76.5% | 21m 51s | 8B | 41K tokens | 4.68 GB | JSON generation errors                        |
+| `ai/qwen2.5:latest` | **60.5%** | 94.1% | 1m 49s | 7B | 33K tokens | 4.36 GB | JSON generation errors                        |
+| `ai/gemma3:latest` | **56.4%** | 100% | 1m 43s | 4B | 131K tokens | 2.31 GB | -                                             |
+| `ai/gemma3-qat:latest` | **55.3%** | 100% | 1m 41s | 3.88B | 131K tokens | 2.93 GB | -                                             |
+| `ai/deepseek-r1-distill-llama:latest` | **54.1%** | 100% | 4m 51s | 8B | 131K tokens | 4.58 GB | -                                             |
+| `ai/mistral:latest` | **52.5%** | 100% | 2m 10s | 7B | 33K tokens | 4.07 GB | -                                             |
+| `ai/smollm2:latest` | **0.0%** | 0% | 9m 44s | 360M | 8K tokens | 256.35 MB | JSON generation errors                        |
 
 > 📊 **Performance data** based on analysis of test fixtures with known vulnerabilities. All models available from [Docker Hub AI](https://hub.docker.com/u/ai).
+> 
+> **Detection Rate** indicates the percentage of known security issues correctly identified by the model (with line number accuracy verification ±1).  
+> **Scan Success** indicates the percentage of files that were successfully analyzed without errors (e.g., timeouts, JSON parsing failures).
 
 ## 📖 Usage Examples
 
@@ -246,6 +257,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📝 Changelog
 
 All notable changes to this project are documented in the [CHANGELOG.md](CHANGELOG.md) file.
+
+## 📞 Contact
+
+For questions, feedback, or support, please reach out to us at:
+📧 **CyclingBitsAI@gmail.com**
 
 ## 🙏 Acknowledgments
 

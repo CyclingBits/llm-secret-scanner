@@ -1,14 +1,13 @@
 package net.cyclingbits.llmsecretscanner.evaluator
 
 import net.cyclingbits.llmsecretscanner.evaluator.service.EvaluationService
-import net.cyclingbits.llmsecretscanner.evaluator.service.ResultsSaver
 
 fun main() {
     println("🚀 Quick evaluation: Java files only, single model")
-    val results = EvaluationService.evaluateModels(
-        models = listOf("ai/gemma3:latest"),
+    EvaluationService.evaluateModels(
+        models = listOf("ai/llama3.2:latest"),
         includes = "**/*.java",
-        fileAnalysisTimeout = 30
+        fileAnalysisTimeout = 60
     )
-    ResultsSaver.saveResultsToMarkdown(results)
+    println("✅ Model evaluated and results saved")
 }

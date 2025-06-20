@@ -10,7 +10,11 @@ import java.io.File
 object EvaluationService {
 
     fun evaluateModels(models: List<String>, includes: String, fileAnalysisTimeout: Int): List<EvaluationResult> {
-        return models.map { model -> evaluateModel(model, includes, fileAnalysisTimeout) }
+        return models.map { model -> 
+            val result = evaluateModel(model, includes, fileAnalysisTimeout)
+            ResultsSaver.saveResultsToMarkdown(listOf(result))
+            result
+        }
     }
 
     private fun evaluateModel(modelName: String, includes: String, fileAnalysisTimeout: Int): EvaluationResult {
@@ -22,11 +26,17 @@ object EvaluationService {
 
         val scanResult = scanner.executeScan(fileScanner)
 
-        val detectionRate = DetectionRateCalculator.calculate(scanResult)
+        val detectionRate = DetectionRateCalculator.calculate(scanResult.issues)
+        val scanSuccessRate = if (scanResult.totalFiles > 0) {
+            scanResult.filesAnalyzed.toDouble() / scanResult.totalFiles.toDouble() * 100.0
+        } else {
+            0.0
+        }
 
         return EvaluationResult(
             modelName = modelName,
             detectionRate = detectionRate,
+            scanSuccessRate = scanSuccessRate,
             scanTime = System.currentTimeMillis() - startTime
         )
     }

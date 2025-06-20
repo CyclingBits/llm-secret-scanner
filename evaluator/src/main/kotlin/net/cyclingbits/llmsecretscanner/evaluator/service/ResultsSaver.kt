@@ -4,24 +4,22 @@ import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration
 import net.cyclingbits.llmsecretscanner.evaluator.model.EvaluationResult
 import java.io.File
 import java.time.Duration
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 object ResultsSaver {
 
     fun saveResultsToMarkdown(results: List<EvaluationResult>) {
-        val testExecutionTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         val outputFile = File(EvaluatorConfiguration.RESULTS_FILE)
 
         val newRows = buildString {
             results.forEach { result ->
                 val detectionRateDisplay = "${String.format("%.1f", result.detectionRate)}%"
+                val scanSuccessRateDisplay = "${String.format("%.1f", result.scanSuccessRate)}%"
                 val timeDisplay = formatTime(result.scanTime)
                 val modelData = ModelDataProvider.findModelData(result.modelName)
                 val parameters = modelData?.parameters ?: "N/A"
                 val contextWindow = modelData?.contextWindow ?: "N/A"
                 val size = modelData?.size ?: "N/A"
-                appendLine("| $testExecutionTime | ${result.modelName} | $detectionRateDisplay | $timeDisplay | $parameters | $contextWindow | $size |")
+                appendLine("| ${result.modelName} | $detectionRateDisplay | $scanSuccessRateDisplay | $timeDisplay | $parameters | $contextWindow | $size |")
             }
         }
 
@@ -31,8 +29,8 @@ object ResultsSaver {
             val markdown = buildString {
                 appendLine("# LLM Evaluation Results")
                 appendLine()
-                appendLine("| Date | LLM Image | Detection Rate | Time | Parameters | Context Window | Size |")
-                appendLine("|------|-----------|----------------|------|------------|----------------|------|")
+                appendLine("| LLM Image | Detection Rate | Scan Success Rate | Time | Parameters | Context Window | Size |")
+                appendLine("|-----------|----------------|-------------------|------|------------|----------------|------|")
                 append(newRows)
             }
             outputFile.writeText(markdown)

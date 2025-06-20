@@ -3,6 +3,7 @@ package net.cyclingbits.llmsecretscanner.core
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import net.cyclingbits.llmsecretscanner.core.exception.ScannerException
 import net.cyclingbits.llmsecretscanner.core.model.Issue
+import net.cyclingbits.llmsecretscanner.core.model.ScanResult
 import net.cyclingbits.llmsecretscanner.core.service.CodeAnalyzer
 import net.cyclingbits.llmsecretscanner.core.service.ContainerManager
 import net.cyclingbits.llmsecretscanner.core.service.ScanReporter
@@ -17,7 +18,7 @@ class Scanner(config: ScannerConfiguration) {
     private val container = ContainerManager(config).startContainer()
     private val codeAnalyzer = CodeAnalyzer(config, container)
 
-    fun executeScan(filesToScan: List<File>): List<Issue> {
+    fun executeScan(filesToScan: List<File>): ScanResult {
         val analysisStartTime = System.currentTimeMillis()
 
         ScanReporter.reportAnalysisStart(filesToScan.size)
@@ -31,7 +32,7 @@ class Scanner(config: ScannerConfiguration) {
 
         ScanReporter.reportScanComplete(issues.size, filesAnalyzed, filesToScan.size, System.currentTimeMillis() - analysisStartTime)
 
-        return issues
+        return ScanResult(issues, filesAnalyzed, filesToScan.size)
     }
 
     private fun scanFile(file: File, fileIndex: Int, totalFiles: Int): Result<List<Issue>> {

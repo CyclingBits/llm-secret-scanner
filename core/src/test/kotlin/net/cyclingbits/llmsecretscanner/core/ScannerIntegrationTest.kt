@@ -2,10 +2,11 @@ package net.cyclingbits.llmsecretscanner.core
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import net.cyclingbits.llmsecretscanner.core.service.FileScanner
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.File
 
 class ScannerIntegrationTest {
@@ -17,9 +18,10 @@ class ScannerIntegrationTest {
     fun setUp() {
         testDir = createTempDir()
         testDir.mkdirs()
-        
+
         javaFile = File(testDir, "TestFile.java")
-        javaFile.writeText("""
+        javaFile.writeText(
+            """
             public class TestFile {
                 private String password = "secret123";
                 private String apiKey = "api-key-xyz-789";
@@ -27,7 +29,8 @@ class ScannerIntegrationTest {
                     String token = "bearer-token-abc123";
                 }
             }
-        """.trimIndent())
+        """.trimIndent()
+        )
     }
 
     @AfterEach
@@ -48,18 +51,18 @@ class ScannerIntegrationTest {
 
         val fileScanner = FileScanner(config)
         val filesToScan = fileScanner.findFiles()
-        
+
         val scanner = Scanner(config)
-        val issues = scanner.executeScan(filesToScan)
-        
-        assertTrue(issues.isNotEmpty(), "Should find at least one security issue")
-        assertTrue(issues.any { it.filePath.contains("TestFile.java") }, "Should find issues in TestFile.java")
+        val scanResult = scanner.executeScan(filesToScan)
+
+        assertTrue(scanResult.issues.isNotEmpty(), "Should find at least one security issue")
+        assertTrue(scanResult.issues.any { it.filePath.contains("TestFile.java") }, "Should find issues in TestFile.java")
     }
 
     @Test
     fun executeScan_withCustomSystemPrompt_usesCustomPrompt() {
         val customPrompt = "Find only API keys in the provided code. Return results as JSON array."
-        
+
         val config = ScannerConfiguration(
             sourceDirectory = testDir,
             modelName = "ai/phi4:latest",
@@ -70,11 +73,11 @@ class ScannerIntegrationTest {
 
         val fileScanner = FileScanner(config)
         val filesToScan = fileScanner.findFiles()
-        
+
         val scanner = Scanner(config)
-        val issues = scanner.executeScan(filesToScan)
-        
-        assertNotNull(issues)
+        val scanResult = scanner.executeScan(filesToScan)
+
+        assertNotNull(scanResult)
     }
 
     @Test
@@ -88,11 +91,11 @@ class ScannerIntegrationTest {
 
         val fileScanner = FileScanner(config)
         val filesToScan = fileScanner.findFiles()
-        
+
         val scanner = Scanner(config)
-        val issues = scanner.executeScan(filesToScan)
-        
-        assertTrue(issues.isEmpty(), "Should return empty list when no files match")
+        val scanResult = scanner.executeScan(filesToScan)
+
+        assertTrue(scanResult.issues.isEmpty(), "Should return empty list when no files match")
     }
 
     @Test
@@ -111,18 +114,18 @@ class ScannerIntegrationTest {
 
         val fileScanner = FileScanner(config)
         val filesToScan = fileScanner.findFiles()
-        
+
         val scanner = Scanner(config)
-        val issues = scanner.executeScan(filesToScan)
-        
-        assertNotNull(issues)
+        val scanResult = scanner.executeScan(filesToScan)
+
+        assertNotNull(scanResult)
     }
 
     @Test
     fun executeScan_withMultipleFiles_analyzesAllFiles() {
         val file1 = File(testDir, "File1.java")
         file1.writeText("public class File1 { private String key = \"secret-key-1\"; }")
-        
+
         val file2 = File(testDir, "File2.java")
         file2.writeText("public class File2 { private String token = \"auth-token-2\"; }")
 
@@ -135,11 +138,11 @@ class ScannerIntegrationTest {
 
         val fileScanner = FileScanner(config)
         val filesToScan = fileScanner.findFiles()
-        
+
         val scanner = Scanner(config)
-        val issues = scanner.executeScan(filesToScan)
-        
-        assertNotNull(issues)
+        val scanResult = scanner.executeScan(filesToScan)
+
+        assertNotNull(scanResult)
     }
 
     private fun createTempDir(): File {

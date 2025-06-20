@@ -35,7 +35,9 @@ class ScannerTest {
         val result = scanner.executeScan(emptyList())
         
         assertNotNull(result)
-        assertTrue(result.isEmpty())
+        assertTrue(result.issues.isEmpty())
+        assertTrue(result.filesAnalyzed == 0)
+        assertTrue(result.totalFiles == 0)
         
         tempDir.deleteRecursively()
     }
