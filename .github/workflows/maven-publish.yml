@@ -34,8 +34,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./maven-plugin/target/llm-secret-scanner-maven-plugin-${{ github.event.release.tag_name }}.jar
-        asset_name: llm-secret-scanner-maven-plugin-${{ github.event.release.tag_name }}.jar
+        asset_path: ./maven-plugin/target/llm-secret-scanner-maven-plugin-${{ github.event.release.tag_name#v }}.jar
+        asset_name: llm-secret-scanner-maven-plugin-${{ github.event.release.tag_name#v }}.jar
         asset_content_type: application/java-archive
 
     - name: Publish to GitHub Packages
