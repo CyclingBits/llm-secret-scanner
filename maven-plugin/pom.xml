@@ -11,7 +11,9 @@
     <artifactId>llm-secret-scanner-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
 
-    <name>llm-secret-scanner-maven-plugin</name>
+    <name>LLM Secret Scanner Maven Plugin</name>
+    <description>Maven plugin for AI-powered secret detection using local LLMs</description>
+    <url>https://github.com/CyclingBits/llm-secret-scanner</url>
 
     <dependencies>
         <dependency>

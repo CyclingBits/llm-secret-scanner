@@ -7,8 +7,42 @@
     <version>1.1.0</version>
     <packaging>pom</packaging>
 
-    <name>llm-secret-scanner-parent</name>
-    <url>https://cyclingbits.net</url>
+    <name>LLM Secret Scanner Parent</name>
+    <description>AI-powered Maven plugin for detecting secrets in code using local LLMs via Docker</description>
+    <url>https://github.com/CyclingBits/llm-secret-scanner</url>
+    
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <id>cyclingbits</id>
+            <name>Cycling Bits</name>
+            <email>CyclingBitsAI@gmail.com</email>
+            <organization>Cycling Bits</organization>
+            <organizationUrl>https://github.com/CyclingBits</organizationUrl>
+        </developer>
+    </developers>
+    
+    <scm>
+        <url>https://github.com/CyclingBits/llm-secret-scanner</url>
+        <connection>scm:git:git://github.com/CyclingBits/llm-secret-scanner.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/CyclingBits/llm-secret-scanner.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/CyclingBits/llm-secret-scanner</url>
+        </repository>
+    </distributionManagement>
 
     <modules>
         <module>core</module>

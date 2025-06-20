@@ -11,7 +11,9 @@
     <artifactId>llm-secret-scanner-core</artifactId>
     <packaging>jar</packaging>
 
-    <name>llm-secret-scanner-core</name>
+    <name>LLM Secret Scanner Core</name>
+    <description>Core scanning engine for AI-powered secret detection</description>
+    <url>https://github.com/CyclingBits/llm-secret-scanner</url>
 
     <dependencies>
         <!--    kotlin    -->
