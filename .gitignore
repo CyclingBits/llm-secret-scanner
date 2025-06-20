@@ -2,13 +2,7 @@
 /core/target/
 /evaluator/target/
 /maven-plugin/target/
-/.idea/.gitignore
-/.idea/compiler.xml
-/.idea/encodings.xml
-/.idea/jarRepositories.xml
-/.idea/kotlinc.xml
-/.idea/llm-secret-scanner.iml
-/.idea/misc.xml
-/.idea/sqldialects.xml
-/.idea/vcs.xml
+/.idea/
 /.claude/
+/.tmp/
+/CLAUDE.md

@@ -13,9 +13,10 @@ import java.io.File
  * Main scanner orchestrator that coordinates file discovery, container management,
  * code analysis, and progress reporting.
  */
-class Scanner(config: ScannerConfiguration) {
+class Scanner(config: ScannerConfiguration) : AutoCloseable {
 
-    private val container = ContainerManager(config).startContainer()
+    private val containerManager = ContainerManager(config)
+    private val container = containerManager.startContainer()
     private val codeAnalyzer = CodeAnalyzer(config, container)
 
     fun executeScan(filesToScan: List<File>): ScanResult {
@@ -42,5 +43,9 @@ class Scanner(config: ScannerConfiguration) {
             ScanReporter.reportError("Error analyzing file ${file.name}: ${e.message}")
             Result.failure(RuntimeException(e.message))
         }
+    }
+
+    override fun close() {
+        containerManager.close()
     }
 }

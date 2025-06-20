@@ -19,12 +19,13 @@ object EvaluationService {
 
     private fun evaluateModel(modelName: String, includes: String, fileAnalysisTimeout: Int): EvaluationResult {
         val config = createConfiguration(modelName, includes, fileAnalysisTimeout)
-        val scanner = Scanner(config)
         val fileScanner = FileScanner(config).findFiles()
 
         val startTime = System.currentTimeMillis()
 
-        val scanResult = scanner.executeScan(fileScanner)
+        val scanResult = Scanner(config).use { scanner ->
+            scanner.executeScan(fileScanner)
+        }
 
         val detectionRate = DetectionRateCalculator.calculate(scanResult.issues)
         val scanSuccessRate = if (scanResult.totalFiles > 0) {

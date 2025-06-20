@@ -24,7 +24,7 @@ class LLMSecretScannerTest {
         
         plugin.log = mockLog
         setPrivateField(plugin, "sourceDirectory", File("/nonexistent"))
-        setPrivateField(plugin, "modelName", "ai/phi4:latest")
+        setPrivateField(plugin, "modelName", "ai/llama3.2:latest")
         setPrivateField(plugin, "includes", "**/*.java")
         setPrivateField(plugin, "excludes", "**/target/**")
         setPrivateField(plugin, "fileAnalysisTimeout", 60)
@@ -48,7 +48,7 @@ class LLMSecretScannerTest {
         
         plugin.log = mockLog
         setPrivateField(plugin, "sourceDirectory", tempDir)
-        setPrivateField(plugin, "modelName", "ai/phi4:latest")
+        setPrivateField(plugin, "modelName", "ai/llama3.2:latest")
         setPrivateField(plugin, "includes", "**/*.java")
         setPrivateField(plugin, "excludes", "**/target/**")
         setPrivateField(plugin, "fileAnalysisTimeout", 60)
@@ -129,7 +129,7 @@ class LLMSecretScannerTest {
         
         plugin.log = mockLog
         setPrivateField(plugin, "sourceDirectory", tempDir)
-        setPrivateField(plugin, "modelName", "ai/phi4:latest")
+        setPrivateField(plugin, "modelName", "ai/llama3.2:latest")
         setPrivateField(plugin, "includes", "**/*.java")
         setPrivateField(plugin, "excludes", "**/target/**")
         setPrivateField(plugin, "fileAnalysisTimeout", 60)

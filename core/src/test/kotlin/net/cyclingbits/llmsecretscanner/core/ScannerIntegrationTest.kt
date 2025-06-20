@@ -44,7 +44,7 @@ class ScannerIntegrationTest {
     fun executeScan_withValidConfiguration_findsSecrets() {
         val config = ScannerConfiguration(
             sourceDirectory = testDir,
-            modelName = "ai/phi4:latest",
+            modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
             fileAnalysisTimeout = 120
         )
@@ -52,8 +52,9 @@ class ScannerIntegrationTest {
         val fileScanner = FileScanner(config)
         val filesToScan = fileScanner.findFiles()
 
-        val scanner = Scanner(config)
-        val scanResult = scanner.executeScan(filesToScan)
+        val scanResult = Scanner(config).use { scanner ->
+            scanner.executeScan(filesToScan)
+        }
 
         assertTrue(scanResult.issues.isNotEmpty(), "Should find at least one security issue")
         assertTrue(scanResult.issues.any { it.filePath.contains("TestFile.java") }, "Should find issues in TestFile.java")
@@ -65,7 +66,7 @@ class ScannerIntegrationTest {
 
         val config = ScannerConfiguration(
             sourceDirectory = testDir,
-            modelName = "ai/phi4:latest",
+            modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
             systemPrompt = customPrompt,
             fileAnalysisTimeout = 120
@@ -74,8 +75,9 @@ class ScannerIntegrationTest {
         val fileScanner = FileScanner(config)
         val filesToScan = fileScanner.findFiles()
 
-        val scanner = Scanner(config)
-        val scanResult = scanner.executeScan(filesToScan)
+        val scanResult = Scanner(config).use { scanner ->
+            scanner.executeScan(filesToScan)
+        }
 
         assertNotNull(scanResult)
     }
@@ -84,7 +86,7 @@ class ScannerIntegrationTest {
     fun executeScan_withNoMatchingFiles_returnsEmptyList() {
         val config = ScannerConfiguration(
             sourceDirectory = testDir,
-            modelName = "ai/phi4:latest",
+            modelName = "ai/llama3.2:latest",
             includes = "**/*.xyz",
             fileAnalysisTimeout = 120
         )
@@ -92,8 +94,9 @@ class ScannerIntegrationTest {
         val fileScanner = FileScanner(config)
         val filesToScan = fileScanner.findFiles()
 
-        val scanner = Scanner(config)
-        val scanResult = scanner.executeScan(filesToScan)
+        val scanResult = Scanner(config).use { scanner ->
+            scanner.executeScan(filesToScan)
+        }
 
         assertTrue(scanResult.issues.isEmpty(), "Should return empty list when no files match")
     }
@@ -106,7 +109,7 @@ class ScannerIntegrationTest {
 
         val config = ScannerConfiguration(
             sourceDirectory = testDir,
-            modelName = "ai/phi4:latest",
+            modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
             maxFileSizeBytes = 1000,
             fileAnalysisTimeout = 120
@@ -115,8 +118,9 @@ class ScannerIntegrationTest {
         val fileScanner = FileScanner(config)
         val filesToScan = fileScanner.findFiles()
 
-        val scanner = Scanner(config)
-        val scanResult = scanner.executeScan(filesToScan)
+        val scanResult = Scanner(config).use { scanner ->
+            scanner.executeScan(filesToScan)
+        }
 
         assertNotNull(scanResult)
     }
@@ -131,7 +135,7 @@ class ScannerIntegrationTest {
 
         val config = ScannerConfiguration(
             sourceDirectory = testDir,
-            modelName = "ai/phi4:latest",
+            modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
             fileAnalysisTimeout = 120
         )
@@ -139,8 +143,9 @@ class ScannerIntegrationTest {
         val fileScanner = FileScanner(config)
         val filesToScan = fileScanner.findFiles()
 
-        val scanner = Scanner(config)
-        val scanResult = scanner.executeScan(filesToScan)
+        val scanResult = Scanner(config).use { scanner ->
+            scanner.executeScan(filesToScan)
+        }
 
         assertNotNull(scanResult)
     }
