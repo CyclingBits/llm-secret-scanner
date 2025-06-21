@@ -1,15 +1,16 @@
 package net.cyclingbits.llmsecretscanner.evaluator
 
+import net.cyclingbits.llmsecretscanner.core.service.ScanReporter
 import net.cyclingbits.llmsecretscanner.evaluator.service.EvaluationService
 
 fun main() {
-    println("🔍 Full evaluation: All file types, all models")
+    ScanReporter.reportEvaluationStart("🔍 Full evaluation: All file types, all models")
     EvaluationService.evaluateModels(
         models = getAllModels(),
         includes = "**/*.java,**/*.kt,**/*.xml,**/*.properties,**/*.yml,**/*.yaml,**/*.json,**/*.md,**/*.sql,**/*.gradle,**/*.kts,**/*.env,**/*.sh,**/*.bat,**/*.html,**/*.css,**/*.js,**/*.ts,**/*.dockerfile",
-        fileAnalysisTimeout = 600
+        chunkAnalysisTimeout = 600
     )
-    println("✅ All models evaluated and results saved incrementally")
+    ScanReporter.reportEvaluationComplete("✅ All models evaluated and results saved incrementally")
 }
 
 private fun getAllModels(): List<String> = listOf(

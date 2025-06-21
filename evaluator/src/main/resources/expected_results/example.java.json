@@ -1,86 +1,226 @@
 [
   {
     "filePath": "example.java",
-    "lineNumber": 7,
+    "issueNumber": 1,
+    "lineNumber": 9,
     "issueType": "Token",
-    "description": "Deploy token in javadoc: deploy-token-from-javadoc-qwerty12345"
+    "secretValue": "deploy-token-from-javadoc-qwerty12345"
   },
   {
     "filePath": "example.java",
-    "lineNumber": 12,
-    "issueType": "Password",
-    "description": "Database password: simple_password_123!"
-  },
-  {
-    "filePath": "example.java",
+    "issueNumber": 2,
     "lineNumber": 14,
-    "issueType": "API Key",
-    "description": "API key constant: api-key-xyz-789-abc"
+    "issueType": "Password",
+    "secretValue": "simple_password_123!"
   },
   {
     "filePath": "example.java",
+    "issueNumber": 3,
     "lineNumber": 16,
-    "issueType": "Token",
-    "description": "Bearer token in char array"
+    "issueType": "API Key",
+    "secretValue": "api-key-xyz-789-abc"
   },
   {
     "filePath": "example.java",
+    "issueNumber": 4,
     "lineNumber": 18,
-    "issueType": "Encoded Secret",
-    "description": "Base64 encoded secret: cGFzc3dvcmQtb2JmdXNjYXRlZC1ieS1iNjQ="
-  },
-  {
-    "filePath": "example.java",
-    "lineNumber": 20,
-    "issueType": "Private Key",
-    "description": "RSA private key in PEM format"
-  },
-  {
-    "filePath": "example.java",
-    "lineNumber": 31,
-    "issueType": "Database Credential",
-    "description": "MySQL connection string with password: HardPass_in_URL"
-  },
-  {
-    "filePath": "example.java",
-    "lineNumber": 33,
-    "issueType": "Password",
-    "description": "Temporary debug password in comment: temp_debug_password"
-  },
-  {
-    "filePath": "example.java",
-    "lineNumber": 39,
-    "issueType": "Session Key",
-    "description": "Session key in comment: session_key_445566_commented"
-  },
-  {
-    "filePath": "example.java",
-    "lineNumber": 45,
-    "issueType": "API Token",
-    "description": "Deprecated API token in annotation: deprecated_token_in_annotation"
-  },
-  {
-    "filePath": "example.java",
-    "lineNumber": 53,
     "issueType": "Token",
-    "description": "Auth token in map value: auth_token_from_map_value"
+    "secretValue": "token-from-char-array"
   },
   {
     "filePath": "example.java",
-    "lineNumber": 65,
+    "issueNumber": 5,
+    "lineNumber": 20,
+    "issueType": "Encoded Secret",
+    "secretValue": "cGFzc3dvcmQtb2JmdXNjYXRlZC1ieS1iNjQ="
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 6,
+    "lineNumber": 22,
+    "issueType": "Private Key",
+    "secretValue": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0r1iBFc3w4V5s5z9Y9f1b9n2b8p7j6e8aG5hZmUvZG9jdW1l\nbnRzL2RldmVsb3BtZW50L3NlY3JldC1zY2FubmVyLXRlc3RpbmcvcHJpdmF0ZS1r\nZXkucGVtMB4XDTE4MDIyODIyNDQzM1oXDTE5MDIyODIyNDQzM1owgYExCzAJBgNV\nBAYTAlBMMRAwDgYDVQQIDAdNYXpvdmlhMRAwDgYDVQQHDAdXYXJzYXcxGDAWBgNV\nBAoMD1NlY3JldCBTdG9yYWdlMRcwFQYDVQQLDA5EZXZlbG9wbWVudCBDYTEcMBoG\nA1UEAwwTdGVzdC5zZWNyZXQuZXhhbXBsZS5jb20wggEiMA0GCSqGSIb3DQEBAQUA\nA4IBDwAwggEKAoIBAQC9s5J2Vq0/rV+wGqFj8GfW8K4M5J8Y3p0Yf+B6Z5G9fV+d\n-----END RSA PRIVATE KEY-----"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 7,
+    "lineNumber": 32,
+    "issueType": "Credential",
+    "secretValue": "HardPass_in_URL"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 8,
+    "lineNumber": 35,
+    "issueType": "Token",
+    "secretValue": "session_key_445566_commented"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 9,
+    "lineNumber": 38,
+    "issueType": "API Key",
+    "secretValue": "deprecated_token_in_annotation"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 10,
+    "lineNumber": 45,
+    "issueType": "Token",
+    "secretValue": "auth_token_from_map_value"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 11,
+    "lineNumber": 50,
     "issueType": "Password",
-    "description": "Complex password with special characters: P@$$w0rd_With_!#$&*()[]{}<>`~"
+    "secretValue": "P@$$w0rd_With_!#$&*()[]{}<>`~"
   },
   {
     "filePath": "example.java",
-    "lineNumber": 67,
-    "issueType": "Encoded Data",
-    "description": "Base64 encoded token: dG9rZW4tbm9uLW9idmlvdXMtbmFtZQ=="
+    "issueNumber": 12,
+    "lineNumber": 52,
+    "issueType": "Encoded Secret",
+    "secretValue": "dG9rZW4tbm9uLW9idmlvdXMtbmFtZQ=="
   },
   {
     "filePath": "example.java",
-    "lineNumber": 72,
-    "issueType": "Secret",
-    "description": "Secret from static block: secret_from_static_block_112233"
+    "issueNumber": 13,
+    "lineNumber": 57,
+    "issueType": "Token",
+    "secretValue": "secret_from_static_block_112233"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 14,
+    "lineNumber": 61,
+    "issueType": "Token",
+    "secretValue": "default_constructor_secret_999"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 15,
+    "lineNumber": 65,
+    "issueType": "Token",
+    "secretValue": "method_param_secret_2024"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 16,
+    "lineNumber": 68,
+    "issueType": "API Key",
+    "secretValue": "lambda_secret_key_xyz"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 17,
+    "lineNumber": 70,
+    "issueType": "Certificate",
+    "secretValue": "-----BEGIN CERTIFICATE-----"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 18,
+    "lineNumber": 78,
+    "issueType": "Password",
+    "secretValue": "record_password_567"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 19,
+    "lineNumber": 82,
+    "issueType": "API Key",
+    "secretValue": "dev_api_key_111"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 20,
+    "lineNumber": 83,
+    "issueType": "API Key",
+    "secretValue": "staging_api_key_222"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 21,
+    "lineNumber": 84,
+    "issueType": "API Key",
+    "secretValue": "prod_api_key_333"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 22,
+    "lineNumber": 94,
+    "issueType": "Token",
+    "secretValue": "inner_class_token_444"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 23,
+    "lineNumber": 98,
+    "issueType": "Credential",
+    "secretValue": "system_property_secret_555"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 24,
+    "lineNumber": 102,
+    "issueType": "Token",
+    "secretValue": "try_with_resources_token_666"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 25,
+    "lineNumber": 104,
+    "issueType": "API Key",
+    "secretValue": "assert_secret_key_777"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 26,
+    "lineNumber": 110,
+    "issueType": "Credential",
+    "secretValue": "switch_dev_secret_888"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 27,
+    "lineNumber": 111,
+    "issueType": "Credential",
+    "secretValue": "switch_prod_secret_999"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 28,
+    "lineNumber": 112,
+    "issueType": "Credential",
+    "secretValue": "switch_default_secret_000"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 29,
+    "lineNumber": 116,
+    "issueType": "Token",
+    "secretValue": "annotation_secret_token_aaa"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 30,
+    "lineNumber": 121,
+    "issueType": "Credential",
+    "secretValue": "builder_default_secret_bbb"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 31,
+    "lineNumber": 125,
+    "issueType": "Token",
+    "secretValue": "_hashed_with_value_ccc"
+  },
+  {
+    "filePath": "example.java",
+    "issueNumber": 32,
+    "lineNumber": 127,
+    "issueType": "Token",
+    "secretValue": "reflection_accessed_secret_ddd"
   }
 ]

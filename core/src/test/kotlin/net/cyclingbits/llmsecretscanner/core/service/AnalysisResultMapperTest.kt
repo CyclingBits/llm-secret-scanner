@@ -12,9 +12,10 @@ class AnalysisResultMapperTest {
         val json = """[
             {
                 "filePath": "/path/to/file.java",
+                "issueNumber": 1,
                 "lineNumber": 42,
                 "issueType": "Password",
-                "description": "Hardcoded password found"
+                "secretValue": "hardcoded123"
             }
         ]"""
         
@@ -24,16 +25,17 @@ class AnalysisResultMapperTest {
         assertEquals("/path/to/file.java", result[0].filePath)
         assertEquals(42, result[0].lineNumber)
         assertEquals("Password", result[0].issueType)
-        assertEquals("Hardcoded password found", result[0].description)
+        assertEquals("hardcoded123", result[0].secretValue)
     }
 
     @Test
     fun parseAnalysisResult_singleObject_returnsWrappedIssue() {
         val json = """[{
             "filePath": "/path/to/file.kt",
+            "issueNumber": 1,
             "lineNumber": 15,
             "issueType": "API Key",
-            "description": "API key detected"
+            "secretValue": "sk_test_123"
         }]"""
         
         val result = AnalysisResultMapper.parseAnalysisResult(json)
@@ -49,9 +51,10 @@ class AnalysisResultMapperTest {
         [
             {
                 "filePath": "/test.java",
+                "issueNumber": 1,
                 "lineNumber": 1,
                 "issueType": "Token",
-                "description": "Token found"
+                "secretValue": "abc123token"
             }
         ]
         ```"""
@@ -66,9 +69,10 @@ class AnalysisResultMapperTest {
     fun parseAnalysisResult_standardFields_mapsCorrectly() {
         val json = """[{
             "filePath": "/alt/path.java",
+            "issueNumber": 1,
             "lineNumber": 99,
-            "issueType": "Secret", 
-            "description": "Secret value detected"
+            "issueType": "Token", 
+            "secretValue": "secret123value"
         }]"""
         
         val result = AnalysisResultMapper.parseAnalysisResult(json)
@@ -76,8 +80,8 @@ class AnalysisResultMapperTest {
         assertEquals(1, result.size)
         assertEquals("/alt/path.java", result[0].filePath)
         assertEquals(99, result[0].lineNumber)
-        assertEquals("Secret", result[0].issueType)
-        assertEquals("Secret value detected", result[0].description)
+        assertEquals("Token", result[0].issueType)
+        assertEquals("secret123value", result[0].secretValue)
     }
 
     @Test
@@ -103,15 +107,17 @@ class AnalysisResultMapperTest {
         val json = """[
             {
                 "filePath": "/file1.java",
+                "issueNumber": 1,
                 "lineNumber": 10,
                 "issueType": "Password",
-                "description": "First issue"
+                "secretValue": "pass123"
             },
             {
                 "filePath": "/file2.java", 
+                "issueNumber": 2,
                 "lineNumber": 20,
                 "issueType": "API Key",
-                "description": "Second issue"
+                "secretValue": "api_key_456"
             }
         ]"""
         

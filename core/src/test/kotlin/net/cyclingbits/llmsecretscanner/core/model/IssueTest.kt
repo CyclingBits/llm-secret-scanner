@@ -9,15 +9,17 @@ class IssueTest {
     fun create_withAllFields_succeeds() {
         val issue = Issue(
             filePath = "/path/to/file.java",
+            issueNumber = 1,
             lineNumber = 42,
             issueType = "Password",
-            description = "Hardcoded password found"
+            secretValue = "mySecretPassword123"
         )
         
         assertEquals("/path/to/file.java", issue.filePath)
+        assertEquals(1, issue.issueNumber)
         assertEquals(42, issue.lineNumber)
         assertEquals("Password", issue.issueType)
-        assertEquals("Hardcoded password found", issue.description)
+        assertEquals("mySecretPassword123", issue.secretValue)
     }
 
     @Test
@@ -25,9 +27,10 @@ class IssueTest {
         val issue = Issue()
         
         assertEquals("", issue.filePath)
+        assertEquals(null, issue.issueNumber)
         assertEquals(0, issue.lineNumber)
         assertEquals("Unknown", issue.issueType)
-        assertEquals("No description provided", issue.description)
+        assertEquals(null, issue.secretValue)
     }
 
     @Test
@@ -38,8 +41,9 @@ class IssueTest {
         )
         
         assertEquals("/test.kt", issue.filePath)
+        assertEquals(null, issue.issueNumber)
         assertEquals(0, issue.lineNumber)
         assertEquals("API Key", issue.issueType)
-        assertEquals("No description provided", issue.description)
+        assertEquals(null, issue.secretValue)
     }
 }

@@ -9,12 +9,15 @@ data class ScannerConfiguration(
     val excludes: String = "**/target/**",
     val modelName: String = "ai/phi4:latest",
     val timeout: Int = 1, // connection timeout in seconds
-    val fileAnalysisTimeout: Int = 60,
-    val maxTokens: Int = 10_000,
+    val chunkAnalysisTimeout: Int = 60,
+    val maxTokens: Int = 16_000,
     val temperature: Double = 0.0,
     val dockerImage: String = "alpine/socat:1.7.4.3-r0",
     val maxFileSizeBytes: Int = 100 * 1024, // 100KB
-    val systemPrompt: String? = null
+    val systemPrompt: String? = null,
+    val enableChunking: Boolean = true,
+    val maxLinesPerChunk: Int = 40,
+    val chunkOverlapLines: Int = 5
 ) {
     init {
         require(sourceDirectory.exists()) {
@@ -44,11 +47,11 @@ data class ScannerConfiguration(
         require(timeout <= 30) {
             "Connection timeout too large (max 30s): $timeout"
         }
-        require(fileAnalysisTimeout > 0) {
-            "File analysis timeout must be positive: $fileAnalysisTimeout"
+        require(chunkAnalysisTimeout > 0) {
+            "Chunk analysis timeout must be positive: $chunkAnalysisTimeout"
         }
-        require(fileAnalysisTimeout <= 600) {
-            "File analysis timeout too large (max 10 minutes): $fileAnalysisTimeout"
+        require(chunkAnalysisTimeout <= 3600) {
+            "Chunk analysis timeout too large (max 60 minutes): $chunkAnalysisTimeout"
         }
         require(maxTokens > 0) {
             "Max tokens must be positive: $maxTokens"
@@ -67,6 +70,18 @@ data class ScannerConfiguration(
         }
         require(maxFileSizeBytes <= 10 * 1024 * 1024) {
             "Max file size too large (max 10MB): $maxFileSizeBytes"
+        }
+        require(maxLinesPerChunk > 0) {
+            "Max lines per chunk must be positive: $maxLinesPerChunk"
+        }
+        require(maxLinesPerChunk <= 1000) {
+            "Max lines per chunk too large (max 1000): $maxLinesPerChunk"
+        }
+        require(chunkOverlapLines >= 0) {
+            "Chunk overlap lines must be non-negative: $chunkOverlapLines"
+        }
+        require(chunkOverlapLines < maxLinesPerChunk) {
+            "Chunk overlap lines must be less than max lines per chunk: $chunkOverlapLines >= $maxLinesPerChunk"
         }
         ScanReporter.reportScanStart(this)
     }

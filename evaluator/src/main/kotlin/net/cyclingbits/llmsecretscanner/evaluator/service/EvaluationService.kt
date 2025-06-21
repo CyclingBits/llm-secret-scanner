@@ -9,16 +9,16 @@ import java.io.File
 
 object EvaluationService {
 
-    fun evaluateModels(models: List<String>, includes: String, fileAnalysisTimeout: Int): List<EvaluationResult> {
+    fun evaluateModels(models: List<String>, includes: String, chunkAnalysisTimeout: Int): List<EvaluationResult> {
         return models.map { model -> 
-            val result = evaluateModel(model, includes, fileAnalysisTimeout)
+            val result = evaluateModel(model, includes, chunkAnalysisTimeout)
             ResultsSaver.saveResultsToMarkdown(listOf(result))
             result
         }
     }
 
-    private fun evaluateModel(modelName: String, includes: String, fileAnalysisTimeout: Int): EvaluationResult {
-        val config = createConfiguration(modelName, includes, fileAnalysisTimeout)
+    private fun evaluateModel(modelName: String, includes: String, chunkAnalysisTimeout: Int): EvaluationResult {
+        val config = createConfiguration(modelName, includes, chunkAnalysisTimeout)
         val fileScanner = FileScanner(config).findFiles()
 
         val startTime = System.currentTimeMillis()
@@ -42,10 +42,10 @@ object EvaluationService {
         )
     }
 
-    private fun createConfiguration(modelName: String, includes: String, fileAnalysisTimeout: Int) = ScannerConfiguration(
+    private fun createConfiguration(modelName: String, includes: String, chunkAnalysisTimeout: Int) = ScannerConfiguration(
         sourceDirectory = File(EvaluatorConfiguration.FIXTURES_DIR),
         includes = includes,
         modelName = modelName,
-        fileAnalysisTimeout = fileAnalysisTimeout
+        chunkAnalysisTimeout = chunkAnalysisTimeout,
     )
 }

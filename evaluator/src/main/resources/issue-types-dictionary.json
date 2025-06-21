@@ -1,0 +1,32 @@
+{
+  "issueTypes": [
+    {
+      "type": "API Key",
+      "description": "API keys, tokens, and authentication keys for external services"
+    },
+    {
+      "type": "Password",
+      "description": "Passwords and passphrases for user accounts"
+    },
+    {
+      "type": "Private Key",
+      "description": "Cryptographic private keys in PEM or other formats"
+    },
+    {
+      "type": "Certificate",
+      "description": "Digital certificates and certificate data"
+    },
+    {
+      "type": "Token",
+      "description": "Session tokens, JWT tokens, and temporary access tokens"
+    },
+    {
+      "type": "Credential",
+      "description": "Database credentials, cloud service credentials, and SMTP credentials"
+    },
+    {
+      "type": "Encoded Secret",
+      "description": "Base64 encoded secrets and encrypted data"
+    }
+  ]
+}

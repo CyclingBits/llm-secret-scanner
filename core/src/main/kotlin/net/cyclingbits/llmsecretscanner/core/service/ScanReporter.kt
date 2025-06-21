@@ -15,7 +15,7 @@ object ScanReporter {
         logger.info("{} {}", LogColors.SCANNER_ICON, LogColors.boldCyan("Starting LLM Secret Scanner with configuration:"))
         logger.info("       {} Source directory: {}", LogColors.FILE_ICON, LogColors.blue(config.sourceDirectory.absolutePath))
         logger.info("       {} Model: {}", LogColors.DOCKER_ICON, LogColors.green(config.modelName))
-        logger.info("       ⏱️ File analysis timeout: {}s", LogColors.yellow(config.fileAnalysisTimeout.toString()))
+        logger.info("       ⏱️ Chunk analysis timeout: {}s", LogColors.yellow(config.chunkAnalysisTimeout.toString()))
         logger.info("       ✅ Include patterns: {}", LogColors.cyan(config.includes))
         logger.info("       ❌ Exclude patterns: {}", LogColors.yellow(config.excludes))
         logger.info("")
@@ -49,6 +49,27 @@ object ScanReporter {
 
     fun reportError(message: String, exception: Throwable) {
         logger.error("{} {}", LogColors.ERROR_ICON, LogColors.boldRed(message), exception)
+    }
+
+    fun reportWarning(message: String) {
+        logger.warn("       ⚠️ {}", LogColors.yellow(message))
+    }
+
+    fun reportChunk(chunkCount: Int, maxLinesPerChunk: Int, overlapLines: Int) {
+        logger.info("       📄 Chunking file into {} chunks ({} lines per chunk, {} overlap)", 
+            LogColors.boldYellow(chunkCount.toString()),
+            LogColors.cyan(maxLinesPerChunk.toString()),
+            LogColors.cyan(overlapLines.toString())
+        )
+    }
+
+    fun reportChunkAnalysis(chunkIndex: Int, totalChunks: Int, startLine: Int, endLine: Int) {
+        logger.info("       🔍 Analyzing chunk [{}/{}] (lines {}-{})", 
+            LogColors.cyan(chunkIndex.toString()),
+            LogColors.cyan(totalChunks.toString()),
+            LogColors.blue(startLine.toString()),
+            LogColors.blue(endLine.toString())
+        )
     }
 
     fun reportContainerStart() {
@@ -104,8 +125,54 @@ object ScanReporter {
                 LogColors.yellow((index + 1).toString()),
                 LogColors.blue(issue.lineNumber.toString()),
                 issueColor,
-                issue.description
+                (issue.secretValue ?: "No secret value").let { if (it.length > 25) it.take(25) + "..." else it }
             )
         }
+    }
+
+    fun reportCorrectDetection(issue: Issue) {
+        logger.info("{} Correct at line {} - {}", 
+            LogColors.SUCCESS_ICON, 
+            LogColors.blue(issue.lineNumber.toString()), 
+            issue.secretValue?.take(25) ?: "No value"
+        )
+    }
+
+    fun reportIncorrectDetection(issue: Issue) {
+        logger.info("{} Incorrect at line {} - {}", 
+            LogColors.ERROR_ICON, 
+            LogColors.blue(issue.lineNumber.toString()), 
+            issue.secretValue?.take(25) ?: "No value"
+        )
+    }
+
+    fun reportMissedSecret(issue: Issue) {
+        logger.info("{} Missed at line {} - {}", 
+            LogColors.ERROR_ICON, 
+            LogColors.blue(issue.lineNumber.toString()), 
+            issue.secretValue?.take(25) ?: "No value"
+        )
+    }
+
+    fun reportEvaluationStart(message: String) {
+        logger.info("")
+        logger.info("{} {}", LogColors.SCANNER_ICON, LogColors.boldCyan(message))
+    }
+
+    fun reportEvaluationComplete(message: String) {
+        logger.info("{} {}", LogColors.SUCCESS_ICON, LogColors.boldGreen(message))
+    }
+
+    fun reportFileSaved(filePath: String) {
+        logger.info("{} Results saved to {}", "💾", LogColors.blue(filePath))
+    }
+
+    fun reportDetectionResults(correctCount: Int, incorrectCount: Int, missedCount: Int) {
+        logger.info("")
+        logger.info("📊 Detection results: {} correct, {} incorrect, {} missed",
+            LogColors.boldGreen(correctCount.toString()), 
+            LogColors.boldRed(incorrectCount.toString()),
+            LogColors.boldYellow(missedCount.toString())
+        )
     }
 }

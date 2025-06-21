@@ -1,5 +1,6 @@
 package net.cyclingbits.llmsecretscanner.evaluator.service
 
+import net.cyclingbits.llmsecretscanner.core.service.ScanReporter
 import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration
 import net.cyclingbits.llmsecretscanner.evaluator.model.EvaluationResult
 import java.io.File
@@ -36,7 +37,7 @@ object ResultsSaver {
             outputFile.writeText(markdown)
         }
 
-        println("💾 Results saved to ${outputFile.absolutePath}")
+        ScanReporter.reportFileSaved(outputFile.absolutePath)
     }
 
     private fun formatTime(timeInMs: Long): String {

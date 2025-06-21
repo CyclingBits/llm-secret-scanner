@@ -28,7 +28,7 @@ class CodeAnalyzerTest {
         config = ScannerConfiguration(
             sourceDirectory = testDir,
             modelName = "ai/phi4:latest",
-            fileAnalysisTimeout = 60,
+            chunkAnalysisTimeout = 60,
             maxFileSizeBytes = 10_000
         )
         

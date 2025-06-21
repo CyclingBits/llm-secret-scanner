@@ -29,11 +29,11 @@ class LLMSecretScanner : AbstractMojo() {
     @Parameter(property = "scan.modelName", defaultValue = "ai/phi4:latest")
     private lateinit var modelName: String
 
-    @Parameter(property = "scan.fileAnalysisTimeout", defaultValue = "60")
-    private var fileAnalysisTimeout: Int = 60
+    @Parameter(property = "scan.chunkAnalysisTimeout", defaultValue = "60")
+    private var chunkAnalysisTimeout: Int = 60
 
-    @Parameter(property = "scan.maxTokens", defaultValue = "10000")
-    private var maxTokens: Int = 10_000
+    @Parameter(property = "scan.maxTokens", defaultValue = "16000")
+    private var maxTokens: Int = 16_000
 
     @Parameter(property = "scan.temperature", defaultValue = "0.0")
     private var temperature: Double = 0.0
@@ -50,6 +50,15 @@ class LLMSecretScanner : AbstractMojo() {
     @Parameter(property = "scan.failOnError", defaultValue = "false")
     private var failOnError: Boolean = false
 
+    @Parameter(property = "scan.enableChunking", defaultValue = "true")
+    private var enableChunking: Boolean = true
+
+    @Parameter(property = "scan.maxLinesPerChunk", defaultValue = "40")
+    private var maxLinesPerChunk: Int = 40
+
+    @Parameter(property = "scan.chunkOverlapLines", defaultValue = "5")
+    private var chunkOverlapLines: Int = 5
+
     override fun execute() {
         configureLogging()
         try {
@@ -58,12 +67,15 @@ class LLMSecretScanner : AbstractMojo() {
                 includes = includes,
                 excludes = excludes,
                 modelName = modelName,
-                fileAnalysisTimeout = fileAnalysisTimeout,
+                chunkAnalysisTimeout = chunkAnalysisTimeout,
                 maxTokens = maxTokens,
                 temperature = temperature,
                 dockerImage = dockerImage,
                 maxFileSizeBytes = maxFileSizeBytes,
-                systemPrompt = systemPrompt
+                systemPrompt = systemPrompt,
+                enableChunking = enableChunking,
+                maxLinesPerChunk = maxLinesPerChunk,
+                chunkOverlapLines = chunkOverlapLines
             )
 
             val fileScanner = FileScanner(config).findFiles()

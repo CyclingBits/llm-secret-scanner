@@ -6,12 +6,15 @@ data class Issue(
     @JsonProperty("filePath")
     val filePath: String = "",
 
+    @JsonProperty("issueNumber")
+    val issueNumber: Int? = null,
+
     @JsonProperty("lineNumber")
     val lineNumber: Int = 0,
 
     @JsonProperty("issueType")
     val issueType: String = "Unknown",
 
-    @JsonProperty("description")
-    val description: String = "No description provided"
+    @JsonProperty("secretValue")
+    val secretValue: String? = null
 )

@@ -48,9 +48,10 @@ class ScanReporterTest {
         val issues = listOf(
             Issue(
                 filePath = testFile.absolutePath,
+                issueNumber = 1,
                 lineNumber = 1,
                 issueType = "Password",
-                description = "Test issue"
+                secretValue = "test123"
             )
         )
         ScanReporter.reportFileIssues(testFile, issues, 1500, 1, 5, tempDir)

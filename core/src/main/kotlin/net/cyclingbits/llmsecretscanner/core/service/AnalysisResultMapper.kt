@@ -22,9 +22,16 @@ object AnalysisResultMapper {
                 cleanedJson,
                 object : TypeReference<List<Issue>>() {}
             )
-            return issues
+            return validateSecretValues(issues)
         } catch (e: Exception) {
+            ScanReporter.reportError("Error parsing JSON response", e)
             throw JsonParserException("Error parsing JSON response", e)
+        }
+    }
+
+    fun adjustLineNumbers(issues: List<Issue>, lineOffset: Int): List<Issue> {
+        return issues.map { issue ->
+            issue.copy(lineNumber = issue.lineNumber + lineOffset)
         }
     }
 
@@ -34,9 +41,33 @@ object AnalysisResultMapper {
 
         return if (jsonStart != -1 && jsonEnd != -1 && jsonEnd > jsonStart) {
             val extracted = response.substring(jsonStart, jsonEnd + 1)
-            extracted
+            fixMalformedJson(extracted)
         } else {
             response
+        }
+    }
+    
+    private fun fixMalformedJson(json: String): String {
+        val pattern = Regex(""""([^"]*?)"\s*\+\s*\n\s*"([^"]*?)"""")
+        var result = json
+        while (pattern.containsMatchIn(result)) {
+            result = result.replace(pattern) { "\"${it.groupValues[1]}${it.groupValues[2]}\"" }
+        }
+        if (result != json) {
+            ScanReporter.reportWarning("Fixed malformed JSON")
+        }
+        return result
+    }
+    
+    private fun validateSecretValues(issues: List<Issue>): List<Issue> {
+        return issues.filter { issue ->
+            val secretValue = issue.secretValue
+            if (secretValue.isNullOrBlank() || secretValue.length < 3) {
+                ScanReporter.reportWarning("Discarded issue with empty or too short secret value at line ${issue.lineNumber}")
+                false
+            } else {
+                true
+            }
         }
     }
 }

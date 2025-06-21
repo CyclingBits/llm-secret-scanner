@@ -166,10 +166,13 @@ For more control, you can customize the plugin configuration:
         <modelName>ai/phi4:latest</modelName>
         <systemPrompt>Find API keys and secrets in the provided code</systemPrompt>
         <failOnError>false</failOnError>
-        <fileAnalysisTimeout>60</fileAnalysisTimeout>
+        <chunkAnalysisTimeout>60</chunkAnalysisTimeout>
         <maxTokens>10000</maxTokens>
         <temperature>0.0</temperature>
         <maxFileSizeBytes>102400</maxFileSizeBytes>
+        <enableChunking>true</enableChunking>
+        <maxLinesPerChunk>40</maxLinesPerChunk>
+        <chunkOverlapLines>5</chunkOverlapLines>
     </configuration>
     <executions>
         <execution>
@@ -192,10 +195,13 @@ For more control, you can customize the plugin configuration:
 | `modelName` | `ai/phi4:latest` | LLM model to use |
 | `systemPrompt` | _null_ | Custom system prompt (optional) |
 | `failOnError` | `false` | Fail build when issues found |
-| `fileAnalysisTimeout` | `60` | File analysis timeout (seconds) |
+| `chunkAnalysisTimeout` | `60` | Chunk analysis timeout (seconds) |
 | `maxTokens` | `10000` | Maximum tokens per request |
 | `temperature` | `0.0` | LLM temperature (0.0-2.0) |
 | `maxFileSizeBytes` | `102400` | Maximum file size (100KB) |
+| `enableChunking` | `true` | Enable file chunking for large files |
+| `maxLinesPerChunk` | `40` | Maximum lines per chunk |
+| `chunkOverlapLines` | `5` | Lines overlap between chunks |
 
 ## 📊 Sample Output
 
@@ -203,7 +209,7 @@ For more control, you can customize the plugin configuration:
 🔍 Starting LLM Secret Scanner with configuration:
        📄 Source directory: /fixtures
        🐳 Model: ai/llama3.2:latest
-       ⏱️ File analysis timeout: 60s
+       ⏱️ Chunk analysis timeout: 60s
        ✅ Include patterns: **/*.java
        ❌ Exclude patterns: **/target/**
 

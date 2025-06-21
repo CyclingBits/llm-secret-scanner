@@ -48,7 +48,7 @@ class ScannerIntegrationTest {
             sourceDirectory = testDir,
             modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
-            fileAnalysisTimeout = 120
+            chunkAnalysisTimeout = 120
         )
 
         val fileScanner = FileScanner(config)
@@ -71,7 +71,7 @@ class ScannerIntegrationTest {
             modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
             systemPrompt = customPrompt,
-            fileAnalysisTimeout = 120
+            chunkAnalysisTimeout = 120
         )
 
         val fileScanner = FileScanner(config)
@@ -90,7 +90,7 @@ class ScannerIntegrationTest {
             sourceDirectory = testDir,
             modelName = "ai/llama3.2:latest",
             includes = "**/*.xyz",
-            fileAnalysisTimeout = 120
+            chunkAnalysisTimeout = 120
         )
 
         val fileScanner = FileScanner(config)
@@ -114,7 +114,7 @@ class ScannerIntegrationTest {
             modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
             maxFileSizeBytes = 1000,
-            fileAnalysisTimeout = 120
+            chunkAnalysisTimeout = 120
         )
 
         val fileScanner = FileScanner(config)
@@ -139,7 +139,7 @@ class ScannerIntegrationTest {
             sourceDirectory = testDir,
             modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
-            fileAnalysisTimeout = 120
+            chunkAnalysisTimeout = 120
         )
 
         val fileScanner = FileScanner(config)
