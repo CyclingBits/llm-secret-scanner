@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-06-22
+
+### Added
+- **File Chunking System** - Advanced chunking for large files with 40-line chunks and 5-line overlap preservation
+- **False Positive Rate Tracking** - New metric showing percentage of clean code incorrectly flagged as vulnerable
+- **Multi-Directory Support** - Changed `sourceDirectory` to `sourceDirectories` list for scanning multiple directories
+- **Issue Deduplication** - Sophisticated deduplication system for chunk-based analysis preventing duplicate issues
+- **Enhanced Evaluation Metrics** - Added `DetectionMetrics` and `DetectionResults` models for comprehensive performance tracking
+- **Negative Test Cases** - Comprehensive 238-line Java file with false positive test scenarios
+- **Package Reorganization** - Moved classes to domain-specific packages: `files/`, `llm/`, `service/`, `util/`
+- **New Service Components** - Added `PromptGenerator`, `IssueDeduplicator`, `ScannerDefaults` for better code organization
+
+### Changed
+- **Detection Rate Calculation** - Fixed calculation to prevent values >100% by tracking unique matched expected issues
+- **False Positive Rate Logic** - Returns 100% when files cannot be analyzed (timeout/error scenarios)
+- **Code Structure** - Refactored `CodeAnalyzer` following Single Responsibility Principle
+- **Class Naming** - Renamed `FileScanner` to `FileFinder`, `AnalysisResultMapper` to `IssueParser`
+- **Configuration Management** - Extracted constants to `ScannerDefaults` object for better maintainability
+- **Evaluation Directory Structure** - Reorganized to `test-cases/positive/` and `test-cases/negative/`
+- **Model Performance** - Updated with latest evaluation results showing significant improvements:
+  - `ai/phi4:latest` now achieves 93.8% detection rate (up from 76.7%)
+  - Added zero false positive models: `ai/deepcoder-preview:latest`, `ai/mistral-nemo:latest`
+
+### Fixed
+- **Duplicate Scanner Icons** - Removed duplicate 🔍 emoji from evaluation output
+- **Expected Files Exclusion** - Added `**/expected/**` pattern to exclude JSON expected results from scanning
+- **Detection Rate Accuracy** - Fixed double-counting of issues in chunk-based analysis
+
 ## [1.1.0] - 2025-06-20
 
 ### Added
@@ -121,5 +149,6 @@ This is the first stable release of LLM Secret Scanner - an AI-powered security 
 
 For detailed usage instructions, see the [README.md](README.md) file.
 
+[1.2.0]: https://github.com/CyclingBits/llm-secret-scanner/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/CyclingBits/llm-secret-scanner/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/CyclingBits/llm-secret-scanner/releases/tag/v1.0.0

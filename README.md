@@ -3,7 +3,7 @@
 > AI-powered security scanner that detects secrets, API keys, and sensitive data in source code using local Large Language Models.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Changelog](https://img.shields.io/badge/changelog-v1.1.0-blue.svg)](CHANGELOG.md)
+[![Changelog](https://img.shields.io/badge/changelog-v1.2.0-blue.svg)](CHANGELOG.md)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/cyclingbits/llm-secret-scanner)
 [![Test Coverage](https://img.shields.io/badge/coverage-80%25-green.svg)](https://github.com/cyclingbits/llm-secret-scanner)
 [![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://openjdk.java.net/)
@@ -16,10 +16,12 @@
 - 🔒 **Privacy-First** - All analysis happens locally, no data leaves your machine
 - 🎯 **Smart Detection** - Identifies API keys, passwords, certificates, database credentials, and more
 - 🧠 **Adaptability** - Can detect unusual secret patterns that would escape traditional regex-based scanners
+- 📄 **File Chunking** - Advanced chunking system for analyzing large files with overlapping context preservation
 - 🚀 **Maven Integration** - Seamlessly integrates with your build pipeline
 - ⚙️ **Highly Configurable** - Flexible file patterns, model selection, and timeout settings
 - 🐳 **Containerized** - Automatic Docker container lifecycle management
 - 🎨 **Beautiful Output** - Colorful, structured logging with emojis and clear issue reporting
+- 🔍 **False Positive Reduction** - Enhanced accuracy with sophisticated issue deduplication
 
 ## 📋 Requirements
 
@@ -62,9 +64,9 @@ You'll also need to authenticate with GitHub Packages. Add to your `~/.m2/settin
 #### Option B: Download from GitHub Releases (Recommended)
 ```bash
 # Download the latest release JARs
-wget https://github.com/cyclingbits/llm-secret-scanner/releases/latest/download/llm-secret-scanner-maven-plugin-1.1.0.jar
+wget https://github.com/cyclingbits/llm-secret-scanner/releases/latest/download/llm-secret-scanner-maven-plugin-1.2.0.jar
 # Install to local Maven repository
-mvn install:install-file -Dfile=llm-secret-scanner-maven-plugin-1.1.0.jar -DgroupId=net.cyclingbits -DartifactId=llm-secret-scanner-maven-plugin -Dversion=1.1.0 -Dpackaging=jar
+mvn install:install-file -Dfile=llm-secret-scanner-maven-plugin-1.2.0.jar -DgroupId=net.cyclingbits -DartifactId=llm-secret-scanner-maven-plugin -Dversion=1.2.0 -Dpackaging=jar
 ```
 
 #### Option C: Build from Source
@@ -82,7 +84,7 @@ Add the plugin to your `pom.xml` (minimal configuration):
 <plugin>
     <groupId>net.cyclingbits</groupId>
     <artifactId>llm-secret-scanner-maven-plugin</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </plugin>
 ```
 
@@ -99,33 +101,29 @@ The scanner supports various LLM models via [Docker Model Runner](https://hub.do
 ### 🎯 **Recommended Models**
 
 **`ai/phi4:latest` ⭐ (Default Choice)**  
-With a 74.3% detection rate and 100% scan success, this **15B parameter** model offers the best balance of accuracy and performance. At **8.43 GB**, it provides excellent results in just 3m 50s analysis time, making it ideal for most use cases.
+With an outstanding **93.8%** detection rate, only **2.0%** false positives, and 100% scan success, this **15B parameter** model offers the best overall performance. At **8.43 GB**, it provides excellent results in just 1m 47s analysis time, making it ideal for most use cases.
 
-**`ai/llama3.2:latest` 🚀 (Fast & Lightweight)**  
-Perfect for quick scans and resource-constrained environments. This **3B parameter** model delivers 70.4% detection rate with 100% reliability in only 1m 20s. At just **1.87 GB**, it's the smallest model that maintains high accuracy and speed.
 
 ### 📊 **All Available Models**
 
-| Model | Detection Rate | Scan Success | Analysis Time | Parameters | Context Window | Size | Best For                                      |
-|-------|----------------|--------------|---------------|------------|----------------|------|-----------------------------------------------|
-| `ai/llama3.3:latest` | **82.7%** | 100% | 17m 26s | 70B | 131K tokens | 39.59 GB | Highest accuracy                              |
-| `ai/phi4:latest` ⭐ | **74.3%** | 100% | 3m 50s | 15B | 16K tokens | 8.43 GB | **Default choice**                            |
-| `ai/llama3.2:latest` | **70.4%** | 100% | 1m 20s | 3B | 131K tokens | 1.87 GB | Fast & lightweight                            |
-| `ai/deepcoder-preview:latest` | **69.3%** | 100% | 11m 15s | 14B | 131K tokens | 8.37 GB | -                                             |
-| `ai/mistral-nemo:latest` | **65.7%** | 100% | 3m 5s | 12B | 131K tokens | 6.96 GB | -                                             |
-| `ai/llama3.1:latest` | **64.8%** | 100% | 2m 1s | 8B | 131K tokens | 4.58 GB | -                                             |
-| `ai/qwq:latest` | **64.3%** | 52.9% | 88m 22s | 32B | 41K tokens | 18.48 GB | JSON generation errors and model API timeouts |
-| `ai/qwen3:latest` | **64.2%** | 76.5% | 21m 51s | 8B | 41K tokens | 4.68 GB | JSON generation errors                        |
-| `ai/qwen2.5:latest` | **60.5%** | 94.1% | 1m 49s | 7B | 33K tokens | 4.36 GB | JSON generation errors                        |
-| `ai/gemma3:latest` | **56.4%** | 100% | 1m 43s | 4B | 131K tokens | 2.31 GB | -                                             |
-| `ai/gemma3-qat:latest` | **55.3%** | 100% | 1m 41s | 3.88B | 131K tokens | 2.93 GB | -                                             |
-| `ai/deepseek-r1-distill-llama:latest` | **54.1%** | 100% | 4m 51s | 8B | 131K tokens | 4.58 GB | -                                             |
-| `ai/mistral:latest` | **52.5%** | 100% | 2m 10s | 7B | 33K tokens | 4.07 GB | -                                             |
-| `ai/smollm2:latest` | **0.0%** | 0% | 9m 44s | 360M | 8K tokens | 256.35 MB | JSON generation errors                        |
+| Model | Detection Rate | False Positive Rate | Scan Success | Analysis Time | Parameters | Context Window | Size | Best For                                      |
+|-------|----------------|---------------------|--------------|---------------|------------|----------------|------|-----------------------------------------------|
+| `ai/phi4:latest` ⭐ | **93.8%** | 2.0% | 100% | 1m 47s | 15B | 16K tokens | 8.43 GB | **Default choice - highest accuracy**                            |
+| `ai/llama3.3:latest` | **90.6%** | 2.8% | 100% | 7m 59s | 70B | 131K tokens | 39.59 GB | Maximum accuracy for critical environments                              |
+| `ai/deepcoder-preview:latest` | **84.4%** | 0.0% | 100% | 7m 19s | 14B | 131K tokens | 8.37 GB | Code-specialized with zero false positives                                             |
+| `ai/llama3.1:latest` | **75.0%** | 7.4% | 100% | 7m 19s | 8B | 131K tokens | 4.58 GB | Balanced performance                                             |
+| `ai/mistral:latest` | **71.9%** | 2.8% | 100% | 1m 27s | 7B | 33K tokens | 4.07 GB | Fast scanning                                             |
+| `ai/mistral-nemo:latest` | **68.8%** | 0.0% | 100% | 1m 11s | 12B | 131K tokens | 6.96 GB | Zero false positives                                             |
+| `ai/qwen3:latest` | **68.8%** | 0.0% | 100% | 9m 34s | 8B | 41K tokens | 4.68 GB | Zero false positives                        |
+| `ai/gemma3:latest` | **65.6%** | 14.5% | 100% | 1m 40s | 4B | 131K tokens | 2.31 GB | Fast & lightweight                                             |
+| `ai/gemma3-qat:latest` | **59.4%** | 9.9% | 100% | 1m 27s | 3.88B | 131K tokens | 2.93 GB | Fast & lightweight                                             |
+| `ai/llama3.2:latest` | **56.3%** | 100.0% | 50% | 4m 14s | 3B | 131K tokens | 1.87 GB | ⚠️ High false positive rate |
+| `ai/deepseek-r1-distill-llama:latest` | **56.3%** | 100.0% | 50% | 3m 28s | 8B | 131K tokens | 4.58 GB | ⚠️ High false positive rate                                             |
 
-> 📊 **Performance data** based on analysis of test fixtures with known vulnerabilities. All models available from [Docker Hub AI](https://hub.docker.com/u/ai).
+> 📊 **Performance data** based on analysis of test fixtures with known vulnerabilities and clean code samples. All models available from [Docker Hub AI](https://hub.docker.com/u/ai).
 > 
 > **Detection Rate** indicates the percentage of known security issues correctly identified by the model (with line number accuracy verification ±1).  
+> **False Positive Rate** indicates the percentage of clean code incorrectly flagged as containing secrets.  
 > **Scan Success** indicates the percentage of files that were successfully analyzed without errors (e.g., timeouts, JSON parsing failures).
 
 ## 📖 Usage Examples
@@ -145,9 +143,15 @@ mvn llm-secret-scanner:scan -Dscan.modelName=ai/llama3.2:latest
 mvn llm-secret-scanner:scan -Dscan.failOnError=true
 ```
 
-### Custom Source Directory
-```bash
-mvn llm-secret-scanner:scan -Dscan.sourceDirectory=./custom-src
+### Multiple Source Directories
+```xml
+<configuration>
+    <sourceDirectories>
+        <sourceDirectory>${project.basedir}/src/main</sourceDirectory>
+        <sourceDirectory>${project.basedir}/src/test</sourceDirectory>
+        <sourceDirectory>${project.basedir}/config</sourceDirectory>
+    </sourceDirectories>
+</configuration>
 ```
 
 ## ⚙️ Advanced Configuration
@@ -158,9 +162,11 @@ For more control, you can customize the plugin configuration:
 <plugin>
     <groupId>net.cyclingbits</groupId>
     <artifactId>llm-secret-scanner-maven-plugin</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <configuration>
-        <sourceDirectory>${project.basedir}/src</sourceDirectory>
+        <sourceDirectories>
+            <sourceDirectory>${project.basedir}/src</sourceDirectory>
+        </sourceDirectories>
         <includes>**/*.java,**/*.kt,**/*.properties,**/*.yml,**/*.env</includes>
         <excludes>**/target/**,**/test/**</excludes>
         <modelName>ai/phi4:latest</modelName>
@@ -189,7 +195,7 @@ For more control, you can customize the plugin configuration:
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `sourceDirectory` | `${project.basedir}` | Directory to scan |
+| `sourceDirectories` | `${project.basedir}` | List of directories to scan |
 | `includes` | `**/*.java,**/*.kt,...` | File patterns to include |
 | `excludes` | `**/target/**` | File patterns to exclude |
 | `modelName` | `ai/phi4:latest` | LLM model to use |
@@ -264,14 +270,20 @@ mvn test
 Quick evaluation (Java files only, single model):
 ```bash
 cd evaluator
-mvn exec:java -Dexec.mainClass="net.cyclingbits.llmsecretscanner.evaluator.QuickEvaluator"
+mvn exec:java -Dexec.mainClass="net.cyclingbits.llmsecretscanner.evaluator.QuickEvaluation"
 ```
 
 Full evaluation (all file types, all models):
 ```bash
 cd evaluator
-mvn exec:java -Dexec.mainClass="net.cyclingbits.llmsecretscanner.evaluator.FullEvaluator"
+mvn exec:java -Dexec.mainClass="net.cyclingbits.llmsecretscanner.evaluator.FullEvaluation"
 ```
+
+The evaluator now includes comprehensive metrics:
+- **Detection Rate**: Percentage of known vulnerabilities correctly identified
+- **False Positive Rate**: Percentage of clean code incorrectly flagged as vulnerable  
+- **Scan Success Rate**: Percentage of files successfully analyzed without errors
+- **Performance Timing**: Analysis time for each model
 
 ## 🚨 What It Detects
 
