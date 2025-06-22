@@ -1,7 +1,8 @@
-package net.cyclingbits.llmsecretscanner.core.service
+package net.cyclingbits.llmsecretscanner.core.llm
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import net.cyclingbits.llmsecretscanner.core.exception.DockerContainerException
+import net.cyclingbits.llmsecretscanner.core.util.ScanReporter
 import org.testcontainers.containers.DockerModelRunnerContainer
 
 class ContainerManager(

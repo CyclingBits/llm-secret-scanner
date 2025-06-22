@@ -1,4 +1,4 @@
-package net.cyclingbits.llmsecretscanner.core.service
+package net.cyclingbits.llmsecretscanner.core.llm
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -6,8 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import net.cyclingbits.llmsecretscanner.core.exception.JsonParserException
 import net.cyclingbits.llmsecretscanner.core.model.Issue
+import net.cyclingbits.llmsecretscanner.core.util.ScanReporter
 
-object AnalysisResultMapper {
+object IssueParser {
 
     private val objectMapper = ObjectMapper().apply {
         registerModule(KotlinModule.Builder().build())
@@ -15,7 +16,7 @@ object AnalysisResultMapper {
         configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     }
 
-    fun parseAnalysisResult(jsonResponse: String): List<Issue> {
+    fun parseIssuesFromJson(jsonResponse: String): List<Issue> {
         try {
             val cleanedJson = extractJsonFromResponse(jsonResponse)
             val issues: List<Issue> = objectMapper.readValue(
@@ -26,12 +27,6 @@ object AnalysisResultMapper {
         } catch (e: Exception) {
             ScanReporter.reportError("Error parsing JSON response", e)
             throw JsonParserException("Error parsing JSON response", e)
-        }
-    }
-
-    fun adjustLineNumbers(issues: List<Issue>, lineOffset: Int): List<Issue> {
-        return issues.map { issue ->
-            issue.copy(lineNumber = issue.lineNumber + lineOffset)
         }
     }
 
@@ -46,7 +41,7 @@ object AnalysisResultMapper {
             response
         }
     }
-    
+
     private fun fixMalformedJson(json: String): String {
         val pattern = Regex(""""([^"]*?)"\s*\+\s*\n\s*"([^"]*?)"""")
         var result = json
@@ -58,7 +53,7 @@ object AnalysisResultMapper {
         }
         return result
     }
-    
+
     private fun validateSecretValues(issues: List<Issue>): List<Issue> {
         return issues.filter { issue ->
             val secretValue = issue.secretValue

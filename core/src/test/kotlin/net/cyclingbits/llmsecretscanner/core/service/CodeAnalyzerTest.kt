@@ -2,6 +2,7 @@ package net.cyclingbits.llmsecretscanner.core.service
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import net.cyclingbits.llmsecretscanner.core.exception.AnalysisException
+import net.cyclingbits.llmsecretscanner.core.util.ScanReporter
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -26,7 +27,7 @@ class CodeAnalyzerTest {
         testDir.mkdirs()
         
         config = ScannerConfiguration(
-            sourceDirectory = testDir,
+            sourceDirectories = listOf(testDir),
             modelName = "ai/phi4:latest",
             chunkAnalysisTimeout = 60,
             maxFileSizeBytes = 10_000
@@ -112,13 +113,14 @@ class CodeAnalyzerTest {
     }
 
     @Test
-    fun analyzeFiles_withNullSystemPrompt_createsAnalyzer() {
+    fun analyzeFiles_withDefaultSystemPrompt_createsAnalyzer() {
         val file = File(testDir, "Test.java")
         file.writeText("public class Test { private String key = \"secret\"; }")
         
         val analyzer = CodeAnalyzer(config, mockContainer)
         
-        assertNull(config.systemPrompt)
+        assertNotNull(config.systemPrompt)
+        assertTrue(config.systemPrompt.isNotEmpty())
         assertNotNull(analyzer)
     }
 

@@ -53,6 +53,7 @@ Pay special attention to:
 - Common key formats (prefixes like `sk_live_`, `rk_test_`, `ghp_`, `xoxp-`, hexadecimal, Base64)
 - Keywords like "password", "secret", "key", "token", "auth" combined with hardcoded credential values
 - Connection strings: extract passwords from URLs like `jdbc:mysql://user:PASSWORD@host`
+- **MULTILINE STRINGS**: For secrets spanning multiple lines (text blocks, concatenated strings), report the line number where the string literal BEGINS
 
 **EXTRACTION EXAMPLES:**
 - From `String password = "mySecret123"` → extract `mySecret123`

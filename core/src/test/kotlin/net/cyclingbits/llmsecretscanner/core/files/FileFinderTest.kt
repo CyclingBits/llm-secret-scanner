@@ -1,12 +1,13 @@
-package net.cyclingbits.llmsecretscanner.core.service
+package net.cyclingbits.llmsecretscanner.core.files
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
+import net.cyclingbits.llmsecretscanner.core.files.FileFinder
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import java.io.File
 
-class FileScannerTest {
+class FileFinderTest {
 
     @Test
     fun findFiles_javaFiles_returnsMatching() {
@@ -15,13 +16,13 @@ class FileScannerTest {
         val kotlinFile = File(tempDir, "Test.kt").apply { writeText("class Test") }
 
         val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
+            sourceDirectories = listOf(tempDir),
             modelName = "ai/phi4:latest",
             includes = "**/*.java"
         )
-        val scanner = FileScanner(config)
+        val scanner = FileFinder(config)
         
-        val result = scanner.findFiles()
+        val result = scanner.findFiles(tempDir)
         
         assertEquals(1, result.size)
         assertEquals(javaFile.name, result[0].name)
@@ -37,14 +38,14 @@ class FileScannerTest {
         val targetFile = File(targetDir, "target.java").apply { writeText("class Target {}") }
 
         val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
+            sourceDirectories = listOf(tempDir),
             modelName = "ai/phi4:latest",
             includes = "**/*.java",
             excludes = "**/target/**"
         )
-        val scanner = FileScanner(config)
+        val scanner = FileFinder(config)
         
-        val result = scanner.findFiles()
+        val result = scanner.findFiles(tempDir)
         
         assertEquals(1, result.size)
         assertEquals(srcFile.name, result[0].name)
@@ -60,13 +61,13 @@ class FileScannerTest {
         val txtFile = File(tempDir, "readme.txt").apply { writeText("readme") }
 
         val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
+            sourceDirectories = listOf(tempDir),
             modelName = "ai/phi4:latest",
             includes = "**/*.java,**/*.kt"
         )
-        val scanner = FileScanner(config)
+        val scanner = FileFinder(config)
         
-        val result = scanner.findFiles()
+        val result = scanner.findFiles(tempDir)
         
         assertEquals(2, result.size)
         assertTrue(result.any { it.name == "Test.java" })
@@ -80,12 +81,12 @@ class FileScannerTest {
         val tempDir = createTempDir()
         
         val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
+            sourceDirectories = listOf(tempDir),
             modelName = "ai/phi4:latest"
         )
-        val scanner = FileScanner(config)
+        val scanner = FileFinder(config)
         
-        val result = scanner.findFiles()
+        val result = scanner.findFiles(tempDir)
         
         assertEquals(0, result.size)
         
@@ -98,13 +99,13 @@ class FileScannerTest {
         File(tempDir, "readme.txt").apply { writeText("readme") }
         
         val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
+            sourceDirectories = listOf(tempDir),
             modelName = "ai/phi4:latest",
             includes = "**/*.java"
         )
-        val scanner = FileScanner(config)
+        val scanner = FileFinder(config)
         
-        val result = scanner.findFiles()
+        val result = scanner.findFiles(tempDir)
         
         assertEquals(0, result.size)
         

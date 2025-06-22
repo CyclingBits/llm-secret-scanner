@@ -1,8 +1,8 @@
-package net.cyclingbits.llmsecretscanner.core.service
+package net.cyclingbits.llmsecretscanner.core.util
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
+import net.cyclingbits.llmsecretscanner.core.config.ScannerDefaults
 import net.cyclingbits.llmsecretscanner.core.model.Issue
-import net.cyclingbits.llmsecretscanner.core.util.LogColors
 import org.slf4j.LoggerFactory
 import java.io.File
 
@@ -10,15 +10,27 @@ object ScanReporter {
 
     private val logger = LoggerFactory.getLogger(ScanReporter::class.java)
 
+    private fun findBaseDirectory(file: File, sourceDirectories: List<File>): File {
+        return sourceDirectories.find { dir ->
+            file.absolutePath.startsWith(dir.absolutePath)
+        } ?: sourceDirectories.firstOrNull() ?: File(".")
+    }
+
     fun reportScanStart(config: ScannerConfiguration) {
         logger.info("")
         logger.info("{} {}", LogColors.SCANNER_ICON, LogColors.boldCyan("Starting LLM Secret Scanner with configuration:"))
-        logger.info("       {} Source directory: {}", LogColors.FILE_ICON, LogColors.blue(config.sourceDirectory.absolutePath))
+        if (config.sourceDirectories.size == 1) {
+            logger.info("       {} Source directory: {}", LogColors.FILE_ICON, LogColors.blue(config.sourceDirectories[0].absolutePath))
+        } else {
+            logger.info("       {} Source directories ({}):", LogColors.FILE_ICON, LogColors.yellow(config.sourceDirectories.size.toString()))
+            config.sourceDirectories.forEach { dir ->
+                logger.info("         - {}", LogColors.blue(dir.absolutePath))
+            }
+        }
         logger.info("       {} Model: {}", LogColors.DOCKER_ICON, LogColors.green(config.modelName))
         logger.info("       ⏱️ Chunk analysis timeout: {}s", LogColors.yellow(config.chunkAnalysisTimeout.toString()))
         logger.info("       ✅ Include patterns: {}", LogColors.cyan(config.includes))
         logger.info("       ❌ Exclude patterns: {}", LogColors.yellow(config.excludes))
-        logger.info("")
     }
 
     fun reportFilesFound(fileCount: Int) {
@@ -73,6 +85,7 @@ object ScanReporter {
     }
 
     fun reportContainerStart() {
+        logger.info("")
         logger.info("{} Starting Docker container...", LogColors.DOCKER_ICON)
     }
 
@@ -80,16 +93,21 @@ object ScanReporter {
         logger.info("{} Docker container started successfully", LogColors.SUCCESS_ICON)
     }
 
-    fun reportAnalysisStart(fileCount: Int) {
-        logger.info("{} Starting analysis of {} files", LogColors.SCANNER_ICON, LogColors.boldYellow(fileCount.toString()))
+    fun reportAnalysisStartForDirectory(directory: File, fileCount: Int) {
+        logger.info("")
+        logger.info("{} Starting analysis of {} files in {}",
+            LogColors.SCANNER_ICON, 
+            LogColors.boldYellow(fileCount.toString()),
+            LogColors.blue(directory.absolutePath)
+        )
     }
 
-    fun reportFileAnalysisStart(file: File, fileIndex: Int, totalFiles: Int, baseDir: File) {
+    fun reportFileAnalysisStart(file: File, fileIndex: Int, totalFiles: Int, sourceDirectories: List<File>) {
+        val baseDir = findBaseDirectory(file, sourceDirectories)
         logger.info("")
         val relativePath = try {
             baseDir.toPath().relativize(file.toPath()).toString()
         } catch (e: IllegalArgumentException) {
-            // Fallback if relativize fails - just use the filename
             file.name
         }
         logger.info(
@@ -100,7 +118,8 @@ object ScanReporter {
         )
     }
 
-    fun reportFileIssues(file: File, issues: List<Issue>, analysisTimeMs: Long, fileIndex: Int, totalFiles: Int, baseDir: File) {
+    fun reportFileIssues(file: File, issues: List<Issue>, analysisTimeMs: Long, fileIndex: Int, totalFiles: Int, sourceDirectories: List<File>) {
+        val baseDir = findBaseDirectory(file, sourceDirectories)
         val analysisTimeSeconds = String.format("%.1f", analysisTimeMs / 1000.0)
         logger.info(
             "       Found {} {} (analyzed in {}s)",
@@ -125,7 +144,7 @@ object ScanReporter {
                 LogColors.yellow((index + 1).toString()),
                 LogColors.blue(issue.lineNumber.toString()),
                 issueColor,
-                (issue.secretValue ?: "No secret value").let { if (it.length > 25) it.take(25) + "..." else it }
+                (issue.secretValue ?: "No secret value").let { if (it.length > ScannerDefaults.SECRET_DISPLAY_LENGTH) it.take(ScannerDefaults.SECRET_DISPLAY_LENGTH) + "..." else it }
             )
         }
     }
@@ -134,7 +153,7 @@ object ScanReporter {
         logger.info("{} Correct at line {} - {}", 
             LogColors.SUCCESS_ICON, 
             LogColors.blue(issue.lineNumber.toString()), 
-            issue.secretValue?.take(25) ?: "No value"
+            issue.secretValue?.take(ScannerDefaults.SECRET_DISPLAY_LENGTH) ?: "No value"
         )
     }
 
@@ -142,7 +161,7 @@ object ScanReporter {
         logger.info("{} Incorrect at line {} - {}", 
             LogColors.ERROR_ICON, 
             LogColors.blue(issue.lineNumber.toString()), 
-            issue.secretValue?.take(25) ?: "No value"
+            issue.secretValue?.take(ScannerDefaults.SECRET_DISPLAY_LENGTH) ?: "No value"
         )
     }
 
@@ -150,7 +169,7 @@ object ScanReporter {
         logger.info("{} Missed at line {} - {}", 
             LogColors.ERROR_ICON, 
             LogColors.blue(issue.lineNumber.toString()), 
-            issue.secretValue?.take(25) ?: "No value"
+            issue.secretValue?.take(ScannerDefaults.SECRET_DISPLAY_LENGTH) ?: "No value"
         )
     }
 
@@ -173,6 +192,12 @@ object ScanReporter {
             LogColors.boldGreen(correctCount.toString()), 
             LogColors.boldRed(incorrectCount.toString()),
             LogColors.boldYellow(missedCount.toString())
+        )
+    }
+
+    fun reportFalsePositives(falsePositiveCount: Int) {
+        logger.info("⚠️ False positives: {} issues detected in files that should have none",
+            LogColors.boldRed(falsePositiveCount.toString())
         )
     }
 }

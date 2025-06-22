@@ -2,8 +2,9 @@ package net.cyclingbits.llmsecretscanner.maven.plugin
 
 import net.cyclingbits.llmsecretscanner.core.Scanner
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
+import net.cyclingbits.llmsecretscanner.core.config.ScannerDefaults
 import net.cyclingbits.llmsecretscanner.core.exception.DockerContainerException
-import net.cyclingbits.llmsecretscanner.core.service.FileScanner
+import net.cyclingbits.llmsecretscanner.core.files.FileFinder
 import org.apache.maven.plugin.AbstractMojo
 import org.apache.maven.plugin.MojoFailureException
 import org.apache.maven.plugins.annotations.LifecyclePhase
@@ -14,35 +15,35 @@ import java.io.File
 @Mojo(name = "scan", defaultPhase = LifecyclePhase.VERIFY)
 class LLMSecretScanner : AbstractMojo() {
 
-    @Parameter(property = "scan.sourceDirectory", defaultValue = "\${project.basedir}", required = true)
-    private lateinit var sourceDirectory: File
+    @Parameter(property = "scan.sourceDirectories", defaultValue = "\${project.basedir}", required = true)
+    private lateinit var sourceDirectories: List<File>
 
     @Parameter(
         property = "scan.include",
-        defaultValue = "**/*.java,**/*.kt,**/*.xml,**/*.properties,**/*.yml,**/*.yaml,**/*.json,**/*.md,**/*.sql,**/*.gradle,**/*.kts,**/*.env,**/*.sh,**/*.bat,**/*.html,**/*.css,**/*.js,**/*.ts,**/*.dockerfile"
+        defaultValue = ScannerDefaults.DEFAULT_INCLUDES
     )
     private lateinit var includes: String
 
-    @Parameter(property = "scan.exclude", defaultValue = "**/target/**")
+    @Parameter(property = "scan.exclude", defaultValue = ScannerDefaults.DEFAULT_EXCLUDES)
     private lateinit var excludes: String
 
-    @Parameter(property = "scan.modelName", defaultValue = "ai/phi4:latest")
+    @Parameter(property = "scan.modelName", defaultValue = ScannerDefaults.DEFAULT_MODEL_NAME)
     private lateinit var modelName: String
 
-    @Parameter(property = "scan.chunkAnalysisTimeout", defaultValue = "60")
-    private var chunkAnalysisTimeout: Int = 60
+    @Parameter(property = "scan.chunkAnalysisTimeout", defaultValue = "${ScannerDefaults.CHUNK_ANALYSIS_TIMEOUT}")
+    private var chunkAnalysisTimeout: Int = ScannerDefaults.CHUNK_ANALYSIS_TIMEOUT
 
-    @Parameter(property = "scan.maxTokens", defaultValue = "16000")
-    private var maxTokens: Int = 16_000
+    @Parameter(property = "scan.maxTokens", defaultValue = "${ScannerDefaults.MAX_TOKENS}")
+    private var maxTokens: Int = ScannerDefaults.MAX_TOKENS
 
-    @Parameter(property = "scan.temperature", defaultValue = "0.0")
-    private var temperature: Double = 0.0
+    @Parameter(property = "scan.temperature", defaultValue = "${ScannerDefaults.TEMPERATURE}")
+    private var temperature: Double = ScannerDefaults.TEMPERATURE
 
-    @Parameter(property = "scan.dockerImage", defaultValue = "alpine/socat:1.7.4.3-r0")
+    @Parameter(property = "scan.dockerImage", defaultValue = ScannerDefaults.DEFAULT_DOCKER_IMAGE)
     private lateinit var dockerImage: String
 
-    @Parameter(property = "scan.maxFileSizeBytes", defaultValue = "102400")
-    private var maxFileSizeBytes: Int = 100 * 1024
+    @Parameter(property = "scan.maxFileSizeBytes", defaultValue = "${ScannerDefaults.MAX_FILE_SIZE_BYTES}")
+    private var maxFileSizeBytes: Int = ScannerDefaults.MAX_FILE_SIZE_BYTES
 
     @Parameter(property = "scan.systemPrompt")
     private var systemPrompt: String? = null
@@ -53,17 +54,17 @@ class LLMSecretScanner : AbstractMojo() {
     @Parameter(property = "scan.enableChunking", defaultValue = "true")
     private var enableChunking: Boolean = true
 
-    @Parameter(property = "scan.maxLinesPerChunk", defaultValue = "40")
-    private var maxLinesPerChunk: Int = 40
+    @Parameter(property = "scan.maxLinesPerChunk", defaultValue = "${ScannerDefaults.MAX_LINES_PER_CHUNK}")
+    private var maxLinesPerChunk: Int = ScannerDefaults.MAX_LINES_PER_CHUNK
 
-    @Parameter(property = "scan.chunkOverlapLines", defaultValue = "5")
-    private var chunkOverlapLines: Int = 5
+    @Parameter(property = "scan.chunkOverlapLines", defaultValue = "${ScannerDefaults.CHUNK_OVERLAP_LINES}")
+    private var chunkOverlapLines: Int = ScannerDefaults.CHUNK_OVERLAP_LINES
 
     override fun execute() {
         configureLogging()
         try {
             val config = ScannerConfiguration(
-                sourceDirectory = sourceDirectory,
+                sourceDirectories = sourceDirectories,
                 includes = includes,
                 excludes = excludes,
                 modelName = modelName,
@@ -72,16 +73,16 @@ class LLMSecretScanner : AbstractMojo() {
                 temperature = temperature,
                 dockerImage = dockerImage,
                 maxFileSizeBytes = maxFileSizeBytes,
-                systemPrompt = systemPrompt,
+                systemPrompt = systemPrompt ?: ScannerDefaults.loadSystemPrompt(),
                 enableChunking = enableChunking,
                 maxLinesPerChunk = maxLinesPerChunk,
                 chunkOverlapLines = chunkOverlapLines
             )
 
-            val fileScanner = FileScanner(config).findFiles()
+            val filesToScan = FileFinder(config).findFiles(sourceDirectories)
             
             val scanResult = Scanner(config).use { scanner ->
-                scanner.executeScan(fileScanner)
+                scanner.executeScan(filesToScan)
             }
 
             if (scanResult.issues.isNotEmpty() && failOnError) {

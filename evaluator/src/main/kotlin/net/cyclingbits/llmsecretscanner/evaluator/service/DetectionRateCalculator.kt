@@ -3,8 +3,10 @@ package net.cyclingbits.llmsecretscanner.evaluator.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import net.cyclingbits.llmsecretscanner.core.model.Issue
-import net.cyclingbits.llmsecretscanner.core.service.ScanReporter
+import net.cyclingbits.llmsecretscanner.core.util.ScanReporter
 import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration
+import net.cyclingbits.llmsecretscanner.evaluator.model.DetectionMetrics
+import net.cyclingbits.llmsecretscanner.evaluator.model.DetectionResults
 import java.io.File
 import kotlin.math.abs
 
@@ -12,22 +14,21 @@ object DetectionRateCalculator {
 
     private val objectMapper = ObjectMapper().registerKotlinModule()
 
-    fun calculate(issues: List<Issue>): Double {
+    fun calculate(positiveIssues: List<Issue>, negativeIssues: List<Issue>, negativeFiles: List<File>): DetectionMetrics {
         val expectedIssues = loadExpectedIssues()
-        val scannedFiles = extractScannedFiles(issues)
+        val scannedFiles = extractScannedFiles(positiveIssues)
         val relevantExpected = filterRelevantExpected(expectedIssues, scannedFiles)
         
-        val detectionResults = analyzeDetections(issues, relevantExpected)
+        val detectionResults = analyzeDetections(positiveIssues, relevantExpected, negativeIssues)
+        
         logAllResults(detectionResults, relevantExpected)
         
-        return calculateDetectionRate(detectionResults.correctCount, relevantExpected.size)
+        val detectionRate = calculateDetectionRate(detectionResults.correctCount, relevantExpected.size)
+        val falsePositiveRate = calculateFalsePositiveRate(detectionResults.falsePositiveIssues.size, negativeFiles)
+        
+        return DetectionMetrics(detectionRate, falsePositiveRate)
     }
 
-    private data class DetectionResults(
-        val correctCount: Int,
-        val detectedIssues: List<Issue>,
-        val incorrectIssues: List<Issue>
-    )
 
     private fun extractScannedFiles(issues: List<Issue>): Set<String> {
         return issues.map { it.filePath.substringAfterLast("/") }.toSet()
@@ -37,24 +38,24 @@ object DetectionRateCalculator {
         return expectedIssues.filter { it.filePath in scannedFiles }
     }
 
-    private fun analyzeDetections(issues: List<Issue>, relevantExpected: List<Issue>): DetectionResults {
+    private fun analyzeDetections(issues: List<Issue>, relevantExpected: List<Issue>, negativeIssues: List<Issue>): DetectionResults {
         val detectedIssues = mutableListOf<Issue>()
         val incorrectIssues = mutableListOf<Issue>()
-        var correctCount = 0
+        val matchedExpected = mutableSetOf<Issue>()
 
         issues.forEach { detected ->
-            val found = relevantExpected.any { expected ->
+            val matchingExpected = relevantExpected.find { expected ->
                 isMatchingSecret(detected, expected)
             }
-            if (found) {
+            if (matchingExpected != null) {
                 detectedIssues.add(detected)
-                correctCount++
+                matchedExpected.add(matchingExpected)
             } else {
                 incorrectIssues.add(detected)
             }
         }
 
-        return DetectionResults(correctCount, detectedIssues, incorrectIssues)
+        return DetectionResults(matchedExpected.size, detectedIssues, incorrectIssues, negativeIssues)
     }
 
     private fun isMatchingSecret(detected: Issue, expected: Issue): Boolean {
@@ -69,6 +70,10 @@ object DetectionRateCalculator {
         }
         
         ScanReporter.reportDetectionResults(detectionResults.detectedIssues.size, detectionResults.incorrectIssues.size, missedSecrets.size)
+        
+        if (detectionResults.falsePositiveIssues.isNotEmpty()) {
+            ScanReporter.reportFalsePositives(detectionResults.falsePositiveIssues.size)
+        }
         
         detectionResults.detectedIssues.forEach { issue ->
             ScanReporter.reportCorrectDetection(issue)
@@ -88,6 +93,24 @@ object DetectionRateCalculator {
         return if (totalExpected > 0) {
             (correctCount.toDouble() / totalExpected) * 100
         } else 0.0
+    }
+
+    private fun calculateFalsePositiveRate(falsePositiveCount: Int, negativeFiles: List<File>): Double {
+        val totalLines = countLinesInFiles(negativeFiles)
+        return if (totalLines > 0) {
+            (falsePositiveCount.toDouble() / totalLines) * 100
+        } else 100.0
+    }
+
+    private fun countLinesInFiles(files: List<File>): Int {
+        return files.sumOf { file ->
+            try {
+                file.readLines().size
+            } catch (e: Exception) {
+                ScanReporter.reportWarning("Failed to count lines in ${file.name}: ${e.message}")
+                0
+            }
+        }
     }
 
 

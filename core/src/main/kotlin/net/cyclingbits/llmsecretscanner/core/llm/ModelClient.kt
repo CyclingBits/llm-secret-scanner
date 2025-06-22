@@ -1,4 +1,4 @@
-package net.cyclingbits.llmsecretscanner.core.service
+package net.cyclingbits.llmsecretscanner.core.llm
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.kittinunf.fuel.Fuel

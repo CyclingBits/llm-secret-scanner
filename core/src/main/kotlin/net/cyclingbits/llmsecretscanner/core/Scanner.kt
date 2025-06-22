@@ -2,27 +2,29 @@ package net.cyclingbits.llmsecretscanner.core
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import net.cyclingbits.llmsecretscanner.core.exception.ScannerException
+import net.cyclingbits.llmsecretscanner.core.llm.ContainerManager
 import net.cyclingbits.llmsecretscanner.core.model.Issue
 import net.cyclingbits.llmsecretscanner.core.model.ScanResult
 import net.cyclingbits.llmsecretscanner.core.service.CodeAnalyzer
-import net.cyclingbits.llmsecretscanner.core.service.ContainerManager
-import net.cyclingbits.llmsecretscanner.core.service.ScanReporter
+import net.cyclingbits.llmsecretscanner.core.util.ScanReporter
 import java.io.File
 
 /**
  * Main scanner orchestrator that coordinates file discovery, container management,
  * code analysis, and progress reporting.
  */
-class Scanner(config: ScannerConfiguration) : AutoCloseable {
+class Scanner(private val configuration: ScannerConfiguration) : AutoCloseable {
 
-    private val containerManager = ContainerManager(config)
+    private val containerManager = ContainerManager(configuration)
     private val container = containerManager.startContainer()
-    private val codeAnalyzer = CodeAnalyzer(config, container)
+    private val codeAnalyzer = CodeAnalyzer(configuration, container)
+    
+    init {
+        ScanReporter.reportScanStart(configuration)
+    }
 
     fun executeScan(filesToScan: List<File>): ScanResult {
         val analysisStartTime = System.currentTimeMillis()
-
-        ScanReporter.reportAnalysisStart(filesToScan.size)
 
         val results = filesToScan.mapIndexed { fileIndex, file ->
             scanFile(file, fileIndex + 1, filesToScan.size)

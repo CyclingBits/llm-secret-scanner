@@ -1,6 +1,7 @@
-package net.cyclingbits.llmsecretscanner.core.service
+package net.cyclingbits.llmsecretscanner.core.llm
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
+import net.cyclingbits.llmsecretscanner.core.llm.ContainerManager
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -11,7 +12,7 @@ class ContainerManagerTest {
     fun constructor_validConfig_succeeds() {
         val tempDir = createTempDir()
         val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
+            sourceDirectories = listOf(tempDir),
             modelName = "ai/phi4:latest"
         )
 
@@ -26,7 +27,7 @@ class ContainerManagerTest {
     fun close_withoutContainer_succeeds() {
         val tempDir = createTempDir()
         val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
+            sourceDirectories = listOf(tempDir),
             modelName = "ai/phi4:latest"
         )
         val containerManager = ContainerManager(config)

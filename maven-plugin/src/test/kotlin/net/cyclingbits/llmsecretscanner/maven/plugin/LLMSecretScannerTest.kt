@@ -23,7 +23,7 @@ class LLMSecretScannerTest {
         val mockLog = mockk<Log>(relaxed = true)
         
         plugin.log = mockLog
-        setPrivateField(plugin, "sourceDirectory", File("/nonexistent"))
+        setPrivateField(plugin, "sourceDirectories", listOf(File("/nonexistent")))
         setPrivateField(plugin, "modelName", "ai/llama3.2:latest")
         setPrivateField(plugin, "includes", "**/*.java")
         setPrivateField(plugin, "excludes", "**/target/**")
@@ -47,7 +47,7 @@ class LLMSecretScannerTest {
         val mockLog = mockk<Log>(relaxed = true)
         
         plugin.log = mockLog
-        setPrivateField(plugin, "sourceDirectory", tempDir)
+        setPrivateField(plugin, "sourceDirectories", listOf(tempDir))
         setPrivateField(plugin, "modelName", "ai/llama3.2:latest")
         setPrivateField(plugin, "includes", "**/*.java")
         setPrivateField(plugin, "excludes", "**/target/**")
@@ -73,7 +73,7 @@ class LLMSecretScannerTest {
         val mockLog = mockk<Log>(relaxed = true)
         
         plugin.log = mockLog
-        setPrivateField(plugin, "sourceDirectory", tempDir)
+        setPrivateField(plugin, "sourceDirectories", listOf(tempDir))
         setPrivateField(plugin, "modelName", "invalid-model")
         setPrivateField(plugin, "includes", "**/*.java")
         setPrivateField(plugin, "excludes", "**/target/**")
@@ -99,7 +99,7 @@ class LLMSecretScannerTest {
         val mockLog = mockk<Log>(relaxed = true)
         
         plugin.log = mockLog
-        setPrivateField(plugin, "sourceDirectory", tempDir)
+        setPrivateField(plugin, "sourceDirectories", listOf(tempDir))
         setPrivateField(plugin, "modelName", "invalid-model")
         setPrivateField(plugin, "includes", "**/*.java")
         setPrivateField(plugin, "excludes", "**/target/**")
@@ -128,7 +128,7 @@ class LLMSecretScannerTest {
         val customPrompt = "Find API keys and passwords in the code"
         
         plugin.log = mockLog
-        setPrivateField(plugin, "sourceDirectory", tempDir)
+        setPrivateField(plugin, "sourceDirectories", listOf(tempDir))
         setPrivateField(plugin, "modelName", "ai/llama3.2:latest")
         setPrivateField(plugin, "includes", "**/*.java")
         setPrivateField(plugin, "excludes", "**/target/**")

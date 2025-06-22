@@ -1,6 +1,6 @@
 package net.cyclingbits.llmsecretscanner.evaluator.service
 
-import net.cyclingbits.llmsecretscanner.core.service.ScanReporter
+import net.cyclingbits.llmsecretscanner.core.util.ScanReporter
 import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration
 import net.cyclingbits.llmsecretscanner.evaluator.model.EvaluationResult
 import java.io.File
@@ -14,13 +14,14 @@ object ResultsSaver {
         val newRows = buildString {
             results.forEach { result ->
                 val detectionRateDisplay = "${String.format("%.1f", result.detectionRate)}%"
+                val falsePositiveRateDisplay = "${String.format("%.1f", result.falsePositiveRate)}%"
                 val scanSuccessRateDisplay = "${String.format("%.1f", result.scanSuccessRate)}%"
                 val timeDisplay = formatTime(result.scanTime)
                 val modelData = ModelDataProvider.findModelData(result.modelName)
                 val parameters = modelData?.parameters ?: "N/A"
                 val contextWindow = modelData?.contextWindow ?: "N/A"
                 val size = modelData?.size ?: "N/A"
-                appendLine("| ${result.modelName} | $detectionRateDisplay | $scanSuccessRateDisplay | $timeDisplay | $parameters | $contextWindow | $size |")
+                appendLine("| ${result.modelName} | $detectionRateDisplay | $falsePositiveRateDisplay | $scanSuccessRateDisplay | $timeDisplay | $parameters | $contextWindow | $size |")
             }
         }
 
@@ -30,8 +31,8 @@ object ResultsSaver {
             val markdown = buildString {
                 appendLine("# LLM Evaluation Results")
                 appendLine()
-                appendLine("| LLM Image | Detection Rate | Scan Success Rate | Time | Parameters | Context Window | Size |")
-                appendLine("|-----------|----------------|-------------------|------|------------|----------------|------|")
+                    appendLine("| LLM Image | Detection<br>Rate | False Positive<br>Rate | Files Successfully<br>Analyzed | Time | Parameters | Context<br>Window | Size |")
+                appendLine("|-----------|----------------|---------------------|----------------------|------|------------|----------------|------|")
                 append(newRows)
             }
             outputFile.writeText(markdown)

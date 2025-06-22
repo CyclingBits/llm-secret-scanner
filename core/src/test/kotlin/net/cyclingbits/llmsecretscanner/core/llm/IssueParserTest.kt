@@ -1,11 +1,12 @@
-package net.cyclingbits.llmsecretscanner.core.service
+package net.cyclingbits.llmsecretscanner.core.llm
 
 import net.cyclingbits.llmsecretscanner.core.exception.JsonParserException
+import net.cyclingbits.llmsecretscanner.core.llm.IssueParser
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertThrows
 
-class AnalysisResultMapperTest {
+class IssueParserTest {
 
     @Test
     fun parseAnalysisResult_validJsonArray_returnsIssues() {
@@ -19,7 +20,7 @@ class AnalysisResultMapperTest {
             }
         ]"""
         
-        val result = AnalysisResultMapper.parseAnalysisResult(json)
+        val result = IssueParser.parseIssuesFromJson(json)
         
         assertEquals(1, result.size)
         assertEquals("/path/to/file.java", result[0].filePath)
@@ -38,7 +39,7 @@ class AnalysisResultMapperTest {
             "secretValue": "sk_test_123"
         }]"""
         
-        val result = AnalysisResultMapper.parseAnalysisResult(json)
+        val result = IssueParser.parseIssuesFromJson(json)
         
         assertEquals(1, result.size)
         assertEquals("/path/to/file.kt", result[0].filePath)
@@ -59,7 +60,7 @@ class AnalysisResultMapperTest {
         ]
         ```"""
         
-        val result = AnalysisResultMapper.parseAnalysisResult(response)
+        val result = IssueParser.parseIssuesFromJson(response)
         
         assertEquals(1, result.size)
         assertEquals("/test.java", result[0].filePath)
@@ -75,7 +76,7 @@ class AnalysisResultMapperTest {
             "secretValue": "secret123value"
         }]"""
         
-        val result = AnalysisResultMapper.parseAnalysisResult(json)
+        val result = IssueParser.parseIssuesFromJson(json)
         
         assertEquals(1, result.size)
         assertEquals("/alt/path.java", result[0].filePath)
@@ -89,7 +90,7 @@ class AnalysisResultMapperTest {
         val invalidJson = "invalid json"
         
         assertThrows<JsonParserException> {
-            AnalysisResultMapper.parseAnalysisResult(invalidJson)
+            IssueParser.parseIssuesFromJson(invalidJson)
         }
     }
 
@@ -97,7 +98,7 @@ class AnalysisResultMapperTest {
     fun parseAnalysisResult_emptyArray_returnsEmptyList() {
         val json = "[]"
         
-        val result = AnalysisResultMapper.parseAnalysisResult(json)
+        val result = IssueParser.parseIssuesFromJson(json)
         
         assertEquals(0, result.size)
     }
@@ -121,7 +122,7 @@ class AnalysisResultMapperTest {
             }
         ]"""
         
-        val result = AnalysisResultMapper.parseAnalysisResult(json)
+        val result = IssueParser.parseIssuesFromJson(json)
         
         assertEquals(2, result.size)
         assertEquals("/file1.java", result[0].filePath)

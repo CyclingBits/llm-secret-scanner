@@ -1,7 +1,8 @@
-package net.cyclingbits.llmsecretscanner.core.service
+package net.cyclingbits.llmsecretscanner.core.util
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import net.cyclingbits.llmsecretscanner.core.model.Issue
+import net.cyclingbits.llmsecretscanner.core.util.ScanReporter
 import org.junit.jupiter.api.Test
 import java.io.File
 
@@ -11,7 +12,7 @@ class ScanReporterTest {
     fun reportScanStart_validConfig_succeeds() {
         val tempDir = createTempDir()
         val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
+            sourceDirectories = listOf(tempDir),
             modelName = "ai/phi4:latest"
         )
         ScanReporter.reportScanStart(config)
@@ -54,7 +55,7 @@ class ScanReporterTest {
                 secretValue = "test123"
             )
         )
-        ScanReporter.reportFileIssues(testFile, issues, 1500, 1, 5, tempDir)
+        ScanReporter.reportFileIssues(testFile, issues, 1500, 1, 5, listOf(tempDir))
         
         tempDir.deleteRecursively()
     }

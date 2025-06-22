@@ -1,7 +1,7 @@
 package net.cyclingbits.llmsecretscanner.core
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
-import net.cyclingbits.llmsecretscanner.core.service.FileScanner
+import net.cyclingbits.llmsecretscanner.core.files.FileFinder
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -45,14 +45,14 @@ class ScannerIntegrationTest {
     @Test
     fun executeScan_withValidConfiguration_findsSecrets() {
         val config = ScannerConfiguration(
-            sourceDirectory = testDir,
+            sourceDirectories = listOf(testDir),
             modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
             chunkAnalysisTimeout = 120
         )
 
-        val fileScanner = FileScanner(config)
-        val filesToScan = fileScanner.findFiles()
+        val fileScanner = FileFinder(config)
+        val filesToScan = fileScanner.findFiles(testDir)
 
         val scanResult = Scanner(config).use { scanner ->
             scanner.executeScan(filesToScan)
@@ -67,15 +67,15 @@ class ScannerIntegrationTest {
         val customPrompt = "Find only API keys in the provided code. Return results as JSON array."
 
         val config = ScannerConfiguration(
-            sourceDirectory = testDir,
+            sourceDirectories = listOf(testDir),
             modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
             systemPrompt = customPrompt,
             chunkAnalysisTimeout = 120
         )
 
-        val fileScanner = FileScanner(config)
-        val filesToScan = fileScanner.findFiles()
+        val fileScanner = FileFinder(config)
+        val filesToScan = fileScanner.findFiles(testDir)
 
         val scanResult = Scanner(config).use { scanner ->
             scanner.executeScan(filesToScan)
@@ -87,14 +87,14 @@ class ScannerIntegrationTest {
     @Test
     fun executeScan_withNoMatchingFiles_returnsEmptyList() {
         val config = ScannerConfiguration(
-            sourceDirectory = testDir,
+            sourceDirectories = listOf(testDir),
             modelName = "ai/llama3.2:latest",
             includes = "**/*.xyz",
             chunkAnalysisTimeout = 120
         )
 
-        val fileScanner = FileScanner(config)
-        val filesToScan = fileScanner.findFiles()
+        val fileScanner = FileFinder(config)
+        val filesToScan = fileScanner.findFiles(testDir)
 
         val scanResult = Scanner(config).use { scanner ->
             scanner.executeScan(filesToScan)
@@ -110,15 +110,15 @@ class ScannerIntegrationTest {
         largeFile.writeText(largeContent)
 
         val config = ScannerConfiguration(
-            sourceDirectory = testDir,
+            sourceDirectories = listOf(testDir),
             modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
             maxFileSizeBytes = 1000,
             chunkAnalysisTimeout = 120
         )
 
-        val fileScanner = FileScanner(config)
-        val filesToScan = fileScanner.findFiles()
+        val fileScanner = FileFinder(config)
+        val filesToScan = fileScanner.findFiles(testDir)
 
         val scanResult = Scanner(config).use { scanner ->
             scanner.executeScan(filesToScan)
@@ -136,14 +136,14 @@ class ScannerIntegrationTest {
         file2.writeText("public class File2 { private String token = \"auth-token-2\"; }")
 
         val config = ScannerConfiguration(
-            sourceDirectory = testDir,
+            sourceDirectories = listOf(testDir),
             modelName = "ai/llama3.2:latest",
             includes = "**/*.java",
             chunkAnalysisTimeout = 120
         )
 
-        val fileScanner = FileScanner(config)
-        val filesToScan = fileScanner.findFiles()
+        val fileScanner = FileFinder(config)
+        val filesToScan = fileScanner.findFiles(testDir)
 
         val scanResult = Scanner(config).use { scanner ->
             scanner.executeScan(filesToScan)

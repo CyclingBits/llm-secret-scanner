@@ -57,6 +57,13 @@ public class Example {
         STATIC_VALUE = "secret_from_static_block_112233";
     }
 
+    private final String textBlockData = """
+            -----BEGIN CERTIFICATE-----
+            MIIDXTCCAkWgAwIBAgIJAKl secret_in_textblock_cert_12345
+            ... rest of certificate ...
+            -----END CERTIFICATE-----
+            """;
+
     public Example(String configKey) {
         this.dbConnection = configKey != null ? configKey : "default_constructor_secret_999";
     }
@@ -66,13 +73,6 @@ public class Example {
     }
 
     private final Supplier<String> dataSupplier = () -> "lambda_secret_key_xyz";
-
-    private final String textBlockData = """
-            -----BEGIN CERTIFICATE-----
-            MIIDXTCCAkWgAwIBAgIJAKl secret_in_textblock_cert_12345
-            ... rest of certificate ...
-            -----END CERTIFICATE-----
-            """;
 
     public record Credentials(String username, String password) {
         public static final Credentials ADMIN = new Credentials("admin", "record_password_567");

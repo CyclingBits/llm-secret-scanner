@@ -1,4 +1,4 @@
-package net.cyclingbits.llmsecretscanner.core.service
+package net.cyclingbits.llmsecretscanner.core.files
 
 import net.cyclingbits.llmsecretscanner.core.model.FileChunk
 import java.io.File

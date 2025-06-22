@@ -12,11 +12,11 @@ class ScannerConfigurationTest {
         val tempDir = createTempDir()
         
         val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
+            sourceDirectories = listOf(tempDir),
             modelName = "ai/phi4:latest"
         )
         
-        assertEquals(tempDir, config.sourceDirectory)
+        assertEquals(listOf(tempDir), config.sourceDirectories)
         assertEquals("ai/phi4:latest", config.modelName)
         assertEquals(1, config.timeout)
         
@@ -29,7 +29,7 @@ class ScannerConfigurationTest {
         
         assertThrows<IllegalArgumentException> {
             ScannerConfiguration(
-                sourceDirectory = tempDir,
+                sourceDirectories = listOf(tempDir),
                 modelName = "invalid-model-name"
             )
         }
@@ -43,7 +43,7 @@ class ScannerConfigurationTest {
         
         assertThrows<IllegalArgumentException> {
             ScannerConfiguration(
-                sourceDirectory = nonExistentDir,
+                sourceDirectories = listOf(nonExistentDir),
                 modelName = "ai/phi4:latest"
             )
         }
@@ -55,7 +55,7 @@ class ScannerConfigurationTest {
         
         assertThrows<IllegalArgumentException> {
             ScannerConfiguration(
-                sourceDirectory = tempDir,
+                sourceDirectories = listOf(tempDir),
                 modelName = "ai/phi4:latest",
                 timeout = -1
             )
@@ -70,7 +70,7 @@ class ScannerConfigurationTest {
         
         assertThrows<IllegalArgumentException> {
             ScannerConfiguration(
-                sourceDirectory = tempDir,
+                sourceDirectories = listOf(tempDir),
                 modelName = "ai/phi4:latest",
                 timeout = 40
             )
@@ -85,7 +85,7 @@ class ScannerConfigurationTest {
         
         assertThrows<IllegalArgumentException> {
             ScannerConfiguration(
-                sourceDirectory = tempDir,
+                sourceDirectories = listOf(tempDir),
                 modelName = "ai/phi4:latest",
                 maxTokens = 0
             )
@@ -100,7 +100,7 @@ class ScannerConfigurationTest {
         
         assertThrows<IllegalArgumentException> {
             ScannerConfiguration(
-                sourceDirectory = tempDir,
+                sourceDirectories = listOf(tempDir),
                 modelName = "ai/phi4:latest",
                 temperature = 3.0
             )
@@ -115,7 +115,7 @@ class ScannerConfigurationTest {
         
         assertThrows<IllegalArgumentException> {
             ScannerConfiguration(
-                sourceDirectory = tempDir,
+                sourceDirectories = listOf(tempDir),
                 modelName = "ai/phi4:latest",
                 includes = ""
             )
@@ -125,35 +125,19 @@ class ScannerConfigurationTest {
     }
 
     @Test
-    fun create_withCustomSystemPrompt_succeeds() {
+    fun create_withDefaultSystemPrompt_succeeds() {
         val tempDir = createTempDir()
-        val customPrompt = "Find secrets and API keys in the code"
         
         val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
-            modelName = "ai/phi4:latest",
-            systemPrompt = customPrompt
+            sourceDirectories = listOf(tempDir),
+            modelName = "ai/phi4:latest"
         )
         
-        assertEquals(customPrompt, config.systemPrompt)
+        assert(config.systemPrompt.isNotEmpty())
         
         tempDir.deleteRecursively()
     }
 
-    @Test
-    fun create_withNullSystemPrompt_succeeds() {
-        val tempDir = createTempDir()
-        
-        val config = ScannerConfiguration(
-            sourceDirectory = tempDir,
-            modelName = "ai/phi4:latest",
-            systemPrompt = null
-        )
-        
-        assertEquals(null, config.systemPrompt)
-        
-        tempDir.deleteRecursively()
-    }
 
     private fun createTempDir(): File {
         val tempDir = File.createTempFile("test", "dir")
