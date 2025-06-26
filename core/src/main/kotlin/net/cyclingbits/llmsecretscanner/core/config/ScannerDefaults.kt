@@ -19,6 +19,14 @@ object ScannerDefaults {
     const val MAX_TEMPERATURE = 2.0
     const val MAX_FILE_SIZE_LIMIT = 10 * 1024 * 1024
 
+    const val TOP_P = 0.05
+    const val MIN_TOP_P = 0.0
+    const val MAX_TOP_P = 1.0
+    const val SEED = 42
+    const val FREQUENCY_PENALTY = 0.3
+    const val MIN_FREQUENCY_PENALTY = -2.0
+    const val MAX_FREQUENCY_PENALTY = 2.0
+
     const val DEFAULT_INCLUDES =
         "**/*.java,**/*.kt,**/*.xml,**/*.properties,**/*.yml,**/*.yaml,**/*.json,**/*.md,**/*.sql,**/*.gradle,**/*.kts,**/*.env,**/*.sh,**/*.bat,**/*.html,**/*.css,**/*.js,**/*.ts,**/*.dockerfile"
     const val DEFAULT_EXCLUDES = "**/target/**"

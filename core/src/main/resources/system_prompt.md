@@ -42,6 +42,18 @@ You MUST follow this protocol for every file:
 - Benign strings like date formats (`"yyyy-MM-dd"`), locales (`"en"`), validation error keys
 - Example or placeholder values like `"your-api-key-here"`, `"user"`, `"password"`
 - PII that is not an authentication secret (e.g., phone numbers, example names)
+- **TEST DATA AND DOCUMENTATION:** Do NOT report values that are clearly test data, documentation examples, or commented code. Look for contextual clues:
+  - Values in comments explaining APIs (e.g., `// Example: ak_live_1234...`)
+  - Values preceded by words like "example", "sample", "test", "demo", "placeholder"
+  - JWT tokens in comments or documentation explaining token format
+  - Private keys in comments showing certificate structure
+  - **EXCEPTION**: Javadoc comments may contain REAL secrets that should be reported - analyze content carefully
+- **CONTEXT ANALYSIS:** Before reporting, analyze the surrounding code context:
+  - If the value appears in a comment explaining how something works, it's documentation
+  - If the value is used in test methods or has "test" in variable names, it's test data
+  - If multiple similar values appear together, they might be examples
+  - If the code is clearly demonstrating a concept rather than implementing it, ignore
+- **STRIPE TEST KEYS:** Specifically ignore Stripe test keys that start with `sk-test_`, `pk-test_`, `rk-test_` as they are meant for testing
 
 ---
 
@@ -50,6 +62,7 @@ Pay special attention to:
 - High-entropy strings (random, long character and digit strings) hardcoded as string literals
 - Variables with names suggesting secret storage (`api_key`, `password`, `secret_token`) assigned hardcoded values
 - **ALL COMMENT TYPES** including Javadoc (`/** */`), single-line (`//`), and multi-line (`/* */`) comments containing secrets
+- **JAVADOC SECRETS**: Pay special attention to secrets hidden in Javadoc comments - these are REAL secrets, not documentation examples
 - Common key formats (prefixes like `sk_live_`, `rk_test_`, `ghp_`, `xoxp-`, hexadecimal, Base64)
 - Keywords like "password", "secret", "key", "token", "auth" combined with hardcoded credential values
 - Connection strings: extract passwords from URLs like `jdbc:mysql://user:PASSWORD@host`
@@ -67,12 +80,13 @@ Pay special attention to:
 - From `value != null ? value : "default_secret_999"` → extract `default_secret_999` (ternary operator secrets)
 - From `() -> "lambda_secret_key"` → extract `lambda_secret_key` (lambda expression secrets)
 - From `Supplier<String> supplier = () -> "secret"` → extract `secret` (lambda assignment secrets)
+- From `/** deploy-token-from-javadoc-qwerty12345 */` → extract `deploy-token-from-javadoc-qwerty12345` (Javadoc secrets)
+- From `String encodedData = "cGFzc3dvcmQtb2JmdXNjYXRlZC1ieS1iNjQ="` → extract `cGFzc3dvcmQtb2JmdXNjYXRlZC1ieS1iNjQ=` (Base64 encoded secrets)
+- From `config.put("auth-token", "auth_token_from_map_value")` → extract `auth_token_from_map_value` (Map values with auth keys)
 
 ---
 
 For each identified issue, provide the following information in JSON format with this exact field order:
-- "filePath": (string) name of the file (not the full path)
-- "issueNumber": (integer) sequential number starting from 1
 - "lineNumber": (integer) exact line number where the secret was found
 - "issueType": (string) one of the 7 types listed above
 - "secretValue": (string) the extracted secret value only - NO surrounding code, variable names, or syntax
@@ -80,15 +94,11 @@ For each identified issue, provide the following information in JSON format with
 Example response:
 [
   {
-    "filePath": "example.java",
-    "issueNumber": 1,
     "lineNumber": 12,
     "issueType": "API Key",
     "secretValue": "sk_live_abc123def456"
   },
   {
-    "filePath": "example.java", 
-    "issueNumber": 2,
     "lineNumber": 15,
     "issueType": "Password",
     "secretValue": "mySecretPassword123"
@@ -100,9 +110,9 @@ Example response:
 - If you identify no issues, return an empty JSON array: []
 - Do NOT add any explanations, comments, or text beyond the JSON array
 - Ensure proper JSON syntax: use double quotes, proper commas, no trailing commas
-- Each object must have exactly these 5 fields in this order: filePath, issueNumber, lineNumber, issueType, secretValue
-- All field values must be properly escaped strings (except issueNumber and lineNumber which are integers)
-- NEVER repeat the same entry - each issueNumber must be unique and sequential
+- Each object must have exactly these 5 fields in this order: lineNumber, issueType, secretValue
+- All field values must be properly escaped strings (except lineNumber which are integers)
+- NEVER repeat the same entry
 - ALWAYS close the JSON array with ] - do not leave it incomplete
 
 Do not add any explanations or text beyond this JSON array.

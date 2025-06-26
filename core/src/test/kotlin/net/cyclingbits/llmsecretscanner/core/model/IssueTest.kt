@@ -1,49 +1,43 @@
 package net.cyclingbits.llmsecretscanner.core.model
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 
 class IssueTest {
 
     @Test
-    fun create_withAllFields_succeeds() {
+    fun `should create issue with all fields`() {
         val issue = Issue(
-            filePath = "/path/to/file.java",
-            issueNumber = 1,
             lineNumber = 42,
-            issueType = "Password",
-            secretValue = "mySecretPassword123"
+            issueType = "API_KEY",
+            secretValue = "sk-1234567890"
         )
         
-        assertEquals("/path/to/file.java", issue.filePath)
-        assertEquals(1, issue.issueNumber)
         assertEquals(42, issue.lineNumber)
-        assertEquals("Password", issue.issueType)
-        assertEquals("mySecretPassword123", issue.secretValue)
+        assertEquals("API_KEY", issue.issueType)
+        assertEquals("sk-1234567890", issue.secretValue)
     }
 
     @Test
-    fun create_withDefaults_usesDefaultValues() {
-        val issue = Issue()
-        
-        assertEquals("", issue.filePath)
-        assertEquals(null, issue.issueNumber)
-        assertEquals(0, issue.lineNumber)
-        assertEquals("Unknown", issue.issueType)
-        assertEquals(null, issue.secretValue)
-    }
-
-    @Test
-    fun create_partialFields_combinesWithDefaults() {
+    fun `should create issue with null secret value`() {
         val issue = Issue(
-            filePath = "/test.kt",
-            issueType = "API Key"
+            lineNumber = 10,
+            issueType = "PASSWORD",
+            secretValue = null
         )
         
-        assertEquals("/test.kt", issue.filePath)
-        assertEquals(null, issue.issueNumber)
-        assertEquals(0, issue.lineNumber)
-        assertEquals("API Key", issue.issueType)
-        assertEquals(null, issue.secretValue)
+        assertEquals(10, issue.lineNumber)
+        assertEquals("PASSWORD", issue.issueType)
+        assertNull(issue.secretValue)
+    }
+
+    @Test
+    fun `should compare issues correctly`() {
+        val issue1 = Issue(42, "API_KEY", "secret")
+        val issue2 = Issue(42, "API_KEY", "secret")
+        val issue3 = Issue(43, "API_KEY", "secret")
+        
+        assertEquals(issue1, issue2)
+        assertNotEquals(issue1, issue3)
     }
 }

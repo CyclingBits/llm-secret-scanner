@@ -1,66 +1,63 @@
 package net.cyclingbits.llmsecretscanner.core.service
 
+import kotlinx.coroutines.runBlocking
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
-import net.cyclingbits.llmsecretscanner.core.config.ScannerDefaults
-import net.cyclingbits.llmsecretscanner.core.exception.AnalysisException
-import net.cyclingbits.llmsecretscanner.core.files.FileChunker
-import net.cyclingbits.llmsecretscanner.core.llm.IssueParser
+import net.cyclingbits.llmsecretscanner.core.file.FileChunker
 import net.cyclingbits.llmsecretscanner.core.llm.ModelClient
+import net.cyclingbits.llmsecretscanner.core.logger.ScanLogger
+import net.cyclingbits.llmsecretscanner.core.model.FileScanResult
 import net.cyclingbits.llmsecretscanner.core.model.Issue
-import net.cyclingbits.llmsecretscanner.core.util.ScanReporter
-import org.testcontainers.containers.DockerModelRunnerContainer
+import net.cyclingbits.llmsecretscanner.core.parser.ResponseParser
 import java.io.File
+import java.time.Duration
+import java.time.Instant
 
 class CodeAnalyzer(
     private val config: ScannerConfiguration,
-    private val container: DockerModelRunnerContainer
+    private val logger: ScanLogger,
+    private val fileChunker: FileChunker,
+    private val modelClient: ModelClient,
+    private val responseParser: ResponseParser
 ) {
 
-    private val modelClient = ModelClient(config, container)
+    fun analyzeFile(file: File, fileIndex: Int, totalFiles: Int): FileScanResult? = runBlocking {
+        if (!validateFileSize(file)) return@runBlocking null
 
-    fun analyzeFile(file: File, fileIndex: Int, totalFiles: Int): List<Issue> {
-        ScanReporter.reportFileAnalysisStart(file, fileIndex, totalFiles, config.sourceDirectories)
-        
-        val startTime = System.currentTimeMillis()
+        logger.reportFileAnalysisStart(file, fileIndex, totalFiles, config)
+        val startTime = Instant.now()
 
-        val issues = if (config.enableChunking && FileChunker.shouldChunkFile(file, config.maxLinesPerChunk)) {
-            analyzeFileInChunks(file)
-        } else {
-            analyzeFullFile(file)
-        }
+        val result = if (config.enableChunking) analyzeWithChunking(file) else analyzeSinglePrompt(file, PromptGenerator.createFilePrompt(file))
 
-        val analysisTime = System.currentTimeMillis() - startTime
-        ScanReporter.reportFileIssues(file, issues, analysisTime, fileIndex, totalFiles, config.sourceDirectories)
-
-        return issues
+        val analysisTime = Duration.between(startTime, Instant.now())
+        result?.let { logger.reportFileIssues(file, it.issues, analysisTime, fileIndex, totalFiles) }
+        result
     }
-    
-    private fun analyzeFileInChunks(file: File): List<Issue> {
-        val chunks = FileChunker.chunkFile(file, config.maxLinesPerChunk, config.chunkOverlapLines)
-        ScanReporter.reportChunk(chunks.size, config.maxLinesPerChunk, config.chunkOverlapLines)
-        val allIssues = mutableListOf<Issue>()
-        
-        chunks.forEach { chunk ->
-            ScanReporter.reportChunkAnalysis(chunk.chunkIndex + 1, chunk.totalChunks, chunk.startLine, chunk.endLine)
-            val userPrompt = PromptGenerator.createChunkPrompt(file, chunk)
-            
-            val jsonResponse = modelClient.analyze(config.systemPrompt, userPrompt)
-            val chunkIssues = IssueParser.parseIssuesFromJson(jsonResponse)
-            
-            allIssues.addAll(chunkIssues)
-        }
-        
-        return IssueDeduplicator.deduplicate(allIssues)
-    }
-    
-    private fun analyzeFullFile(file: File): List<Issue> {
-        if (file.length() > config.maxFileSizeBytes) {
-            throw AnalysisException("File ${file.path} is too large (${file.length()} bytes). Maximum size is ${config.maxFileSizeBytes} bytes.")
-        }
-        
-        val userPrompt = PromptGenerator.createFilePrompt(file)
 
-        val jsonResponse = modelClient.analyze(config.systemPrompt, userPrompt)
-        return IssueParser.parseIssuesFromJson(jsonResponse)
+    private suspend fun analyzeWithChunking(file: File): FileScanResult? {
+        val chunks = fileChunker.processFile(file)
+        if (chunks.size == 1) return analyzeSinglePrompt(file, PromptGenerator.createFilePrompt(file))
+
+        logger.reportChunk(file, chunks.size, config)
+
+        val allIssues = chunks.mapNotNull { chunk ->
+            logger.reportChunkAnalysis(chunk, file.extension)
+            analyzeLLM(PromptGenerator.createChunkPrompt(file, chunk))
+        }.flatten()
+
+        return FileScanResult(file, IssueDeduplicator.deduplicate(allIssues))
+    }
+
+    private suspend fun analyzeSinglePrompt(file: File, prompt: String): FileScanResult? =
+        analyzeLLM(prompt)?.let { FileScanResult(file, it) }
+
+    private suspend fun analyzeLLM(prompt: String): List<Issue>? {
+        val rawResponse = modelClient.analyze(prompt)
+        return rawResponse?.let { responseParser.parseResponse(it) }
+    }
+
+    private fun validateFileSize(file: File): Boolean {
+        return (file.length() <= config.maxFileSizeBytes).also { isValid ->
+            if (!isValid) logger.reportError("File ${file.path} is too large (${file.length()} bytes). Maximum size is ${config.maxFileSizeBytes} bytes.")
+        }
     }
 }

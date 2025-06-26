@@ -2,24 +2,32 @@ package net.cyclingbits.llmsecretscanner.core.llm
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import net.cyclingbits.llmsecretscanner.core.exception.DockerContainerException
-import net.cyclingbits.llmsecretscanner.core.util.ScanReporter
+import net.cyclingbits.llmsecretscanner.core.logger.ScanLogger
 import org.testcontainers.containers.DockerModelRunnerContainer
 
 class ContainerManager(
     private val config: ScannerConfiguration,
+    private val logger: ScanLogger
 ) : AutoCloseable {
 
     private var container: DockerModelRunnerContainer? = null
 
-    fun startContainer(): DockerModelRunnerContainer {
+    fun getContainer(): DockerModelRunnerContainer {
+        if (container == null) {
+            startContainer()
+        }
+        return requireNotNull(container) { "Container failed to start" }
+    }
+
+    private fun startContainer(): DockerModelRunnerContainer {
         return try {
-            ScanReporter.reportContainerStart()
+            logger.reportContainerStart()
 
             val dockerModelRunnerContainer = DockerModelRunnerContainer(config.dockerImage).withModel(config.modelName)
             dockerModelRunnerContainer.start()
             container = dockerModelRunnerContainer
 
-            ScanReporter.reportContainerStarted()
+            logger.reportContainerStarted()
 
             dockerModelRunnerContainer
 
@@ -35,9 +43,10 @@ class ContainerManager(
                     containerInstance.stop()
                 }
             } catch (e: Exception) {
-                ScanReporter.reportError("Error stopping container: ${containerInstance.containerId}", e)
+                logger.reportError("Error stopping container: ${containerInstance.containerId}", e)
             }
         }
+        container = null
     }
 
 }

@@ -1,16 +1,16 @@
 package net.cyclingbits.llmsecretscanner.maven.plugin
 
-import net.cyclingbits.llmsecretscanner.core.Scanner
+import net.cyclingbits.llmsecretscanner.core.ScannerFactory
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import net.cyclingbits.llmsecretscanner.core.config.ScannerDefaults
 import net.cyclingbits.llmsecretscanner.core.exception.DockerContainerException
-import net.cyclingbits.llmsecretscanner.core.files.FileFinder
 import org.apache.maven.plugin.AbstractMojo
 import org.apache.maven.plugin.MojoFailureException
 import org.apache.maven.plugins.annotations.LifecyclePhase
 import org.apache.maven.plugins.annotations.Mojo
 import org.apache.maven.plugins.annotations.Parameter
 import java.io.File
+import java.io.FileNotFoundException
 
 @Mojo(name = "scan", defaultPhase = LifecyclePhase.VERIFY)
 class LLMSecretScanner : AbstractMojo() {
@@ -67,30 +67,30 @@ class LLMSecretScanner : AbstractMojo() {
                 sourceDirectories = sourceDirectories,
                 includes = includes,
                 excludes = excludes,
+                maxFileSizeBytes = maxFileSizeBytes,
                 modelName = modelName,
-                chunkAnalysisTimeout = chunkAnalysisTimeout,
                 maxTokens = maxTokens,
                 temperature = temperature,
                 dockerImage = dockerImage,
-                maxFileSizeBytes = maxFileSizeBytes,
                 systemPrompt = systemPrompt ?: ScannerDefaults.loadSystemPrompt(),
+                chunkAnalysisTimeout = chunkAnalysisTimeout,
                 enableChunking = enableChunking,
                 maxLinesPerChunk = maxLinesPerChunk,
                 chunkOverlapLines = chunkOverlapLines
             )
 
-            val filesToScan = FileFinder(config).findFiles(sourceDirectories)
-            
-            val scanResult = Scanner(config).use { scanner ->
-                scanner.executeScan(filesToScan)
+            val scanResult = ScannerFactory.create(config).use { scanner ->
+                scanner.scan()
             }
 
-            if (scanResult.issues.isNotEmpty() && failOnError) {
-                throw MojoFailureException("LLM Secret Scanner found ${scanResult.issues.size} security issues. Build failed due to failOnError=true setting.")
+            if (scanResult.hasIssues && failOnError) {
+                throw MojoFailureException("LLM Secret Scanner found ${scanResult.totalIssues} security issues. Build failed due to failOnError=true setting.")
             }
 
         } catch (e: MojoFailureException) {
             throw e
+        } catch (e: FileNotFoundException) {
+            handleError("System prompt file not found. Please check system_prompt.md exists in resources", e)
         } catch (e: DockerContainerException) {
             handleError("Please ensure Docker Desktop is running and Docker Model Runner is enabled", e)
         } catch (e: Exception) {
@@ -99,7 +99,7 @@ class LLMSecretScanner : AbstractMojo() {
     }
 
     private fun handleError(message: String, cause: Exception) {
-        log.error(message)
+        log.error(message, cause)
         if (failOnError) {
             throw MojoFailureException(message, cause)
         } else {
