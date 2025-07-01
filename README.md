@@ -96,35 +96,17 @@ mvn llm-secret-scanner:scan
 
 ## 🧠 Supported AI Models
 
-The scanner supports various LLM models via [Docker Model Runner](https://hub.docker.com/u/ai). Below are performance benchmarks from our evaluation tests:
+The scanner supports various LLM models via [Docker Model Runner](https://hub.docker.com/u/ai). The recommended model is **`ai/phi4:latest`**, which provides the best scanning results with low execution time.
 
-### 🎯 **Recommended Models**
+### 📊 **Evaluation Results**
 
-**`ai/phi4:latest` ⭐ (Default Choice)**  
-With an outstanding **93.8%** detection rate, only **2.0%** false positives, and 100% scan success, this **15B parameter** model offers the best overall performance. At **8.43 GB**, it provides excellent results in just 1m 47s analysis time, making it ideal for most use cases.
+| LLM Image | Detection<br>Rate | False Positive<br>Rate | Time | Parameters | Context<br>Window | Size |
+|-----------|----------------|---------------------|------|------------|----------------|------|
+| ai/phi4:latest | 74.9% | 0.4% | 5m 27s | 15B | 16K tokens | 8.43 GB |
 
+The evaluation was conducted on test files from the `test_cases` directory, which included: Java, Kotlin, Properties, XML, and YAML files.
 
-### 📊 **All Available Models**
-
-| Model | Detection Rate | False Positive Rate | Scan Success | Analysis Time | Parameters | Context Window | Size |
-|-------|----------------|---------------------|--------------|---------------|------------|----------------|------|
-| `ai/phi4:latest` ⭐ | **93.8%** | 2.0% | 100% | 1m 47s | 15B | 16K tokens | 8.43 GB |
-| `ai/llama3.3:latest` | **90.6%** | 2.8% | 100% | 7m 59s | 70B | 131K tokens | 39.59 GB |
-| `ai/deepcoder-preview:latest` | **84.4%** | 0.0% | 100% | 7m 19s | 14B | 131K tokens | 8.37 GB |
-| `ai/llama3.1:latest` | **75.0%** | 7.4% | 100% | 7m 19s | 8B | 131K tokens | 4.58 GB |
-| `ai/mistral:latest` | **71.9%** | 2.8% | 100% | 1m 27s | 7B | 33K tokens | 4.07 GB |
-| `ai/mistral-nemo:latest` | **68.8%** | 0.0% | 100% | 1m 11s | 12B | 131K tokens | 6.96 GB |
-| `ai/qwen3:latest` | **68.8%** | 0.0% | 100% | 9m 34s | 8B | 41K tokens | 4.68 GB |
-| `ai/gemma3:latest` | **65.6%** | 14.5% | 100% | 1m 40s | 4B | 131K tokens | 2.31 GB |
-| `ai/gemma3-qat:latest` | **59.4%** | 9.9% | 100% | 1m 27s | 3.88B | 131K tokens | 2.93 GB |
-| `ai/llama3.2:latest` | **56.3%** | 100.0% | 50% | 4m 14s | 3B | 131K tokens | 1.87 GB |
-| `ai/deepseek-r1-distill-llama:latest` | **56.3%** | 100.0% | 50% | 3m 28s | 8B | 131K tokens | 4.58 GB |
-
-> 📊 **Performance data** based on analysis of test fixtures with known vulnerabilities and clean code samples. All models available from [Docker Hub AI](https://hub.docker.com/u/ai).
-> 
-> **Detection Rate** indicates the percentage of known security issues correctly identified by the model (with line number accuracy verification ±1).  
-> **False Positive Rate** indicates the percentage of clean code incorrectly flagged as containing secrets.  
-> **Scan Success** indicates the percentage of files that were successfully analyzed without errors (e.g., timeouts, JSON parsing failures).
+**`ai/phi4:latest`** is the recommended model for most use cases, offering excellent detection accuracy with very low false positive rate while maintaining reasonable scanning time. This 15B parameter model strikes the perfect balance between performance and accuracy.
 
 ## 📖 Usage Examples
 
