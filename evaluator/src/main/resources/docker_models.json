@@ -1,663 +1,634 @@
-{
-  "models": [
-    {
-      "name": "DEEPCODER-PREVIEW",
-      "variants": [
-        {
-          "image": "ai/deepcoder-preview:latest",
-          "parameters": "14B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "9.36 GiB",
-          "size": "8.37 GB"
-        },
-        {
-          "image": "ai/deepcoder-preview:14B-Q4_K_M",
-          "parameters": "14B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "9.36 GiB",
-          "size": "8.37 GB"
-        },
-        {
-          "image": "ai/deepcoder-preview:14B-F16",
-          "parameters": "14B",
-          "quantization": "F16",
-          "context_window": "131K tokens",
-          "vram": "27.46 GiB",
-          "size": "27.51 GB"
-        }
-      ]
-    },
-    {
-      "name": "DEEPSEEK-R1-DISTILL-LLAMA",
-      "variants": [
-        {
-          "image": "ai/deepseek-r1-distill-llama:latest",
-          "parameters": "8B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "5.33 GiB",
-          "size": "4.58 GB"
-        },
-        {
-          "image": "ai/deepseek-r1-distill-llama:8B-Q4_K_M",
-          "parameters": "8B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "5.33 GiB",
-          "size": "4.58 GB"
-        },
-        {
-          "image": "ai/deepseek-r1-distill-llama:8B-Q4_0",
-          "parameters": "8B",
-          "quantization": "Q4_0",
-          "context_window": "131K tokens",
-          "vram": "5.09 GiB",
-          "size": "4.33 GB"
-        },
-        {
-          "image": "ai/deepseek-r1-distill-llama:8B-F16",
-          "parameters": "8B",
-          "quantization": "F16",
-          "context_window": "131K tokens",
-          "vram": "15.01 GiB",
-          "size": "14.96 GB"
-        },
-        {
-          "image": "ai/deepseek-r1-distill-llama:70B-Q4_0",
-          "parameters": "70B",
-          "quantization": "Q4_0",
-          "context_window": "131K tokens",
-          "vram": "38.73 GiB",
-          "size": "37.22 GB"
-        },
-        {
-          "image": "ai/deepseek-r1-distill-llama:70B-Q4_K_M",
-          "parameters": "70B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "41.11 GiB",
-          "size": "39.59 GB"
-        }
-      ]
-    },
-    {
-      "name": "GEMMA3",
-      "variants": [
-        {
-          "image": "ai/gemma3:latest",
-          "parameters": "4B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "3.43 GiB",
-          "size": "2.31 GB"
-        },
-        {
-          "image": "ai/gemma3:4B-Q4_K_M",
-          "parameters": "4B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "3.43 GiB",
-          "size": "2.31 GB"
-        },
-        {
-          "image": "ai/gemma3:1B-Q4_K_M",
-          "parameters": "1B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "33K tokens",
-          "vram": "1.40 GiB",
-          "size": "762.49 MB"
-        },
-        {
-          "image": "ai/gemma3:1B-F16",
-          "parameters": "1B",
-          "quantization": "F16",
-          "context_window": "33K tokens",
-          "vram": "2.51 GiB",
-          "size": "1.86 GB"
-        },
-        {
-          "image": "ai/gemma3:4B-Q4_0",
-          "parameters": "4B",
-          "quantization": "Q4_0",
-          "context_window": "131K tokens",
-          "vram": "3.32 GiB",
-          "size": "2.19 GB"
-        },
-        {
-          "image": "ai/gemma3:4B-F16",
-          "parameters": "4B",
-          "quantization": "F16",
-          "context_window": "131K tokens",
-          "vram": "8.35 GiB",
-          "size": "7.23 GB"
-        }
-      ]
-    },
-    {
-      "name": "GEMMA3-QAT",
-      "variants": [
-        {
-          "image": "ai/gemma3-qat:latest",
-          "parameters": "3.88B",
-          "quantization": "Q4_0",
-          "context_window": "131K tokens",
-          "vram": "4.05 GiB",
-          "size": "2.93 GB"
-        },
-        {
-          "image": "ai/gemma3-qat:4B-Q4_K_M",
-          "parameters": "3.88B",
-          "quantization": "Q4_0",
-          "context_window": "131K tokens",
-          "vram": "4.05 GiB",
-          "size": "2.93 GB"
-        },
-        {
-          "image": "ai/gemma3-qat:1B-Q4_K_M",
-          "parameters": "999.89M",
-          "quantization": "Q4_0",
-          "context_window": "33K tokens",
-          "vram": "1.58 GiB",
-          "size": "950.82 MB"
-        },
-        {
-          "image": "ai/gemma3-qat:12B-Q4_K_M",
-          "parameters": "11.77B",
-          "quantization": "Q4_0",
-          "context_window": "131K tokens",
-          "vram": "9.68 GiB",
-          "size": "7.51 GB"
-        },
-        {
-          "image": "ai/gemma3-qat:27B-Q4_K_M",
-          "parameters": "27.01B",
-          "quantization": "Q4_0",
-          "context_window": "131K tokens",
-          "vram": "18.78 GiB",
-          "size": "16.04 GB"
-        }
-      ]
-    },
-    {
-      "name": "LLAMA3.3",
-      "variants": [
-        {
-          "image": "ai/llama3.3:latest",
-          "parameters": "70B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "41.11 GiB",
-          "size": "39.59 GB"
-        },
-        {
-          "image": "ai/llama3.3:70B-Q4_K_M",
-          "parameters": "70B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "41.11 GiB",
-          "size": "39.59 GB"
-        },
-        {
-          "image": "ai/llama3.3:70B-Q4_0",
-          "parameters": "70B",
-          "quantization": "Q4_0",
-          "context_window": "131K tokens",
-          "vram": "38.73 GiB",
-          "size": "37.22 GB"
-        }
-      ]
-    },
-    {
-      "name": "LLAMA3.2",
-      "variants": [
-        {
-          "image": "ai/llama3.2:latest",
-          "parameters": "3B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "2.77 GiB",
-          "size": "1.87 GB"
-        },
-        {
-          "image": "ai/llama3.2:3B-Q4_K_M",
-          "parameters": "3B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "2.77 GiB",
-          "size": "1.87 GB"
-        },
-        {
-          "image": "ai/llama3.2:1B-Q4_0",
-          "parameters": "1B",
-          "quantization": "Q4_0",
-          "context_window": "131K tokens",
-          "vram": "1.35 GiB",
-          "size": "727.75 MB"
-        },
-        {
-          "image": "ai/llama3.2:1B-Q8_0",
-          "parameters": "1B",
-          "quantization": "Q8_0",
-          "context_window": "131K tokens",
-          "vram": "1.87 GiB",
-          "size": "1.22 GB"
-        },
-        {
-          "image": "ai/llama3.2:1B-F16",
-          "parameters": "1B",
-          "quantization": "F16",
-          "context_window": "131K tokens",
-          "vram": "2.95 GiB",
-          "size": "2.30 GB"
-        },
-        {
-          "image": "ai/llama3.2:3B-Q4_0",
-          "parameters": "3B",
-          "quantization": "Q4_0",
-          "context_window": "131K tokens",
-          "vram": "2.68 GiB",
-          "size": "1.78 GB"
-        },
-        {
-          "image": "ai/llama3.2:3B-F16",
-          "parameters": "3B",
-          "quantization": "F16",
-          "context_window": "131K tokens",
-          "vram": "6.89 GiB",
-          "size": "5.98 GB"
-        }
-      ]
-    },
-    {
-      "name": "LLAMA3.1",
-      "variants": [
-        {
-          "image": "ai/llama3.1:latest",
-          "parameters": "8B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "5.33 GiB",
-          "size": "4.58 GB"
-        },
-        {
-          "image": "ai/llama3.1:8B-Q4_K_M",
-          "parameters": "8B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "5.33 GiB",
-          "size": "4.58 GB"
-        },
-        {
-          "image": "ai/llama3.1:8B-F16",
-          "parameters": "8B",
-          "quantization": "F16",
-          "context_window": "131K tokens",
-          "vram": "15.01 GiB",
-          "size": "14.96 GB"
-        }
-      ]
-    },
-    {
-      "name": "MXBAI-EMBED-LARGE",
-      "variants": [
-        {
-          "image": "ai/mxbai-embed-large:335M-F16",
-          "parameters": "334.09M",
-          "quantization": "F16",
-          "context_window": "512 tokens",
-          "vram": "0.63 GiB",
-          "size": "638.85 MB"
-        }
-      ]
-    },
-    {
-      "name": "MISTRAL",
-      "variants": [
-        {
-          "image": "ai/mistral:latest",
-          "parameters": "7B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "33K tokens",
-          "vram": "4.85 GiB",
-          "size": "4.07 GB"
-        },
-        {
-          "image": "ai/mistral:7B-Q4_K_M",
-          "parameters": "7B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "33K tokens",
-          "vram": "4.85 GiB",
-          "size": "4.07 GB"
-        },
-        {
-          "image": "ai/mistral:7B-Q4_0",
-          "parameters": "7B",
-          "quantization": "Q4_0",
-          "context_window": "33K tokens",
-          "vram": "4.61 GiB",
-          "size": "3.83 GB"
-        },
-        {
-          "image": "ai/mistral:7B-F16",
-          "parameters": "7B",
-          "quantization": "F16",
-          "context_window": "33K tokens",
-          "vram": "14.10 GiB",
-          "size": "13.50 GB"
-        }
-      ]
-    },
-    {
-      "name": "MISTRAL-NEMO",
-      "variants": [
-        {
-          "image": "ai/mistral-nemo:latest",
-          "parameters": "12B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "7.78 GiB",
-          "size": "6.96 GB"
-        },
-        {
-          "image": "ai/mistral-nemo:12B-Q4_K_M",
-          "parameters": "12B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "131K tokens",
-          "vram": "7.78 GiB",
-          "size": "6.96 GB"
-        }
-      ]
-    },
-    {
-      "name": "PHI4",
-      "variants": [
-        {
-          "image": "ai/phi4:latest",
-          "parameters": "15B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "16K tokens",
-          "vram": "9.78 GiB",
-          "size": "8.43 GB"
-        },
-        {
-          "image": "ai/phi4:14B-Q4_K_M",
-          "parameters": "15B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "16K tokens",
-          "vram": "9.78 GiB",
-          "size": "8.43 GB"
-        },
-        {
-          "image": "ai/phi4:14B-Q4_0",
-          "parameters": "15B",
-          "quantization": "Q4_0",
-          "context_window": "16K tokens",
-          "vram": "9.16 GiB",
-          "size": "7.80 GB"
-        },
-        {
-          "image": "ai/phi4:14B-F16",
-          "parameters": "15B",
-          "quantization": "F16",
-          "context_window": "16K tokens",
-          "vram": "27.97 GiB",
-          "size": "27.31 GB"
-        }
-      ]
-    },
-    {
-      "name": "QWEN2.5",
-      "variants": [
-        {
-          "image": "ai/qwen2.5:latest",
-          "parameters": "7B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "33K tokens",
-          "vram": "4.83 GiB",
-          "size": "4.36 GB"
-        },
-        {
-          "image": "ai/qwen2.5:7B-Q4_K_M",
-          "parameters": "7B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "33K tokens",
-          "vram": "4.83 GiB",
-          "size": "4.36 GB"
-        },
-        {
-          "image": "ai/qwen2.5:0.5B-F16",
-          "parameters": "0.5B",
-          "quantization": "F16",
-          "context_window": "33K tokens",
-          "vram": "1.38 GiB",
-          "size": "942.43 MB"
-        },
-        {
-          "image": "ai/qwen2.5:1.5B-F16",
-          "parameters": "1.5B",
-          "quantization": "F16",
-          "context_window": "33K tokens",
-          "vram": "3.39 GiB",
-          "size": "2.88 GB"
-        },
-        {
-          "image": "ai/qwen2.5:3B-Q4_K_M",
-          "parameters": "3B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "33K tokens",
-          "vram": "2.37 GiB",
-          "size": "1.79 GB"
-        },
-        {
-          "image": "ai/qwen2.5:3B-F16",
-          "parameters": "3B",
-          "quantization": "F16",
-          "context_window": "33K tokens",
-          "vram": "6.33 GiB",
-          "size": "5.75 GB"
-        },
-        {
-          "image": "ai/qwen2.5:7B-Q4_0",
-          "parameters": "7B",
-          "quantization": "Q4_0",
-          "context_window": "33K tokens",
-          "vram": "4.60 GiB",
-          "size": "4.12 GB"
-        },
-        {
-          "image": "ai/qwen2.5:7B-F16",
-          "parameters": "7B",
-          "quantization": "F16",
-          "context_window": "33K tokens",
-          "vram": "13.93 GiB",
-          "size": "14.19 GB"
-        }
-      ]
-    },
-    {
-      "name": "QWEN3",
-      "variants": [
-        {
-          "image": "ai/qwen3:latest",
-          "parameters": "8B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "41K tokens",
-          "vram": "5.49 GiB",
-          "size": "4.68 GB"
-        },
-        {
-          "image": "ai/qwen3:8B-Q4_K_M",
-          "parameters": "8B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "41K tokens",
-          "vram": "5.49 GiB",
-          "size": "4.68 GB"
-        },
-        {
-          "image": "ai/qwen3:0.6B-Q4_0",
-          "parameters": "0.6B",
-          "quantization": "Q4_0",
-          "context_window": "41K tokens",
-          "vram": "1.22 GiB",
-          "size": "441.67 MB"
-        },
-        {
-          "image": "ai/qwen3:0.6B-Q4_K_M",
-          "parameters": "0.6B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "41K tokens",
-          "vram": "1.23 GiB",
-          "size": "456.11 MB"
-        },
-        {
-          "image": "ai/qwen3:0.6B-F16",
-          "parameters": "0.6B",
-          "quantization": "F16",
-          "context_window": "41K tokens",
-          "vram": "1.98 GiB",
-          "size": "1.40 GB"
-        },
-        {
-          "image": "ai/qwen3:30B-A3B-F16",
-          "parameters": "30B-A3B",
-          "quantization": "F16",
-          "context_window": "41K tokens",
-          "vram": "57.25 GiB",
-          "size": "56.89 GB"
-        },
-        {
-          "image": "ai/qwen3:30B-A3B-Q4_K_M",
-          "parameters": "30B-A3B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "41K tokens",
-          "vram": "18.05 GiB",
-          "size": "17.28 GB"
-        },
-        {
-          "image": "ai/qwen3:8B-Q4_0",
-          "parameters": "8B",
-          "quantization": "Q4_0",
-          "context_window": "41K tokens",
-          "vram": "5.26 GiB",
-          "size": "4.44 GB"
-        },
-        {
-          "image": "ai/qwen3:8B-F16",
-          "parameters": "8B",
-          "quantization": "F16",
-          "context_window": "41K tokens",
-          "vram": "15.24 GiB",
-          "size": "15.26 GB"
-        }
-      ]
-    },
-    {
-      "name": "QWQ",
-      "variants": [
-        {
-          "image": "ai/qwq:latest",
-          "parameters": "32B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "41K tokens",
-          "vram": "19.72 GiB",
-          "size": "18.48 GB"
-        },
-        {
-          "image": "ai/qwq:32B-Q4_K_M",
-          "parameters": "32B",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "41K tokens",
-          "vram": "19.72 GiB",
-          "size": "18.48 GB"
-        },
-        {
-          "image": "ai/qwq:32B-Q4_0",
-          "parameters": "32B",
-          "quantization": "Q4_0",
-          "context_window": "41K tokens",
-          "vram": "18.60 GiB",
-          "size": "17.35 GB"
-        },
-        {
-          "image": "ai/qwq:32B-F16",
-          "parameters": "32B",
-          "quantization": "F16",
-          "context_window": "41K tokens",
-          "vram": "61.23 GiB",
-          "size": "61.03 GB"
-        }
-      ]
-    },
-    {
-      "name": "SMOLLM2",
-      "variants": [
-        {
-          "image": "ai/smollm2:latest",
-          "parameters": "360M",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "8K tokens",
-          "vram": "0.63 GiB",
-          "size": "256.35 MB"
-        },
-        {
-          "image": "ai/smollm2:360M-Q4_K_M",
-          "parameters": "360M",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "8K tokens",
-          "vram": "0.63 GiB",
-          "size": "256.35 MB"
-        },
-        {
-          "image": "ai/smollm2:135M-Q4_0",
-          "parameters": "135M",
-          "quantization": "Q4_0",
-          "context_window": "8K tokens",
-          "vram": "0.35 GiB",
-          "size": "85.77 MB"
-        },
-        {
-          "image": "ai/smollm2:135M-Q4_K_M",
-          "parameters": "135M",
-          "quantization": "IQ2_XXS/Q4_K_M",
-          "context_window": "8K tokens",
-          "vram": "0.36 GiB",
-          "size": "98.87 MB"
-        },
-        {
-          "image": "ai/smollm2:135M-F16",
-          "parameters": "135M",
-          "quantization": "F16",
-          "context_window": "8K tokens",
-          "vram": "0.51 GiB",
-          "size": "256.63 MB"
-        },
-        {
-          "image": "ai/smollm2:135M-Q2_K",
-          "parameters": "135M",
-          "quantization": "Q2_K",
-          "context_window": "8K tokens",
-          "vram": "0.34 GiB",
-          "size": "82.41 MB"
-        },
-        {
-          "image": "ai/smollm2:360M-Q4_0",
-          "parameters": "360M",
-          "quantization": "Q4_0",
-          "context_window": "8K tokens",
-          "vram": "0.59 GiB",
-          "size": "216.80 MB"
-        },
-        {
-          "image": "ai/smollm2:360M-F16",
-          "parameters": "360M",
-          "quantization": "F16",
-          "context_window": "8K tokens",
-          "vram": "1.06 GiB",
-          "size": "690.24 MB"
-        }
-      ]
-    }
-  ]
-}
+[
+  {
+    "model_name": "ai/deepcoder-preview:latest",
+    "parameters": "14B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "9.36 GiB",
+    "size": "8.37 GB"
+  },
+  {
+    "model_name": "ai/deepcoder-preview:14B-Q4_K_M",
+    "parameters": "14B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "9.36 GiB",
+    "size": "8.37 GB"
+  },
+  {
+    "model_name": "ai/deepcoder-preview:14B-F16",
+    "parameters": "14B",
+    "quantization": "F16",
+    "context_window": "131K tokens",
+    "vram": "27.46 GiB",
+    "size": "27.51 GB"
+  },
+  {
+    "model_name": "ai/deepseek-r1-distill-llama:latest",
+    "parameters": "8B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "5.33 GiB",
+    "size": "4.58 GB"
+  },
+  {
+    "model_name": "ai/deepseek-r1-distill-llama:8B-Q4_K_M",
+    "parameters": "8B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "5.33 GiB",
+    "size": "4.58 GB"
+  },
+  {
+    "model_name": "ai/deepseek-r1-distill-llama:8B-Q4_0",
+    "parameters": "8B",
+    "quantization": "Q4_0",
+    "context_window": "131K tokens",
+    "vram": "5.09 GiB",
+    "size": "4.33 GB"
+  },
+  {
+    "model_name": "ai/deepseek-r1-distill-llama:8B-F16",
+    "parameters": "8B",
+    "quantization": "F16",
+    "context_window": "131K tokens",
+    "vram": "15.01 GiB",
+    "size": "14.96 GB"
+  },
+  {
+    "model_name": "ai/deepseek-r1-distill-llama:70B-Q4_0",
+    "parameters": "70B",
+    "quantization": "Q4_0",
+    "context_window": "131K tokens",
+    "vram": "38.73 GiB",
+    "size": "37.22 GB"
+  },
+  {
+    "model_name": "ai/deepseek-r1-distill-llama:70B-Q4_K_M",
+    "parameters": "70B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "41.11 GiB",
+    "size": "39.59 GB"
+  },
+  {
+    "model_name": "ai/gemma3:latest",
+    "parameters": "4B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "3.43 GiB",
+    "size": "2.31 GB"
+  },
+  {
+    "model_name": "ai/gemma3:4B-Q4_K_M",
+    "parameters": "4B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "3.43 GiB",
+    "size": "2.31 GB"
+  },
+  {
+    "model_name": "ai/gemma3:1B-Q4_K_M",
+    "parameters": "1B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "33K tokens",
+    "vram": "1.40 GiB",
+    "size": "762.49 MB"
+  },
+  {
+    "model_name": "ai/gemma3:1B-F16",
+    "parameters": "1B",
+    "quantization": "F16",
+    "context_window": "33K tokens",
+    "vram": "2.51 GiB",
+    "size": "1.86 GB"
+  },
+  {
+    "model_name": "ai/gemma3:4B-Q4_0",
+    "parameters": "4B",
+    "quantization": "Q4_0",
+    "context_window": "131K tokens",
+    "vram": "3.32 GiB",
+    "size": "2.19 GB"
+  },
+  {
+    "model_name": "ai/gemma3:4B-F16",
+    "parameters": "4B",
+    "quantization": "F16",
+    "context_window": "131K tokens",
+    "vram": "8.35 GiB",
+    "size": "7.23 GB"
+  },
+  {
+    "model_name": "ai/gemma3-qat:latest",
+    "parameters": "3.88B",
+    "quantization": "Q4_0",
+    "context_window": "131K tokens",
+    "vram": "4.05 GiB",
+    "size": "2.93 GB"
+  },
+  {
+    "model_name": "ai/gemma3-qat:4B-Q4_K_M",
+    "parameters": "3.88B",
+    "quantization": "Q4_0",
+    "context_window": "131K tokens",
+    "vram": "4.05 GiB",
+    "size": "2.93 GB"
+  },
+  {
+    "model_name": "ai/gemma3-qat:1B-Q4_K_M",
+    "parameters": "999.89M",
+    "quantization": "Q4_0",
+    "context_window": "33K tokens",
+    "vram": "1.58 GiB",
+    "size": "950.82 MB"
+  },
+  {
+    "model_name": "ai/gemma3-qat:12B-Q4_K_M",
+    "parameters": "11.77B",
+    "quantization": "Q4_0",
+    "context_window": "131K tokens",
+    "vram": "9.68 GiB",
+    "size": "7.51 GB"
+  },
+  {
+    "model_name": "ai/gemma3-qat:27B-Q4_K_M",
+    "parameters": "27.01B",
+    "quantization": "Q4_0",
+    "context_window": "131K tokens",
+    "vram": "18.78 GiB",
+    "size": "16.04 GB"
+  },
+  {
+    "model_name": "ai/llama3.3:latest",
+    "parameters": "70B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "41.11 GiB",
+    "size": "39.59 GB"
+  },
+  {
+    "model_name": "ai/llama3.3:70B-Q4_K_M",
+    "parameters": "70B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "41.11 GiB",
+    "size": "39.59 GB"
+  },
+  {
+    "model_name": "ai/llama3.3:70B-Q4_0",
+    "parameters": "70B",
+    "quantization": "Q4_0",
+    "context_window": "131K tokens",
+    "vram": "38.73 GiB",
+    "size": "37.22 GB"
+  },
+  {
+    "model_name": "ai/llama3.2:latest",
+    "parameters": "3B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "2.77 GiB",
+    "size": "1.87 GB"
+  },
+  {
+    "model_name": "ai/llama3.2:3B-Q4_K_M",
+    "parameters": "3B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "2.77 GiB",
+    "size": "1.87 GB"
+  },
+  {
+    "model_name": "ai/llama3.2:1B-Q4_0",
+    "parameters": "1B",
+    "quantization": "Q4_0",
+    "context_window": "131K tokens",
+    "vram": "1.35 GiB",
+    "size": "727.75 MB"
+  },
+  {
+    "model_name": "ai/llama3.2:1B-Q8_0",
+    "parameters": "1B",
+    "quantization": "Q8_0",
+    "context_window": "131K tokens",
+    "vram": "1.87 GiB",
+    "size": "1.22 GB"
+  },
+  {
+    "model_name": "ai/llama3.2:1B-F16",
+    "parameters": "1B",
+    "quantization": "F16",
+    "context_window": "131K tokens",
+    "vram": "2.95 GiB",
+    "size": "2.30 GB"
+  },
+  {
+    "model_name": "ai/llama3.2:3B-Q4_0",
+    "parameters": "3B",
+    "quantization": "Q4_0",
+    "context_window": "131K tokens",
+    "vram": "2.68 GiB",
+    "size": "1.78 GB"
+  },
+  {
+    "model_name": "ai/llama3.2:3B-F16",
+    "parameters": "3B",
+    "quantization": "F16",
+    "context_window": "131K tokens",
+    "vram": "6.89 GiB",
+    "size": "5.98 GB"
+  },
+  {
+    "model_name": "ai/llama3.1:latest",
+    "parameters": "8B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "5.33 GiB",
+    "size": "4.58 GB"
+  },
+  {
+    "model_name": "ai/llama3.1:8B-Q4_K_M",
+    "parameters": "8B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "5.33 GiB",
+    "size": "4.58 GB"
+  },
+  {
+    "model_name": "ai/llama3.1:8B-F16",
+    "parameters": "8B",
+    "quantization": "F16",
+    "context_window": "131K tokens",
+    "vram": "15.01 GiB",
+    "size": "14.96 GB"
+  },
+  {
+    "model_name": "ai/mxbai-embed-large:335M-F16",
+    "parameters": "334.09M",
+    "quantization": "F16",
+    "context_window": "512 tokens",
+    "vram": "0.63 GiB",
+    "size": "638.85 MB"
+  },
+  {
+    "model_name": "ai/mistral:latest",
+    "parameters": "7B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "33K tokens",
+    "vram": "4.85 GiB",
+    "size": "4.07 GB"
+  },
+  {
+    "model_name": "ai/mistral:7B-Q4_K_M",
+    "parameters": "7B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "33K tokens",
+    "vram": "4.85 GiB",
+    "size": "4.07 GB"
+  },
+  {
+    "model_name": "ai/mistral:7B-Q4_0",
+    "parameters": "7B",
+    "quantization": "Q4_0",
+    "context_window": "33K tokens",
+    "vram": "4.61 GiB",
+    "size": "3.83 GB"
+  },
+  {
+    "model_name": "ai/mistral:7B-F16",
+    "parameters": "7B",
+    "quantization": "F16",
+    "context_window": "33K tokens",
+    "vram": "14.10 GiB",
+    "size": "13.50 GB"
+  },
+  {
+    "model_name": "ai/mistral-nemo:latest",
+    "parameters": "12B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "7.78 GiB",
+    "size": "6.96 GB"
+  },
+  {
+    "model_name": "ai/mistral-nemo:12B-Q4_K_M",
+    "parameters": "12B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "131K tokens",
+    "vram": "7.78 GiB",
+    "size": "6.96 GB"
+  },
+  {
+    "model_name": "ai/phi4:latest",
+    "parameters": "15B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "16K tokens",
+    "vram": "9.78 GiB",
+    "size": "8.43 GB"
+  },
+  {
+    "model_name": "ai/phi4:14B-Q4_K_M",
+    "parameters": "15B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "16K tokens",
+    "vram": "9.78 GiB",
+    "size": "8.43 GB"
+  },
+  {
+    "model_name": "ai/phi4:14B-Q4_0",
+    "parameters": "15B",
+    "quantization": "Q4_0",
+    "context_window": "16K tokens",
+    "vram": "9.16 GiB",
+    "size": "7.80 GB"
+  },
+  {
+    "model_name": "ai/phi4:14B-F16",
+    "parameters": "15B",
+    "quantization": "F16",
+    "context_window": "16K tokens",
+    "vram": "27.97 GiB",
+    "size": "27.31 GB"
+  },
+  {
+    "model_name": "ai/qwen2.5:latest",
+    "parameters": "7B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "33K tokens",
+    "vram": "4.83 GiB",
+    "size": "4.36 GB"
+  },
+  {
+    "model_name": "ai/qwen2.5:7B-Q4_K_M",
+    "parameters": "7B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "33K tokens",
+    "vram": "4.83 GiB",
+    "size": "4.36 GB"
+  },
+  {
+    "model_name": "ai/qwen2.5:0.5B-F16",
+    "parameters": "0.5B",
+    "quantization": "F16",
+    "context_window": "33K tokens",
+    "vram": "1.38 GiB",
+    "size": "942.43 MB"
+  },
+  {
+    "model_name": "ai/qwen2.5:1.5B-F16",
+    "parameters": "1.5B",
+    "quantization": "F16",
+    "context_window": "33K tokens",
+    "vram": "3.39 GiB",
+    "size": "2.88 GB"
+  },
+  {
+    "model_name": "ai/qwen2.5:3B-Q4_K_M",
+    "parameters": "3B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "33K tokens",
+    "vram": "2.37 GiB",
+    "size": "1.79 GB"
+  },
+  {
+    "model_name": "ai/qwen2.5:3B-F16",
+    "parameters": "3B",
+    "quantization": "F16",
+    "context_window": "33K tokens",
+    "vram": "6.33 GiB",
+    "size": "5.75 GB"
+  },
+  {
+    "model_name": "ai/qwen2.5:7B-Q4_0",
+    "parameters": "7B",
+    "quantization": "Q4_0",
+    "context_window": "33K tokens",
+    "vram": "4.60 GiB",
+    "size": "4.12 GB"
+  },
+  {
+    "model_name": "ai/qwen2.5:7B-F16",
+    "parameters": "7B",
+    "quantization": "F16",
+    "context_window": "33K tokens",
+    "vram": "13.93 GiB",
+    "size": "14.19 GB"
+  },
+  {
+    "model_name": "ai/qwen3:latest",
+    "parameters": "8B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "41K tokens",
+    "vram": "5.49 GiB",
+    "size": "4.68 GB"
+  },
+  {
+    "model_name": "ai/qwen3:8B-Q4_K_M",
+    "parameters": "8B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "41K tokens",
+    "vram": "5.49 GiB",
+    "size": "4.68 GB"
+  },
+  {
+    "model_name": "ai/qwen3:0.6B-Q4_0",
+    "parameters": "0.6B",
+    "quantization": "Q4_0",
+    "context_window": "41K tokens",
+    "vram": "1.22 GiB",
+    "size": "441.67 MB"
+  },
+  {
+    "model_name": "ai/qwen3:0.6B-Q4_K_M",
+    "parameters": "0.6B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "41K tokens",
+    "vram": "1.23 GiB",
+    "size": "456.11 MB"
+  },
+  {
+    "model_name": "ai/qwen3:0.6B-F16",
+    "parameters": "0.6B",
+    "quantization": "F16",
+    "context_window": "41K tokens",
+    "vram": "1.98 GiB",
+    "size": "1.40 GB"
+  },
+  {
+    "model_name": "ai/qwen3:30B-A3B-F16",
+    "parameters": "30B-A3B",
+    "quantization": "F16",
+    "context_window": "41K tokens",
+    "vram": "57.25 GiB",
+    "size": "56.89 GB"
+  },
+  {
+    "model_name": "ai/qwen3:30B-A3B-Q4_K_M",
+    "parameters": "30B-A3B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "41K tokens",
+    "vram": "18.05 GiB",
+    "size": "17.28 GB"
+  },
+  {
+    "model_name": "ai/qwen3:8B-Q4_0",
+    "parameters": "8B",
+    "quantization": "Q4_0",
+    "context_window": "41K tokens",
+    "vram": "5.26 GiB",
+    "size": "4.44 GB"
+  },
+  {
+    "model_name": "ai/qwen3:8B-F16",
+    "parameters": "8B",
+    "quantization": "F16",
+    "context_window": "41K tokens",
+    "vram": "15.24 GiB",
+    "size": "15.26 GB"
+  },
+  {
+    "model_name": "ai/qwen3:14B-Q6_K",
+    "parameters": "14B",
+    "quantization": "Q6_K",
+    "context_window": "41K tokens",
+    "vram": "11.29 GiB",
+    "size": "11.29 GB"
+  },
+  {
+    "model_name": "ai/qwq:latest",
+    "parameters": "32B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "41K tokens",
+    "vram": "19.72 GiB",
+    "size": "18.48 GB"
+  },
+  {
+    "model_name": "ai/qwq:32B-Q4_K_M",
+    "parameters": "32B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "41K tokens",
+    "vram": "19.72 GiB",
+    "size": "18.48 GB"
+  },
+  {
+    "model_name": "ai/qwq:32B-Q4_0",
+    "parameters": "32B",
+    "quantization": "Q4_0",
+    "context_window": "41K tokens",
+    "vram": "18.60 GiB",
+    "size": "17.35 GB"
+  },
+  {
+    "model_name": "ai/qwq:32B-F16",
+    "parameters": "32B",
+    "quantization": "F16",
+    "context_window": "41K tokens",
+    "vram": "61.23 GiB",
+    "size": "61.03 GB"
+  },
+  {
+    "model_name": "ai/smollm2:latest",
+    "parameters": "360M",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "8K tokens",
+    "vram": "0.63 GiB",
+    "size": "256.35 MB"
+  },
+  {
+    "model_name": "ai/smollm2:360M-Q4_K_M",
+    "parameters": "360M",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "8K tokens",
+    "vram": "0.63 GiB",
+    "size": "256.35 MB"
+  },
+  {
+    "model_name": "ai/smollm2:135M-Q4_0",
+    "parameters": "135M",
+    "quantization": "Q4_0",
+    "context_window": "8K tokens",
+    "vram": "0.35 GiB",
+    "size": "85.77 MB"
+  },
+  {
+    "model_name": "ai/smollm2:135M-Q4_K_M",
+    "parameters": "135M",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "8K tokens",
+    "vram": "0.36 GiB",
+    "size": "98.87 MB"
+  },
+  {
+    "model_name": "ai/smollm2:135M-F16",
+    "parameters": "135M",
+    "quantization": "F16",
+    "context_window": "8K tokens",
+    "vram": "0.51 GiB",
+    "size": "256.63 MB"
+  },
+  {
+    "model_name": "ai/smollm2:135M-Q2_K",
+    "parameters": "135M",
+    "quantization": "Q2_K",
+    "context_window": "8K tokens",
+    "vram": "0.34 GiB",
+    "size": "82.41 MB"
+  },
+  {
+    "model_name": "ai/smollm2:360M-Q4_0",
+    "parameters": "360M",
+    "quantization": "Q4_0",
+    "context_window": "8K tokens",
+    "vram": "0.59 GiB",
+    "size": "216.80 MB"
+  },
+  {
+    "model_name": "ai/smollm2:360M-F16",
+    "parameters": "360M",
+    "quantization": "F16",
+    "context_window": "8K tokens",
+    "vram": "1.06 GiB",
+    "size": "690.24 MB"
+  },
+  {
+    "model_name": "ai/gemma3n:latest",
+    "parameters": "6.9B",
+    "quantization": "MOSTLY_Q4_K_M",
+    "context_window": "33K tokens",
+    "vram": "3.49 GiB",
+    "size": "3.94 GB"
+  },
+  {
+    "model_name": "ai/gemma3n:4B-Q4_K_M",
+    "parameters": "6.9B",
+    "quantization": "MOSTLY_Q4_K_M",
+    "context_window": "33K tokens",
+    "vram": "3.49 GiB",
+    "size": "3.94 GB"
+  },
+  {
+    "model_name": "ai/gemma3n:2B-Q4_K_M",
+    "parameters": "4.5B",
+    "quantization": "MOSTLY_Q4_K_M",
+    "context_window": "33K tokens",
+    "vram": "2.28 GiB",
+    "size": "2.59 GB"
+  },
+  {
+    "model_name": "ai/gemma3n:2B-F16",
+    "parameters": "4.5B",
+    "quantization": "MOSTLY_F16",
+    "context_window": "33K tokens",
+    "vram": "5.09 GiB",
+    "size": "8.30 GB"
+  },
+  {
+    "model_name": "ai/gemma3n:4B-F16",
+    "parameters": "6.9B",
+    "quantization": "MOSTLY_F16",
+    "context_window": "33K tokens",
+    "vram": "8.81 GiB",
+    "size": "12.79 GB"
+  }
+]

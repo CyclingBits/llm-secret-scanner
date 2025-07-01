@@ -1,25 +1,27 @@
 package net.cyclingbits.llmsecretscanner.evaluator
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
-import net.cyclingbits.llmsecretscanner.core.util.ScanReporter
-import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration
+import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.NEGATIVE_CASES_DIR
+import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.POSITIVE_CASES_DIR
+import net.cyclingbits.llmsecretscanner.evaluator.logger.EvaluatorLogger
 import net.cyclingbits.llmsecretscanner.evaluator.service.EvaluationService
 import net.cyclingbits.llmsecretscanner.evaluator.service.ResultsSaver
-import java.io.File
 
 fun main() {
-    ScanReporter.reportEvaluationStart("🚀 Quick evaluation: Java files only, single model")
+
+    val logger = EvaluatorLogger().also { it.reportEvaluationStart() }
+
     val config = ScannerConfiguration(
-        sourceDirectories = listOf(
-            File(EvaluatorConfiguration.POSITIVE_CASES_DIR),
-            File(EvaluatorConfiguration.NEGATIVE_CASES_DIR)
-        ),
+        sourceDirectories = listOf(POSITIVE_CASES_DIR, NEGATIVE_CASES_DIR),
         modelName = "ai/phi4:latest",
         includes = "**/*.java",
         excludes = "**/expected/**",
         chunkAnalysisTimeout = 120
     )
-    val evaluationService = EvaluationService(config)
+    val evaluationService = EvaluationService(config, logger)
     val result = evaluationService.evaluateModel()
-    ResultsSaver.saveResultsToMarkdown(listOf(result))
+
+    ResultsSaver(logger).saveResultsToMarkdown(listOf(result), config)
+
+    logger.reportEvaluationComplete(result.scanTime / 1000)
 }

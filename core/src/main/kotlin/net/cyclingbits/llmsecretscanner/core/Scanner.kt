@@ -1,53 +1,52 @@
 package net.cyclingbits.llmsecretscanner.core
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
-import net.cyclingbits.llmsecretscanner.core.exception.ScannerException
+import net.cyclingbits.llmsecretscanner.core.file.FileFinder
 import net.cyclingbits.llmsecretscanner.core.llm.ContainerManager
-import net.cyclingbits.llmsecretscanner.core.model.Issue
+import net.cyclingbits.llmsecretscanner.core.llm.ModelClient
+import net.cyclingbits.llmsecretscanner.core.logger.ScanLogger
 import net.cyclingbits.llmsecretscanner.core.model.ScanResult
 import net.cyclingbits.llmsecretscanner.core.service.CodeAnalyzer
-import net.cyclingbits.llmsecretscanner.core.util.ScanReporter
 import java.io.File
+import java.time.Duration
+import java.time.Instant
 
-/**
- * Main scanner orchestrator that coordinates file discovery, container management,
- * code analysis, and progress reporting.
- */
-class Scanner(private val configuration: ScannerConfiguration) : AutoCloseable {
+class Scanner(
+    private val configuration: ScannerConfiguration,
+    private val logger: ScanLogger,
+    private val containerManager: ContainerManager,
+    private val modelClient: ModelClient,
+    private val fileFinder: FileFinder,
+    private val codeAnalyzer: CodeAnalyzer,
+) : AutoCloseable {
 
-    private val containerManager = ContainerManager(configuration)
-    private val container = containerManager.startContainer()
-    private val codeAnalyzer = CodeAnalyzer(configuration, container)
-    
     init {
-        ScanReporter.reportScanStart(configuration)
+        logger.reportScanStart()
+        logger.reportScanConfiguration(configuration)
+        containerManager.getContainer()
+    }
+
+    fun scan(): ScanResult {
+        val filesToScan = fileFinder.findFiles(configuration.sourceDirectories)
+        return executeScan(filesToScan)
     }
 
     fun executeScan(filesToScan: List<File>): ScanResult {
-        val analysisStartTime = System.currentTimeMillis()
+        val startTime = Instant.now()
 
-        val results = filesToScan.mapIndexed { fileIndex, file ->
-            scanFile(file, fileIndex + 1, filesToScan.size)
+        val fileScanResults = filesToScan.mapIndexedNotNull { index, file ->
+            codeAnalyzer.analyzeFile(file, index + 1, filesToScan.size)
         }
-        
-        val issues = results.mapNotNull { it.getOrNull() }.flatten()
-        val filesAnalyzed = results.count { it.isSuccess }
 
-        ScanReporter.reportScanComplete(issues.size, filesAnalyzed, filesToScan.size, System.currentTimeMillis() - analysisStartTime)
+        val totalTime = Duration.between(startTime, Instant.now())
 
-        return ScanResult(issues, filesAnalyzed, filesToScan.size)
-    }
+        logger.reportScanComplete(fileScanResults, filesToScan.size, totalTime)
 
-    private fun scanFile(file: File, fileIndex: Int, totalFiles: Int): Result<List<Issue>> {
-        return try {
-            Result.success(codeAnalyzer.analyzeFile(file, fileIndex, totalFiles))
-        } catch (e: ScannerException) {
-            ScanReporter.reportError("Error analyzing file ${file.name}: ${e.message}")
-            Result.failure(RuntimeException(e.message))
-        }
+        return ScanResult(fileScanResults = fileScanResults)
     }
 
     override fun close() {
+        modelClient.close()
         containerManager.close()
     }
 }

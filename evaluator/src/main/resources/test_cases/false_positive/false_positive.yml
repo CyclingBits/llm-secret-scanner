@@ -1,0 +1,219 @@
+
+database:
+  host: localhost
+  port: 5432
+  name: myapp
+  driver: org.postgresql.Driver
+  pool:
+    size: 10
+    timeout: 30
+  ssl:
+    enabled: true
+  username: ${DATABASE_USERNAME}
+  password: ${DATABASE_PASSWORD}
+
+api:
+  endpoint: https://api.example.com/v1
+  version: "2.0"
+  timeout: 30000
+  retry:
+    count: 3
+    delay: 1000
+  rate_limit: 100
+  key: ${API_KEY}
+  secret: ${API_SECRET}
+
+authentication:
+  method: bearer
+  header:
+    name: Authorization
+    prefix: Bearer
+  session:
+    timeout: 3600
+  max_login_attempts: 5
+  token: ${AUTH_TOKEN}
+
+jwt:
+  algorithm: HS256
+  expiry_seconds: 3600
+  issuer: myapp-service
+  audience: myapp-client
+  secret_key: ${JWT_SIGNING_KEY}
+
+encryption:
+  algorithm: AES-256-CBC
+  key_size: 256
+  iv_size: 16
+  provider: SunJCE
+  master_key: ${MASTER_ENCRYPTION_KEY}
+  data_key: ${DATA_ENCRYPTION_KEY}
+
+external_services:
+  payment:
+    url: https://payments.example.com/api
+    timeout: 45000
+    version: v3
+    api_key: ${PAYMENT_API_KEY}
+    webhook_secret: ${PAYMENT_WEBHOOK_SECRET}
+  
+  email:
+    provider: sendgrid
+    url: https://api.sendgrid.com/v3
+    template_engine: mustache
+    from_address: noreply@example.com
+    api_key: ${EMAIL_API_KEY}
+    smtp_password: ${SMTP_PASSWORD}
+  
+  storage:
+    provider: s3
+    bucket: my-app-file
+    region: us-east-1
+    public_url: https://files.example.com
+    max_file_size: 50MB
+    allowed_types:
+      - jpg
+      - png
+      - pdf
+      - docx
+    access_key: ${AWS_ACCESS_KEY_ID}
+    secret_key: ${AWS_SECRET_ACCESS_KEY}
+
+caching:
+  provider: redis
+  host: localhost
+  port: 6379
+  database: 0
+  timeout: 5000
+  pool_size: 20
+  ttl: 3600
+  password: ${REDIS_PASSWORD}
+
+logging:
+  level: INFO
+  pattern: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: logs/application.log
+  max_file_size: 10MB
+  max_files: 10
+
+monitoring:
+  enabled: true
+  metrics:
+    provider: prometheus
+    endpoint: /metrics
+    port: 9090
+  health:
+    endpoint: /health
+    timeout: 10000
+  api_key: ${MONITORING_API_KEY}
+
+security:
+  cors:
+    enabled: true
+    allowed_origins:
+      - https://example.com
+      - https://app.example.com
+    allowed_methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+    allowed_headers:
+      - Content-Type
+      - Authorization
+      - X-API-Key
+  
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+    burst_size: 20
+
+validation:
+  patterns:
+    password: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$"
+    api_key: "^[a-zA-Z0-9]{32,}$"
+    email: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+    url: "^https?://[^\\s/$.?#].[^\\s]*$"
+
+examples:
+  # Example formats (not actual secrets)
+  api_key_format: "sk-[48 characters]"
+  jwt_format: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+  uuid_format: "123e4567-e89b-12d3-a456-426614174000"
+  private_key_format: "-----BEGIN PRIVATE KEY-----"
+
+test_placeholders:
+  # Test data that looks like secrets but isn't
+  password: "your-password-here"
+  api_key: "your-api-key-here"
+  token: "your-token-here"
+  secret: "your-secret-here"
+
+environment_references:
+  database_password: "${DATABASE_PASSWORD}"
+  api_secret_key: "${API_SECRET_KEY}"
+  jwt_signing_key: "${JWT_SIGNING_KEY}"
+  redis_password: "${REDIS_PASSWORD}"
+  smtp_password: "${SMTP_PASSWORD}"
+
+secret_references:
+  database_credentials: "vault:secret/database#password"
+  api_keys: "vault:secret/api-keys#primary"
+  certificates: "vault:secret/certificates#app-cert"
+  third_party_tokens: "vault:secret/external#payment-token"
+
+configuration:
+  version: "1.0.0"
+  environment: development
+  last_updated: "2024-01-01T00:00:00Z"
+  description: "Application configuration without secrets"
+
+documentation:
+  links:
+    security: "https://docs.example.com/security"
+    api: "https://docs.example.com/api"
+    deployment: "https://docs.example.com/deployment"
+
+feature_flags:
+  new_authentication: false
+  advanced_logging: true
+  experimental_cache: false
+
+performance:
+  thread_pool_size: 20
+  connection_pool_size: 50
+  query_timeout: 30
+  batch_size: 100
+
+development:
+  debug_enabled: false
+  hot_reload: true
+  test_data_enabled: false
+  mock_external_services: true
+
+system_properties:
+  user_home: "${user.home}"
+  java_version: "${java.version}"
+  os_name: "${os.name}"
+  temp_dir: "${java.io.tmpdir}"
+
+build_info:
+  version: "${project.version}"
+  timestamp: "${build.timestamp}"
+  git_commit: "${git.commit.id}"
+  git_branch: "${git.branch}"
+
+
+replacements:
+  database_password: "REPLACE_WITH_ACTUAL_PASSWORD"
+  api_key: "REPLACE_WITH_ACTUAL_API_KEY"
+  secret_token: "REPLACE_WITH_ACTUAL_TOKEN"
+
+metadata:
+  password_min_length: 8
+  token_expiry_hours: 24
+  secret_rotation_days: 90
+  api_key_length: 32
+  private_key_algorithm: RSA
+  certificate_validity_days: 365
+
+inline_secret: ${SECRET_VALUE}inline_password: ${DB_PASS}

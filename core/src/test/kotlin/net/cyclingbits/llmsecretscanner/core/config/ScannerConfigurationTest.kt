@@ -1,148 +1,90 @@
 package net.cyclingbits.llmsecretscanner.core.config
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
 import java.io.File
 
 class ScannerConfigurationTest {
 
     @Test
-    fun create_validConfiguration_succeeds() {
-        val tempDir = createTempDir()
-        
+    fun `should create configuration with defaults`() {
         val config = ScannerConfiguration(
-            sourceDirectories = listOf(tempDir),
-            modelName = "ai/phi4:latest"
+            sourceDirectories = listOf(File(".")),
+            modelName = "ai/test-model:latest"
         )
         
-        assertEquals(listOf(tempDir), config.sourceDirectories)
-        assertEquals("ai/phi4:latest", config.modelName)
-        assertEquals(1, config.timeout)
-        
-        tempDir.deleteRecursively()
+        assertEquals(listOf(File(".")), config.sourceDirectories)
+        assertEquals("ai/test-model:latest", config.modelName)
+        assertEquals("**/*.java,**/*.kt,**/*.xml,**/*.properties,**/*.yml,**/*.yaml,**/*.json,**/*.md,**/*.sql,**/*.gradle,**/*.kts,**/*.env,**/*.sh,**/*.bat,**/*.html,**/*.css,**/*.js,**/*.ts,**/*.dockerfile", config.includes)
+        assertEquals("**/target/**", config.excludes)
+        assertEquals(100 * 1024, config.maxFileSizeBytes)
+        assertEquals(true, config.enableChunking)
+        assertEquals(40, config.maxLinesPerChunk)
+        assertEquals(5, config.chunkOverlapLines)
     }
 
     @Test
-    fun create_invalidModelName_throwsException() {
-        val tempDir = createTempDir()
-        
-        assertThrows<IllegalArgumentException> {
+    fun `should validate source directories exist`() {
+        val exception = assertThrows<IllegalArgumentException> {
             ScannerConfiguration(
-                sourceDirectories = listOf(tempDir),
+                sourceDirectories = listOf(File("/non/existent/path")),
+                modelName = "ai/test-model:latest"
+            )
+        }
+        
+        assertTrue(exception.message!!.contains("Source directory must exist"))
+    }
+
+    @Test
+    fun `should validate model name format`() {
+        val exception = assertThrows<IllegalArgumentException> {
+            ScannerConfiguration(
+                sourceDirectories = listOf(File(".")),
                 modelName = "invalid-model-name"
             )
         }
         
-        tempDir.deleteRecursively()
+        assertTrue(exception.message!!.contains("Invalid model name format"))
     }
 
     @Test
-    fun create_nonExistentDirectory_throwsException() {
-        val nonExistentDir = File("/path/that/does/not/exist")
-        
-        assertThrows<IllegalArgumentException> {
+    fun `should validate chunk size is positive`() {
+        val exception = assertThrows<IllegalArgumentException> {
             ScannerConfiguration(
-                sourceDirectories = listOf(nonExistentDir),
-                modelName = "ai/phi4:latest"
-            )
-        }
-    }
-
-    @Test
-    fun create_invalidTimeout_throwsException() {
-        val tempDir = createTempDir()
-        
-        assertThrows<IllegalArgumentException> {
-            ScannerConfiguration(
-                sourceDirectories = listOf(tempDir),
-                modelName = "ai/phi4:latest",
-                timeout = -1
+                sourceDirectories = listOf(File(".")),
+                modelName = "ai/test-model:latest",
+                maxLinesPerChunk = 0
             )
         }
         
-        tempDir.deleteRecursively()
+        assertTrue(exception.message!!.contains("Max lines per chunk must be positive"))
     }
 
     @Test
-    fun create_timeoutTooLarge_throwsException() {
-        val tempDir = createTempDir()
-        
-        assertThrows<IllegalArgumentException> {
+    fun `should validate overlap is less than chunk size`() {
+        val exception = assertThrows<IllegalArgumentException> {
             ScannerConfiguration(
-                sourceDirectories = listOf(tempDir),
-                modelName = "ai/phi4:latest",
-                timeout = 40
+                sourceDirectories = listOf(File(".")),
+                modelName = "ai/test-model:latest",
+                maxLinesPerChunk = 10,
+                chunkOverlapLines = 15
             )
         }
         
-        tempDir.deleteRecursively()
+        assertTrue(exception.message!!.contains("must be less than max lines per chunk"))
     }
 
     @Test
-    fun create_invalidMaxTokens_throwsException() {
-        val tempDir = createTempDir()
-        
-        assertThrows<IllegalArgumentException> {
+    fun `should validate temperature range`() {
+        val exception = assertThrows<IllegalArgumentException> {
             ScannerConfiguration(
-                sourceDirectories = listOf(tempDir),
-                modelName = "ai/phi4:latest",
-                maxTokens = 0
+                sourceDirectories = listOf(File(".")),
+                modelName = "ai/test-model:latest",
+                temperature = 2.5
             )
         }
         
-        tempDir.deleteRecursively()
-    }
-
-    @Test
-    fun create_invalidTemperature_throwsException() {
-        val tempDir = createTempDir()
-        
-        assertThrows<IllegalArgumentException> {
-            ScannerConfiguration(
-                sourceDirectories = listOf(tempDir),
-                modelName = "ai/phi4:latest",
-                temperature = 3.0
-            )
-        }
-        
-        tempDir.deleteRecursively()
-    }
-
-    @Test
-    fun create_emptyIncludes_throwsException() {
-        val tempDir = createTempDir()
-        
-        assertThrows<IllegalArgumentException> {
-            ScannerConfiguration(
-                sourceDirectories = listOf(tempDir),
-                modelName = "ai/phi4:latest",
-                includes = ""
-            )
-        }
-        
-        tempDir.deleteRecursively()
-    }
-
-    @Test
-    fun create_withDefaultSystemPrompt_succeeds() {
-        val tempDir = createTempDir()
-        
-        val config = ScannerConfiguration(
-            sourceDirectories = listOf(tempDir),
-            modelName = "ai/phi4:latest"
-        )
-        
-        assert(config.systemPrompt.isNotEmpty())
-        
-        tempDir.deleteRecursively()
-    }
-
-
-    private fun createTempDir(): File {
-        val tempDir = File.createTempFile("test", "dir")
-        tempDir.delete()
-        tempDir.mkdirs()
-        return tempDir
+        assertTrue(exception.message!!.contains("Temperature must be between 0.0 and 2.0"))
     }
 }

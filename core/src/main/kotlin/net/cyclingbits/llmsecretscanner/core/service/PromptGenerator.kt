@@ -1,19 +1,19 @@
 package net.cyclingbits.llmsecretscanner.core.service
 
-import net.cyclingbits.llmsecretscanner.core.model.FileChunk
+import net.cyclingbits.llmsecretscanner.core.file.FileChunk
 import java.io.File
 
-object PromptGenerator {
+internal object PromptGenerator {
 
-    fun createFilePrompt(file: File): String {
-        val fileContent = file.readText()
-        val numberedLines = formatLinesWithNumbers(fileContent.lines(), 1)
-        return "Analyze the following code from file '${file.path}':\n```\n$numberedLines\n```"
-    }
+    fun createFilePrompt(file: File): String =
+        createPrompt(file.path, file.readText().lines(), 1)
 
-    fun createChunkPrompt(file: File, chunk: FileChunk): String {
-        val numberedLines = formatLinesWithNumbers(chunk.content.lines(), chunk.startLine)
-        return "Analyze the following code from file '${file.path}':\n```\n$numberedLines\n```"
+    fun createChunkPrompt(file: File, chunk: FileChunk): String =
+        createPrompt(file.path, chunk.content.lines(), chunk.startLine)
+
+    private fun createPrompt(filePath: String, lines: List<String>, startLine: Int): String {
+        val numberedLines = formatLinesWithNumbers(lines, startLine)
+        return "Analyze the following code from file '$filePath':\n```\n$numberedLines\n```"
     }
 
     private fun formatLinesWithNumbers(lines: List<String>, startLineNumber: Int): String {

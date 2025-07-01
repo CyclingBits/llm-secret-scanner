@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML configuration file without secrets -->
+<configuration>
+    <properties>
+        <property name="database.host" value="localhost" />
+        <property name="database.port" value="5432" />
+        <property name="database.name" value="myapp" />
+        <property name="api.endpoint" value="https://api.example.com/v1" />
+        <property name="auth.method" value="bearer" />
+        <property name="ssl.enabled" value="true" />
+        <property name="logging.level" value="INFO" />
+        <property name="password.min.length" value="8" />
+        <property name="token.expiry.hours" value="24" />
+        <property name="api.key.header" value="X-API-Key" />
+    </properties>
+
+    <datasources>
+        <datasource>
+            <name>development</name>
+            <url>jdbc:postgresql://localhost:5432/dev_db</url>
+            <username>dev_user</username>
+            <driver>org.postgresql.Driver</driver>
+            <pool-size>10</pool-size>
+            <timeout>30</timeout>
+        </datasource>
+        
+        <datasource>
+            <name>test</name>
+            <url>jdbc:h2:mem:testdb</url>
+            <username>sa</username>
+            <driver>org.h2.Driver</driver>
+            <pool-size>5</pool-size>
+        </datasource>
+    </datasources>
+
+    <security>
+        <authentication>
+            <provider>ldap</provider>
+            <ldap-url>ldap://localhost:389</ldap-url>
+            <base-dn>dc=example,dc=com</base-dn>
+            <user-search-filter>(uid={0})</user-search-filter>
+        </authentication>
+        
+        <authorization>
+            <role-mapping>
+                <role name="admin" permissions="read,write,delete" />
+                <role name="user" permissions="read" />
+                <role name="guest" permissions="" />
+            </role-mapping>
+        </authorization>
+        
+        <encryption>
+            <algorithm>AES-256-CBC</algorithm>
+            <key-size>256</key-size>
+            <iv-size>16</iv-size>
+        </encryption>
+    </security>
+
+    <external-services>
+        <service name="payment-gateway">
+            <endpoint>https://payments.example.com/api</endpoint>
+            <timeout>30000</timeout>
+            <retry-count>3</retry-count>
+            <version>v2</version>
+        </service>
+        
+        <service name="email-service">
+            <endpoint>https://email.example.com/api</endpoint>
+            <provider>sendgrid</provider>
+            <template-engine>mustache</template-engine>
+        </service>
+        
+        <service name="notification-service">
+            <endpoint>https://notifications.example.com/api</endpoint>
+            <channels>email,sms,push</channels>
+        </service>
+    </external-services>
+
+    <caching>
+        <provider>redis</provider>
+        <host>localhost</host>
+        <port>6379</port>
+        <database>0</database>
+        <timeout>5000</timeout>
+        <pool-size>20</pool-size>
+        <ttl>3600</ttl>
+    </caching>
+
+    <logging>
+        <level>INFO</level>
+        <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        <file>logs/application.log</file>
+        <max-file-size>10MB</max-file-size>
+        <max-files>10</max-files>
+    </logging>
+
+    <monitoring>
+        <metrics>
+            <enabled>true</enabled>
+            <provider>prometheus</provider>
+            <endpoint>/metrics</endpoint>
+            <port>9090</port>
+        </metrics>
+        
+        <health-check>
+            <enabled>true</enabled>
+            <endpoint>/health</endpoint>
+            <timeout>10000</timeout>
+        </health-check>
+    </monitoring>
+
+    <api-configuration>
+        <rate-limiting>
+            <enabled>true</enabled>
+            <requests-per-minute>100</requests-per-minute>
+            <burst-size>20</burst-size>
+        </rate-limiting>
+        
+        <cors>
+            <enabled>true</enabled>
+            <allowed-origins>https://example.com,https://app.example.com</allowed-origins>
+            <allowed-methods>GET,POST,PUT,DELETE</allowed-methods>
+            <allowed-headers>Content-Type,Authorization,X-API-Key</allowed-headers>
+        </cors>
+    </api-configuration>
+
+    <file-storage>
+        <provider>s3</provider>
+        <bucket>my-app-files</bucket>
+        <region>us-east-1</region>
+        <public-url>https://files.example.com</public-url>
+        <max-file-size>50MB</max-file-size>
+        <allowed-types>jpg,png,pdf,docx</allowed-types>
+    </file-storage>
+
+    <environment-variables>
+        <!-- These are just references to environment variables -->
+        <variable name="DATABASE_PASSWORD" description="Database password from environment" />
+        <variable name="API_SECRET_KEY" description="API secret key from environment" />
+        <variable name="JWT_SIGNING_KEY" description="JWT signing key from environment" />
+        <variable name="REDIS_PASSWORD" description="Redis password from environment" />
+        <variable name="SMTP_PASSWORD" description="SMTP password from environment" />
+    </environment-variables>
+
+    <secret-references>
+        <!-- These are references to secrets stored in vault -->
+        <secret-ref name="database-credentials" vault-path="secret/database" />
+        <secret-ref name="api-keys" vault-path="secret/api-keys" />
+        <secret-ref name="certificates" vault-path="secret/certificates" />
+        <secret-ref name="third-party-tokens" vault-path="secret/external" />
+    </secret-references>
+
+    <placeholders>
+        <!-- These are placeholders that will be replaced during deployment -->
+        <placeholder key="DATABASE_URL" value="${DATABASE_URL}" />
+        <placeholder key="API_ENDPOINT" value="${API_ENDPOINT}" />
+        <placeholder key="REDIS_URL" value="${REDIS_URL}" />
+        <placeholder key="LOG_LEVEL" value="${LOG_LEVEL}" />
+    </placeholders>
+
+    <examples>
+        <!-- Example configurations for documentation -->
+        <example-api-key format="sk-[48 characters]" description="Stripe-style API key" />
+        <example-jwt format="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..." description="JWT token format" />
+        <example-uuid format="123e4567-e89b-12d3-a456-426614174000" description="UUID format" />
+        <example-private-key format="-----BEGIN PRIVATE KEY-----" description="PEM format private key" />
+    </examples>
+
+    <validation-rules>
+        <rule field="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" />
+        <rule field="api-key" pattern="^[a-zA-Z0-9]{32,}$" />
+        <rule field="email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" />
+        <rule field="url" pattern="^https?://[^\s/$.?#].[^\s]*$" />
+    </validation-rules>
+
+    <test-data>
+        <!-- Test data that looks like secrets but isn't -->
+        <test-password>TestPassword123!</test-password>
+        <test-api-key>test_api_key_placeholder</test-api-key>
+        <test-token>test_token_placeholder</test-token>
+        <test-uuid>00000000-0000-0000-0000-000000000000</test-uuid>
+    </test-data>
+
+    <!-- Comments about security -->
+    <!-- 
+         Security best practices:
+         - Never store passwords in plain text
+         - Use environment variables for secrets
+         - Rotate API keys regularly
+         - Use strong encryption algorithms
+         - Validate all input data
+    -->
+
+    <documentation>
+        <link href="https://docs.example.com/security" title="Security Guidelines" />
+        <link href="https://docs.example.com/api" title="API Documentation" />
+        <link href="https://docs.example.com/deployment" title="Deployment Guide" />
+    </documentation>
+
+</configuration>

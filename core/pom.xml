@@ -5,7 +5,7 @@
     <parent>
         <groupId>net.cyclingbits</groupId>
         <artifactId>llm-secret-scanner-parent</artifactId>
-        <version>1.2.0</version>
+        <version>1.3.0</version>
     </parent>
 
     <artifactId>llm-secret-scanner-core</artifactId>
@@ -27,10 +27,22 @@
             <artifactId>plexus-utils</artifactId>
         </dependency>
 
-        <!--    fuel    -->
+        <!--    ktor    -->
         <dependency>
-            <groupId>com.github.kittinunf.fuel</groupId>
-            <artifactId>fuel</artifactId>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-client-core-jvm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-client-cio-jvm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-client-content-negotiation-jvm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-serialization-jackson-jvm</artifactId>
         </dependency>
 
         <!--    jackson    -->
@@ -49,6 +61,10 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
 
         <!--    testcontainers    -->

@@ -3,9 +3,9 @@
 > AI-powered security scanner that detects secrets, API keys, and sensitive data in source code using local Large Language Models.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Changelog](https://img.shields.io/badge/changelog-v1.2.0-blue.svg)](CHANGELOG.md)
+[![Changelog](https://img.shields.io/badge/changelog-v1.3.0-blue.svg)](CHANGELOG.md)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/cyclingbits/llm-secret-scanner)
-[![Test Coverage](https://img.shields.io/badge/coverage-80%25-green.svg)](https://github.com/cyclingbits/llm-secret-scanner)
+[![Tests](https://img.shields.io/badge/tests-72_passing-brightgreen.svg)](https://github.com/cyclingbits/llm-secret-scanner)
 [![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://openjdk.java.net/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.1.10-purple.svg)](https://kotlinlang.org/)
 [![Maven](https://img.shields.io/badge/Maven-3.6+-red.svg)](https://maven.apache.org/)
@@ -64,9 +64,9 @@ You'll also need to authenticate with GitHub Packages. Add to your `~/.m2/settin
 #### Option B: Download from GitHub Releases (Recommended)
 ```bash
 # Download the latest release JARs
-wget https://github.com/cyclingbits/llm-secret-scanner/releases/latest/download/llm-secret-scanner-maven-plugin-1.2.0.jar
+wget https://github.com/cyclingbits/llm-secret-scanner/releases/latest/download/llm-secret-scanner-maven-plugin-1.3.0.jar
 # Install to local Maven repository
-mvn install:install-file -Dfile=llm-secret-scanner-maven-plugin-1.2.0.jar -DgroupId=net.cyclingbits -DartifactId=llm-secret-scanner-maven-plugin -Dversion=1.2.0 -Dpackaging=jar
+mvn install:install-file -Dfile=llm-secret-scanner-maven-plugin-1.3.0.jar -DgroupId=net.cyclingbits -DartifactId=llm-secret-scanner-maven-plugin -Dversion=1.3.0 -Dpackaging=jar
 ```
 
 #### Option C: Build from Source
@@ -84,7 +84,7 @@ Add the plugin to your `pom.xml` (minimal configuration):
 <plugin>
     <groupId>net.cyclingbits</groupId>
     <artifactId>llm-secret-scanner-maven-plugin</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </plugin>
 ```
 
@@ -106,19 +106,19 @@ With an outstanding **93.8%** detection rate, only **2.0%** false positives, and
 
 ### 📊 **All Available Models**
 
-| Model | Detection Rate | False Positive Rate | Scan Success | Analysis Time | Parameters | Context Window | Size | Best For                                      |
-|-------|----------------|---------------------|--------------|---------------|------------|----------------|------|-----------------------------------------------|
-| `ai/phi4:latest` ⭐ | **93.8%** | 2.0% | 100% | 1m 47s | 15B | 16K tokens | 8.43 GB | **Default choice - highest accuracy**                            |
-| `ai/llama3.3:latest` | **90.6%** | 2.8% | 100% | 7m 59s | 70B | 131K tokens | 39.59 GB | Maximum accuracy for critical environments                              |
-| `ai/deepcoder-preview:latest` | **84.4%** | 0.0% | 100% | 7m 19s | 14B | 131K tokens | 8.37 GB | Code-specialized with zero false positives                                             |
-| `ai/llama3.1:latest` | **75.0%** | 7.4% | 100% | 7m 19s | 8B | 131K tokens | 4.58 GB | Balanced performance                                             |
-| `ai/mistral:latest` | **71.9%** | 2.8% | 100% | 1m 27s | 7B | 33K tokens | 4.07 GB | Fast scanning                                             |
-| `ai/mistral-nemo:latest` | **68.8%** | 0.0% | 100% | 1m 11s | 12B | 131K tokens | 6.96 GB | Zero false positives                                             |
-| `ai/qwen3:latest` | **68.8%** | 0.0% | 100% | 9m 34s | 8B | 41K tokens | 4.68 GB | Zero false positives                        |
-| `ai/gemma3:latest` | **65.6%** | 14.5% | 100% | 1m 40s | 4B | 131K tokens | 2.31 GB | Fast & lightweight                                             |
-| `ai/gemma3-qat:latest` | **59.4%** | 9.9% | 100% | 1m 27s | 3.88B | 131K tokens | 2.93 GB | Fast & lightweight                                             |
-| `ai/llama3.2:latest` | **56.3%** | 100.0% | 50% | 4m 14s | 3B | 131K tokens | 1.87 GB | ⚠️ High false positive rate |
-| `ai/deepseek-r1-distill-llama:latest` | **56.3%** | 100.0% | 50% | 3m 28s | 8B | 131K tokens | 4.58 GB | ⚠️ High false positive rate                                             |
+| Model | Detection Rate | False Positive Rate | Scan Success | Analysis Time | Parameters | Context Window | Size |
+|-------|----------------|---------------------|--------------|---------------|------------|----------------|------|
+| `ai/phi4:latest` ⭐ | **93.8%** | 2.0% | 100% | 1m 47s | 15B | 16K tokens | 8.43 GB |
+| `ai/llama3.3:latest` | **90.6%** | 2.8% | 100% | 7m 59s | 70B | 131K tokens | 39.59 GB |
+| `ai/deepcoder-preview:latest` | **84.4%** | 0.0% | 100% | 7m 19s | 14B | 131K tokens | 8.37 GB |
+| `ai/llama3.1:latest` | **75.0%** | 7.4% | 100% | 7m 19s | 8B | 131K tokens | 4.58 GB |
+| `ai/mistral:latest` | **71.9%** | 2.8% | 100% | 1m 27s | 7B | 33K tokens | 4.07 GB |
+| `ai/mistral-nemo:latest` | **68.8%** | 0.0% | 100% | 1m 11s | 12B | 131K tokens | 6.96 GB |
+| `ai/qwen3:latest` | **68.8%** | 0.0% | 100% | 9m 34s | 8B | 41K tokens | 4.68 GB |
+| `ai/gemma3:latest` | **65.6%** | 14.5% | 100% | 1m 40s | 4B | 131K tokens | 2.31 GB |
+| `ai/gemma3-qat:latest` | **59.4%** | 9.9% | 100% | 1m 27s | 3.88B | 131K tokens | 2.93 GB |
+| `ai/llama3.2:latest` | **56.3%** | 100.0% | 50% | 4m 14s | 3B | 131K tokens | 1.87 GB |
+| `ai/deepseek-r1-distill-llama:latest` | **56.3%** | 100.0% | 50% | 3m 28s | 8B | 131K tokens | 4.58 GB |
 
 > 📊 **Performance data** based on analysis of test fixtures with known vulnerabilities and clean code samples. All models available from [Docker Hub AI](https://hub.docker.com/u/ai).
 > 
@@ -162,19 +162,22 @@ For more control, you can customize the plugin configuration:
 <plugin>
     <groupId>net.cyclingbits</groupId>
     <artifactId>llm-secret-scanner-maven-plugin</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
     <configuration>
         <sourceDirectories>
-            <sourceDirectory>${project.basedir}/src</sourceDirectory>
+            <sourceDirectory>${project.basedir}/src/main</sourceDirectory>
+            <sourceDirectory>${project.basedir}/src/test</sourceDirectory>
+            <sourceDirectory>${project.basedir}/config</sourceDirectory>
         </sourceDirectories>
-        <includes>**/*.java,**/*.kt,**/*.properties,**/*.yml,**/*.env</includes>
-        <excludes>**/target/**,**/test/**</excludes>
+        <includes>**/*.java,**/*.kt,**/*.xml,**/*.properties,**/*.yml,**/*.yaml,**/*.json,**/*.md,**/*.sql,**/*.gradle,**/*.kts,**/*.env,**/*.sh,**/*.bat,**/*.html,**/*.css,**/*.js,**/*.ts,**/*.dockerfile</includes>
+        <excludes>**/target/**</excludes>
         <modelName>ai/phi4:latest</modelName>
         <systemPrompt>Find API keys and secrets in the provided code</systemPrompt>
         <failOnError>false</failOnError>
         <chunkAnalysisTimeout>60</chunkAnalysisTimeout>
-        <maxTokens>10000</maxTokens>
+        <maxTokens>16000</maxTokens>
         <temperature>0.0</temperature>
+        <dockerImage>alpine/socat:1.7.4.3-r0</dockerImage>
         <maxFileSizeBytes>102400</maxFileSizeBytes>
         <enableChunking>true</enableChunking>
         <maxLinesPerChunk>40</maxLinesPerChunk>
@@ -196,14 +199,15 @@ For more control, you can customize the plugin configuration:
 | Parameter | Default | Description |
 |-----------|---------|-------------|
 | `sourceDirectories` | `${project.basedir}` | List of directories to scan |
-| `includes` | `**/*.java,**/*.kt,...` | File patterns to include |
+| `includes` | `**/*.java,**/*.kt,**/*.xml,**/*.properties,**/*.yml,**/*.yaml,**/*.json,**/*.md,**/*.sql,**/*.gradle,**/*.kts,**/*.env,**/*.sh,**/*.bat,**/*.html,**/*.css,**/*.js,**/*.ts,**/*.dockerfile` | File patterns to include |
 | `excludes` | `**/target/**` | File patterns to exclude |
 | `modelName` | `ai/phi4:latest` | LLM model to use |
 | `systemPrompt` | _null_ | Custom system prompt (optional) |
 | `failOnError` | `false` | Fail build when issues found |
 | `chunkAnalysisTimeout` | `60` | Chunk analysis timeout (seconds) |
-| `maxTokens` | `10000` | Maximum tokens per request |
+| `maxTokens` | `16000` | Maximum tokens per request |
 | `temperature` | `0.0` | LLM temperature (0.0-2.0) |
+| `dockerImage` | `alpine/socat:1.7.4.3-r0` | Docker proxy image for container communication |
 | `maxFileSizeBytes` | `102400` | Maximum file size (100KB) |
 | `enableChunking` | `true` | Enable file chunking for large files |
 | `maxLinesPerChunk` | `40` | Maximum lines per chunk |

@@ -1,84 +1,90 @@
 package net.cyclingbits.llmsecretscanner.core.llm
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.extensions.jsonBody
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import io.ktor.serialization.jackson.*
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
-import net.cyclingbits.llmsecretscanner.core.exception.HttpException
-import net.cyclingbits.llmsecretscanner.core.exception.JsonParserException
-import net.cyclingbits.llmsecretscanner.core.exception.TimeoutException
-import org.testcontainers.containers.DockerModelRunnerContainer
+import net.cyclingbits.llmsecretscanner.core.logger.ScanLogger
 import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
+import java.time.Duration
+import java.time.Instant
 
 class ModelClient(
     private val config: ScannerConfiguration,
-    private val container: DockerModelRunnerContainer
-) {
+    private val logger: ScanLogger,
+    private val containerManager: ContainerManager
+) : AutoCloseable {
 
-    private val objectMapper = ObjectMapper()
+    private val client = lazy {
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                jackson()
+            }
+            install(HttpTimeout) {
+                requestTimeoutMillis = config.chunkAnalysisTimeout * 1000L
+                connectTimeoutMillis = config.timeout * 1000L
+                socketTimeoutMillis = config.chunkAnalysisTimeout * 1000L
+            }
+        }
+    }
 
-    fun analyze(systemPrompt: String, userPrompt: String): String {
-        val requestBody = createRequestBody(systemPrompt, userPrompt)
+    suspend fun analyze(userPrompt: String): String? {
+        val requestBody = createRequestBody(userPrompt)
         val response = sendRequest(requestBody)
-        return parseResponse(response)
+        return response
     }
 
-    private fun createRequestBody(systemPrompt: String, userPrompt: String): String {
-        val requestMap = mapOf(
+    private fun createRequestBody(userPrompt: String): Map<String, Any> {
+        val body = mutableMapOf<String, Any>(
             "model" to config.modelName,
-            "messages" to createMessages(systemPrompt, userPrompt),
+            "messages" to createMessages(userPrompt),
             "max_tokens" to config.maxTokens,
-            "temperature" to config.temperature
+            "temperature" to config.temperature,
+            "top_p" to config.topP,
+            "seed" to config.seed,
+            "frequency_penalty" to config.frequencyPenalty
         )
-        return objectMapper.writeValueAsString(requestMap)
+
+        return body
     }
 
-    private fun createMessages(systemPrompt: String, userPrompt: String): List<Map<String, String>> {
+    private fun createMessages(userPrompt: String): List<Map<String, String>> {
         return listOf(
-            mapOf("role" to "system", "content" to systemPrompt),
+            mapOf("role" to "system", "content" to config.systemPrompt),
             mapOf("role" to "user", "content" to userPrompt)
         )
     }
 
-    private fun sendRequest(jsonBody: String): String {
-        val endpoint = "${container.openAIEndpoint}/v1/chat/completions"
+    private suspend fun sendRequest(requestBody: Map<String, Any>): String? {
+        val startTime = Instant.now()
+        logger.reportLLMRequest(requestBody)
 
-        val (_, _, result) = Fuel.post(endpoint)
-            .header("Content-Type", "application/json")
-            .jsonBody(jsonBody)
-            .timeout(config.timeout * 1000)
-            .timeoutRead(config.chunkAnalysisTimeout * 1000)
-            .responseString()
+        val endpoint = "${containerManager.getContainer().openAIEndpoint}/v1/chat/completions"
 
-        return result.fold(
-            success = { it },
-            failure = { error ->
-                when (error.cause?.cause ?: error.cause) {
-                    is SocketTimeoutException -> throw TimeoutException("Model API timeout after ${config.chunkAnalysisTimeout}s", error)
-                    is ConnectException -> throw HttpException("Cannot connect to LLM API at $endpoint", error)
-                    is UnknownHostException -> throw HttpException("Unknown host: $endpoint", error)
-                    else -> throw HttpException("HTTP request failed: ${error.message}", error)
-                }
-            }
-        )
-    }
-
-    private fun parseResponse(responseBody: String): String {
-        try {
-            val responseMap = objectMapper.readValue(responseBody, Map::class.java)
-            val content = extractContent(responseMap)
-            return content ?: throw JsonParserException("Invalid response format - no content found")
+        return try {
+            val response = client.value.post(endpoint) {
+                contentType(ContentType.Application.Json)
+                setBody(requestBody)
+            }.bodyAsText()
+            logger.reportLLMResponse(response, Duration.between(startTime, Instant.now()))
+            response
+        } catch (e: HttpRequestTimeoutException) {
+            logger.reportLLMTimeout(config, e).let { null }
+        } catch (e: ConnectException) {
+            logger.reportError("Cannot connect to LLM API at $endpoint", e).let { null }
         } catch (e: Exception) {
-            throw JsonParserException("Failed to parse JSON response", e)
+            logger.reportError("HTTP request failed: ${e.message}", e).let { null }
         }
     }
 
-    private fun extractContent(responseMap: Map<*, *>): String? {
-        val choices = responseMap["choices"] as? List<*>
-        val firstChoice = choices?.firstOrNull() as? Map<*, *>
-        val message = firstChoice?.get("message") as? Map<*, *>
-        return message?.get("content") as? String
+    override fun close() {
+        if (client.isInitialized()) {
+            client.value.close()
+        }
     }
 }

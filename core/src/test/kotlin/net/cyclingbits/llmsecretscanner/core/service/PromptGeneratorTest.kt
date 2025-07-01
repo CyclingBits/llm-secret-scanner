@@ -1,82 +1,43 @@
 package net.cyclingbits.llmsecretscanner.core.service
 
-import net.cyclingbits.llmsecretscanner.core.model.FileChunk
-import net.cyclingbits.llmsecretscanner.core.service.PromptGenerator
+import net.cyclingbits.llmsecretscanner.core.file.FileChunk
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
+import java.nio.file.Path
 
 class PromptGeneratorTest {
 
-    private lateinit var testDir: File
+    @TempDir
+    lateinit var tempDir: Path
 
-    @BeforeEach
-    fun setUp() {
-        testDir = createTempDir()
-        testDir.mkdirs()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        if (::testDir.isInitialized) {
-            testDir.deleteRecursively()
-        }
+    @Test
+    fun `should create file prompt with content`() {
+        val file = File(tempDir.toFile(), "test.java")
+        file.writeText("public class Test {\n    private String apiKey = \"sk-123456\";\n}")
+        
+        val prompt = PromptGenerator.createFilePrompt(file)
+        
+        assertTrue(prompt.contains("test.java"))
+        assertTrue(prompt.contains("sk-123456"))
+        assertTrue(prompt.contains("  1:"))
     }
 
     @Test
-    fun createFilePrompt_includesFilePathAndContent() {
-        val file = File(testDir, "example.java")
-        file.writeText("class Test {}")
-        
-        val result = PromptGenerator.createFilePrompt(file)
-        
-        assertTrue(result.contains(file.path))
-        assertTrue(result.contains("Analyze the following code from file"))
-        assertTrue(result.contains("```"))
-        assertTrue(result.contains("class Test"))
-    }
-
-    @Test
-    fun createChunkPrompt_includesCorrectLineNumbers() {
-        val file = File(testDir, "chunk.java")
+    fun `should create chunk prompt with line numbers`() {
+        val file = File("config.properties")
         val chunk = FileChunk(
-            content = "line1\nline2\nline3",
-            startLine = 10,
-            endLine = 12,
-            chunkIndex = 0,
-            totalChunks = 1
+            content = "api.key=secret123\ndb.password=admin",
+            startLine = 42,
+            endLine = 43
         )
         
-        val result = PromptGenerator.createChunkPrompt(file, chunk)
+        val prompt = PromptGenerator.createChunkPrompt(file, chunk)
         
-        assertTrue(result.contains(" 10: line1"))
-        assertTrue(result.contains(" 11: line2"))
-        assertTrue(result.contains(" 12: line3"))
-    }
-
-    @Test
-    fun createChunkPrompt_includesFilePath() {
-        val file = File(testDir, "chunk.kt")
-        val chunk = FileChunk(
-            content = "content",
-            startLine = 1,
-            endLine = 1,
-            chunkIndex = 0,
-            totalChunks = 1
-        )
-        
-        val result = PromptGenerator.createChunkPrompt(file, chunk)
-        
-        assertTrue(result.contains(file.path))
-        assertTrue(result.contains("Analyze the following code from file"))
-    }
-
-    private fun createTempDir(): File {
-        val tempDir = File.createTempFile("test", "dir")
-        tempDir.delete()
-        tempDir.mkdirs()
-        return tempDir
+        assertTrue(prompt.contains("config.properties"))
+        assertTrue(prompt.contains("secret123"))
+        assertTrue(prompt.contains(" 42:"))
+        assertTrue(prompt.contains(" 43:"))
     }
 }
