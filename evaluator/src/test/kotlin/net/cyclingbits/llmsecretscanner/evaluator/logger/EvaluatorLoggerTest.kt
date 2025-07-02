@@ -1,6 +1,6 @@
 package net.cyclingbits.llmsecretscanner.evaluator.logger
 
-import net.cyclingbits.llmsecretscanner.core.logger.EventStore
+import net.cyclingbits.llmsecretscanner.events.EventStore
 import net.cyclingbits.llmsecretscanner.core.model.FileScanResult
 import net.cyclingbits.llmsecretscanner.core.model.Issue
 import net.cyclingbits.llmsecretscanner.evaluator.model.DetectionResults

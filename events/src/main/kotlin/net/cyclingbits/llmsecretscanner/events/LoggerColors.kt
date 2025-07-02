@@ -1,4 +1,4 @@
-package net.cyclingbits.llmsecretscanner.core.logger
+package net.cyclingbits.llmsecretscanner.events
 
 object LoggerColors {
     // ANSI Color codes

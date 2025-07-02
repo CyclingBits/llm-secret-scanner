@@ -1,6 +1,6 @@
 package net.cyclingbits.llmsecretscanner.core.config
 
-import net.cyclingbits.llmsecretscanner.core.parser.toFormattedJsonString
+import net.cyclingbits.llmsecretscanner.events.toFormattedJsonString
 import java.io.File
 
 data class ScannerConfiguration(

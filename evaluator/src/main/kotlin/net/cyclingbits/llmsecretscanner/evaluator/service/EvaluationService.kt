@@ -6,9 +6,9 @@ import net.cyclingbits.llmsecretscanner.core.file.FileFinder
 import net.cyclingbits.llmsecretscanner.core.model.FileScanResult
 import net.cyclingbits.llmsecretscanner.core.model.Issue
 import net.cyclingbits.llmsecretscanner.core.model.ScanResult
-import net.cyclingbits.llmsecretscanner.core.parser.ObjectMapperHolder
-import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.EXPECTED_ISSUES_DIR
-import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.NEGATIVE_CASES_DIR
+import net.cyclingbits.llmsecretscanner.events.JsonSupport
+import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.POSITIVE_EXPECTED_ISSUES_DIR
+import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.FALSE_POSITIVE_CASES_DIR
 import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.POSITIVE_CASES_DIR
 import net.cyclingbits.llmsecretscanner.evaluator.logger.EvaluatorLogger
 import net.cyclingbits.llmsecretscanner.evaluator.model.EvaluationResult
@@ -28,7 +28,7 @@ class EvaluationService(
 
         val positiveResults = evaluateTestCases(POSITIVE_CASES_DIR)
         val expectedPositiveIssues = loadExpectedIssues()
-        val negativeResults = evaluateTestCases(NEGATIVE_CASES_DIR)
+        val negativeResults = evaluateTestCases(FALSE_POSITIVE_CASES_DIR)
 
         val detectionMetrics = detectionRateCalculator.calculate(positiveResults.fileScanResults, expectedPositiveIssues, negativeResults.fileScanResults)
 
@@ -36,7 +36,8 @@ class EvaluationService(
             modelName = config.modelName,
             detectionRate = detectionMetrics.detectionRate,
             falsePositiveRate = detectionMetrics.falsePositiveRate,
-            scanTime = System.currentTimeMillis() - startTime
+            scanTime = System.currentTimeMillis() - startTime,
+            config = config
         )
     }
 
@@ -52,10 +53,10 @@ class EvaluationService(
         val configCopy = config.copy(sourceDirectories = listOf(POSITIVE_CASES_DIR))
         val actualScannedFiles = FileFinder(configCopy, logger).findFiles(listOf(POSITIVE_CASES_DIR))
 
-        val result = EXPECTED_ISSUES_DIR.listFiles { it.extension == "json" }
+        val result = POSITIVE_EXPECTED_ISSUES_DIR.listFiles { it.extension == "json" }
             ?.flatMap { file ->
                 try {
-                    ObjectMapperHolder.objectMapper.readValue(file, Array<ExpectedIssue>::class.java).toList()
+                    JsonSupport.objectMapper.readValue(file, Array<ExpectedIssue>::class.java).toList()
                 } catch (e: Exception) {
                     logger.reportWarning("Failed to load ${file.name}: ${e.message}")
                     emptyList()

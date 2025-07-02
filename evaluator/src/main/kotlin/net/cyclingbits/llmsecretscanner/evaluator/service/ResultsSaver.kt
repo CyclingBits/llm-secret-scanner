@@ -1,11 +1,11 @@
 package net.cyclingbits.llmsecretscanner.evaluator.service
 
-import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
-import net.cyclingbits.llmsecretscanner.core.logger.EventStore
-import net.cyclingbits.llmsecretscanner.core.parser.ObjectMapperHolder
+import net.cyclingbits.llmsecretscanner.events.EventStore
+import net.cyclingbits.llmsecretscanner.events.JsonSupport
 import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.RESULTS_DIR
 import net.cyclingbits.llmsecretscanner.evaluator.logger.EvaluatorLogger
 import net.cyclingbits.llmsecretscanner.evaluator.model.EvaluationResult
+import net.cyclingbits.llmsecretscanner.evaluator.service.DockerModelProvider
 import java.io.File
 import java.time.Duration
 import java.time.LocalDateTime
@@ -15,16 +15,15 @@ class ResultsSaver(
     private val logger: EvaluatorLogger
 ) {
 
-    fun saveResultsToMarkdown(results: List<EvaluationResult>, config: ScannerConfiguration) {
+    fun saveResultsToMarkdown(results: List<EvaluationResult>) {
         val timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
         val outputFile = File(RESULTS_DIR, "${timestamp}_evaluation_results.md")
 
         RESULTS_DIR.mkdirs()
 
-        val fileTypes = getFileTypesFromIncludes(config.includes)
-
         val newRows = buildString {
             results.forEach { result ->
+                val fileTypes = getFileTypesFromIncludes(result.config.includes)
                 val detectionRateDisplay = "${String.format("%.1f", result.detectionRate)}%"
                 val falsePositiveRateDisplay = "${String.format("%.1f", result.falsePositiveRate)}%"
                 val timeDisplay = formatTime(result.scanTime)
@@ -50,7 +49,7 @@ class ResultsSaver(
 
         val eventsFile = File(RESULTS_DIR, "${timestamp}_evaluation_events.json")
         val events = EventStore.getAll()
-        eventsFile.writeText(ObjectMapperHolder.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(events))
+        eventsFile.writeText(JsonSupport.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(events))
         logger.reportFileSaved(eventsFile.absolutePath)
     }
 

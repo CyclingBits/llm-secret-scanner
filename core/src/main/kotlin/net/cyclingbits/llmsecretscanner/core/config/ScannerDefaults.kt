@@ -4,7 +4,6 @@ import java.io.FileNotFoundException
 
 object ScannerDefaults {
     const val MAX_FILE_SIZE_BYTES = 100 * 1024
-    const val SECRET_DISPLAY_LENGTH = 25
     const val MAX_LINES_PER_CHUNK = 40
     const val CHUNK_OVERLAP_LINES = 5
     const val MAX_TOKENS = 16_000

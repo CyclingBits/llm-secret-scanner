@@ -1,5 +1,6 @@
 package net.cyclingbits.llmsecretscanner.evaluator.service
 
+import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import net.cyclingbits.llmsecretscanner.evaluator.logger.EvaluatorLogger
 import net.cyclingbits.llmsecretscanner.evaluator.model.EvaluationResult
 import io.mockk.mockk
@@ -10,6 +11,7 @@ class ResultsSaverTest {
 
     private val logger = mockk<EvaluatorLogger>(relaxed = true)
     private val resultsSaver = ResultsSaver(logger)
+    private val testConfig = mockk<ScannerConfiguration>()
 
     @Test
     fun `should create ResultsSaver instance`() {
@@ -26,7 +28,7 @@ class ResultsSaverTest {
 
     @Test
     fun `should create evaluation result object`() {
-        val result = EvaluationResult("ai/test:latest", 85.0, 10.0, 30000)
+        val result = EvaluationResult("ai/test:latest", 85.0, 10.0, 30000, testConfig)
         
         assertEquals("ai/test:latest", result.modelName)
         assertEquals(85.0, result.detectionRate)
@@ -46,9 +48,9 @@ class ResultsSaverTest {
     @Test
     fun `should handle multiple results`() {
         val results = listOf(
-            EvaluationResult("ai/phi4:latest", 85.0, 10.0, 30000),
-            EvaluationResult("ai/llama3.2:latest", 80.0, 15.0, 45000),
-            EvaluationResult("ai/mistral:latest", 75.0, 20.0, 35000)
+            EvaluationResult("ai/phi4:latest", 85.0, 10.0, 30000, testConfig),
+            EvaluationResult("ai/llama3.2:latest", 80.0, 15.0, 45000, testConfig),
+            EvaluationResult("ai/mistral:latest", 75.0, 20.0, 35000, testConfig)
         )
         
         assertEquals(3, results.size)

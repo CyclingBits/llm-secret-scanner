@@ -1,7 +1,5 @@
 # Project exclude paths
-/core/target/
-/evaluator/target/
-/maven-plugin/target/
+**/target/
 /.idea/
 /.claude/
 /.tmp/

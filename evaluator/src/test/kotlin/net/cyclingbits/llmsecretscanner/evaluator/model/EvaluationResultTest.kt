@@ -1,9 +1,13 @@
 package net.cyclingbits.llmsecretscanner.evaluator.model
 
+import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
+import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
 class EvaluationResultTest {
+
+    private val testConfig = mockk<ScannerConfiguration>()
 
     @Test
     fun `should create evaluation result with all fields`() {
@@ -11,7 +15,8 @@ class EvaluationResultTest {
             modelName = "ai/phi4:latest",
             detectionRate = 85.5,
             falsePositiveRate = 12.3,
-            scanTime = 45000
+            scanTime = 45000,
+            config = testConfig
         )
         
         assertEquals("ai/phi4:latest", result.modelName)
@@ -26,7 +31,8 @@ class EvaluationResultTest {
             modelName = "ai/test:latest",
             detectionRate = 0.0,
             falsePositiveRate = 0.0,
-            scanTime = 1000
+            scanTime = 1000,
+            config = testConfig
         )
         
         assertEquals(0.0, result.detectionRate)
@@ -39,7 +45,8 @@ class EvaluationResultTest {
             modelName = "ai/perfect:latest",
             detectionRate = 100.0,
             falsePositiveRate = 0.0,
-            scanTime = 30000
+            scanTime = 30000,
+            config = testConfig
         )
         
         assertEquals(100.0, result.detectionRate)

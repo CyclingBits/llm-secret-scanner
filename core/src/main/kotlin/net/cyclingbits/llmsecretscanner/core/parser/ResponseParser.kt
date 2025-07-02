@@ -3,6 +3,7 @@ package net.cyclingbits.llmsecretscanner.core.parser
 import com.fasterxml.jackson.core.type.TypeReference
 import net.cyclingbits.llmsecretscanner.core.logger.ScanLogger
 import net.cyclingbits.llmsecretscanner.core.model.Issue
+import net.cyclingbits.llmsecretscanner.events.JsonSupport
 
 class ResponseParser(
     private val logger: ScanLogger
@@ -16,7 +17,7 @@ class ResponseParser(
 
     private fun parseRawResponse(rawResponse: String): String? {
         return try {
-            val responseMap = ObjectMapperHolder.objectMapper.readValue(rawResponse, Map::class.java)
+            val responseMap = JsonSupport.objectMapper.readValue(rawResponse, Map::class.java)
             val content = extractContent(responseMap)
             content?.let { logger.reportJsonParse(it) }
             content
@@ -35,7 +36,7 @@ class ResponseParser(
     private fun parseJsonResponse(jsonResponse: String): List<Issue>? {
         return try {
             val cleanedJson = extractJsonFromResponse(jsonResponse)
-            val issues: List<Issue> = ObjectMapperHolder.objectMapper.readValue(
+            val issues: List<Issue> = JsonSupport.objectMapper.readValue(
                 cleanedJson,
                 object : TypeReference<List<Issue>>() {}
             )

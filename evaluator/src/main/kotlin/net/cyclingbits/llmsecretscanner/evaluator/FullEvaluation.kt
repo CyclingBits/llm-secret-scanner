@@ -1,7 +1,7 @@
 package net.cyclingbits.llmsecretscanner.evaluator
 
 import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
-import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.NEGATIVE_CASES_DIR
+import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.FALSE_POSITIVE_CASES_DIR
 import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.POSITIVE_CASES_DIR
 import net.cyclingbits.llmsecretscanner.evaluator.logger.EvaluatorLogger
 import net.cyclingbits.llmsecretscanner.evaluator.model.EvaluationResult
@@ -14,21 +14,22 @@ fun main() {
     val results = mutableListOf<EvaluationResult>()
 
     getAllModels().forEach { modelName ->
-        val config = ScannerConfiguration(
-            sourceDirectories = listOf(POSITIVE_CASES_DIR, NEGATIVE_CASES_DIR),
-            modelName = modelName,
-            includes = "**/*.java,**/*.kt,**/*.xml,**/*.properties,**/*.yml",
-            excludes = "**/expected/**",
-            chunkAnalysisTimeout = 600
-        )
-        val evaluationService = EvaluationService(config, logger)
-        val result = evaluationService.evaluateModel()
+        getAllIncludesPatterns().forEach { includesPattern ->
+            val config = ScannerConfiguration(
+                sourceDirectories = listOf(POSITIVE_CASES_DIR, FALSE_POSITIVE_CASES_DIR),
+                modelName = modelName,
+                includes = includesPattern,
+                excludes = "**/expected/**",
+                chunkAnalysisTimeout = 600
+            )
+            val evaluationService = EvaluationService(config, logger)
+            val result = evaluationService.evaluateModel()
 
-        results.add(result)
-
-        ResultsSaver(logger).saveResultsToMarkdown(listOf(result), config)
+            results.add(result)
+        }
     }
 
+    ResultsSaver(logger).saveResultsToMarkdown(results)
     logger.reportEvaluationComplete(results.sumOf { it.scanTime } / 1000)
 }
 
@@ -48,4 +49,12 @@ private fun getAllModels(): List<String> = listOf(
 //    "ai/deepseek-r1-distill-llama:latest",
 //    "ai/mistral:latest",
 //    "ai/smollm2:latest"
+)
+
+private fun getAllIncludesPatterns(): List<String> = listOf(
+    "**/*.java",
+//    "**/*.kt",
+//    "**/*.xml",
+//    "**/*.properties",
+//    "**/*.yml"
 )

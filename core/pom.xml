@@ -16,6 +16,12 @@
     <url>https://github.com/CyclingBits/llm-secret-scanner</url>
 
     <dependencies>
+        <!--    events    -->
+        <dependency>
+            <groupId>net.cyclingbits</groupId>
+            <artifactId>llm-secret-scanner-events</artifactId>
+        </dependency>
+
         <!--    kotlin    -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>

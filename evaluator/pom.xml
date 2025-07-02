@@ -18,6 +18,11 @@
     <dependencies>
         <dependency>
             <groupId>net.cyclingbits</groupId>
+            <artifactId>llm-secret-scanner-events</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.cyclingbits</groupId>
             <artifactId>llm-secret-scanner-core</artifactId>
             <version>${project.version}</version>
         </dependency>

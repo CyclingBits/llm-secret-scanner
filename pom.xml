@@ -10,7 +10,7 @@
     <name>LLM Secret Scanner Parent</name>
     <description>AI-powered Maven plugin for detecting secrets in code using local LLMs via Docker</description>
     <url>https://github.com/CyclingBits/llm-secret-scanner</url>
-    
+
     <licenses>
         <license>
             <name>MIT License</name>
@@ -18,7 +18,7 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
+
     <developers>
         <developer>
             <id>cyclingbits</id>
@@ -28,14 +28,14 @@
             <organizationUrl>https://github.com/CyclingBits</organizationUrl>
         </developer>
     </developers>
-    
+
     <scm>
         <url>https://github.com/CyclingBits/llm-secret-scanner</url>
         <connection>scm:git:git://github.com/CyclingBits/llm-secret-scanner.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/CyclingBits/llm-secret-scanner.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
-    
+
     <distributionManagement>
         <repository>
             <id>github</id>
@@ -45,9 +45,10 @@
     </distributionManagement>
 
     <modules>
+        <module>events</module>
         <module>core</module>
-         <module>maven-plugin</module>
-         <module>evaluator</module>
+        <module>maven-plugin</module>
+        <module>evaluator</module>
     </modules>
 
     <properties>
@@ -57,7 +58,7 @@
         <ktor.version>3.2.0</ktor.version>
         <kotlin.version>2.2.0</kotlin.version>
         <jackson.version>2.19.1</jackson.version>
-        <testcontainers.version>1.21.2</testcontainers.version>
+        <testcontainers.version>1.21.3</testcontainers.version>
         <junit.version>5.13.2</junit.version>
         <mockk.version>1.14.4</mockk.version>
         <slf4j.version>2.0.17</slf4j.version>
@@ -65,6 +66,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <!--    events    -->
+            <dependency>
+                <groupId>net.cyclingbits</groupId>
+                <artifactId>llm-secret-scanner-events</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!--    core    -->
             <dependency>
                 <groupId>net.cyclingbits</groupId>
