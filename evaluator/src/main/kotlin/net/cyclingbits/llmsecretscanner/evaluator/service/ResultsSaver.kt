@@ -6,17 +6,17 @@ import net.cyclingbits.llmsecretscanner.evaluator.config.EvaluatorConfiguration.
 import net.cyclingbits.llmsecretscanner.evaluator.logger.EvaluatorLogger
 import net.cyclingbits.llmsecretscanner.evaluator.model.EvaluationResult
 import net.cyclingbits.llmsecretscanner.evaluator.service.DockerModelProvider
+import net.cyclingbits.llmsecretscanner.events.Formatter
 import java.io.File
 import java.time.Duration
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class ResultsSaver(
     private val logger: EvaluatorLogger
 ) {
 
     fun saveResultsToMarkdown(results: List<EvaluationResult>) {
-        val timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
+        val timestamp = Formatter.formatForFileName()
         val outputFile = File(RESULTS_DIR, "${timestamp}_evaluation_results.md")
 
         RESULTS_DIR.mkdirs()
@@ -38,7 +38,7 @@ class ResultsSaver(
         val markdown = buildString {
             appendLine("# LLM Evaluation Results")
             appendLine()
-            appendLine("Generated on: ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))}")
+            appendLine("Generated on: ${Formatter.formatForReport()}")
             appendLine()
             appendLine("| LLM Image | File Types | Detection<br>Rate | False Positive<br>Rate | Time | Parameters | Context<br>Window | Size |")
             appendLine("|-----------|------------|----------------|---------------------|------|------------|----------------|------|")

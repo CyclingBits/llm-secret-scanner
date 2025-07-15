@@ -49,6 +49,7 @@
         <module>core</module>
         <module>maven-plugin</module>
         <module>evaluator</module>
+        <module>optimizer</module>
     </modules>
 
     <properties>
@@ -62,6 +63,10 @@
         <junit.version>5.13.2</junit.version>
         <mockk.version>1.14.4</mockk.version>
         <slf4j.version>2.0.17</slf4j.version>
+        <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
+        <openai.version>2.12.0</openai.version>
+        <anthropic.version>2.1.0</anthropic.version>
+        <google.genai.version>1.7.0</google.genai.version>
     </properties>
 
     <dependencyManagement>
@@ -77,6 +82,13 @@
             <dependency>
                 <groupId>net.cyclingbits</groupId>
                 <artifactId>llm-secret-scanner-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!--    evaluator    -->
+            <dependency>
+                <groupId>net.cyclingbits</groupId>
+                <artifactId>llm-secret-scanner-evaluator</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -200,6 +212,23 @@
                 <artifactId>mockk-jvm</artifactId>
                 <version>${mockk.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <!-- External LLM SDKs for optimizer -->
+            <dependency>
+                <groupId>com.openai</groupId>
+                <artifactId>openai-java</artifactId>
+                <version>${openai.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.anthropic</groupId>
+                <artifactId>anthropic-java</artifactId>
+                <version>${anthropic.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.genai</groupId>
+                <artifactId>google-genai</artifactId>
+                <version>${google.genai.version}</version>
             </dependency>
 
         </dependencies>
@@ -328,6 +357,12 @@
                             </property>
                         </properties>
                     </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>${exec-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

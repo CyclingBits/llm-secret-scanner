@@ -4,21 +4,18 @@ import net.cyclingbits.llmsecretscanner.core.config.ScannerConfiguration
 import net.cyclingbits.llmsecretscanner.core.file.FileChunk
 import net.cyclingbits.llmsecretscanner.core.model.FileScanResult
 import net.cyclingbits.llmsecretscanner.core.model.Issue
-import net.cyclingbits.llmsecretscanner.events.EventStore
-import net.cyclingbits.llmsecretscanner.events.EventType
-import net.cyclingbits.llmsecretscanner.events.LogLevel
-import net.cyclingbits.llmsecretscanner.events.LoggerColors
-import net.cyclingbits.llmsecretscanner.events.LoggerUtils.getIssueTypeColor
+import net.cyclingbits.llmsecretscanner.events.*
 import net.cyclingbits.llmsecretscanner.events.LoggerUtils.getRelativePath
 import net.cyclingbits.llmsecretscanner.events.LoggerUtils.toSecondsString
 import net.cyclingbits.llmsecretscanner.events.LoggerUtils.truncateSecret
 import java.io.File
 import java.time.Duration
 
-open class ScanLogger() {
+class ScanLogger(override val eventSource: EventSource = EventSource.CORE) : Logger {
 
     fun reportScanStart() {
         EventStore.log(
+            source = eventSource,
             type = EventType.SCANNER,
             level = LogLevel.INFO
         ) {
@@ -29,6 +26,7 @@ open class ScanLogger() {
 
     fun reportScanConfiguration(config: ScannerConfiguration) {
         EventStore.log(
+            source = eventSource,
             type = EventType.SCANNER,
             level = LogLevel.INFO,
             data = mapOf("config" to config)
@@ -47,7 +45,7 @@ open class ScanLogger() {
             add("       {} Include patterns: {}", LoggerColors.INCLUDE_ICON, LoggerColors.cyan(config.includes))
             add("       {} Exclude patterns: {}", LoggerColors.EXCLUDE_ICON, LoggerColors.yellow(config.excludes))
             add("       {} Max file size: {}KB", LoggerColors.FILE_SIZE_ICON, LoggerColors.cyan((config.maxFileSizeBytes / 1024).toString()))
-            add("       {} System prompt: {}", LoggerColors.INFO_ICON, LoggerColors.cyan(config.systemPrompt.take(100) + if (config.systemPrompt.length > 100) "..." else ""))
+            add("       {} System prompt: {}", LoggerColors.INFO_ICON, LoggerColors.cyan(truncateAndClean(config.systemPrompt)))
             add("       {} Max tokens: {}", LoggerColors.TOKENS_ICON, LoggerColors.cyan(config.maxTokens.toString()))
             add("       {} Temperature: {}", LoggerColors.TEMPERATURE_ICON, LoggerColors.cyan(config.temperature.toString()))
             add("       {} Top P: {}", LoggerColors.TEMPERATURE_ICON, LoggerColors.cyan(config.topP.toString()))
@@ -63,6 +61,7 @@ open class ScanLogger() {
 
     fun reportContainerStart() {
         EventStore.log(
+            source = eventSource,
             type = EventType.CONTAINER,
             level = LogLevel.INFO
         ) {
@@ -73,6 +72,7 @@ open class ScanLogger() {
 
     fun reportContainerStarted() {
         EventStore.log(
+            source = eventSource,
             type = EventType.CONTAINER,
             level = LogLevel.INFO
         ) {
@@ -82,6 +82,7 @@ open class ScanLogger() {
 
     fun reportFilesFound(sourceDirectories: List<File>, filesToScan: List<File>, config: ScannerConfiguration) {
         EventStore.log(
+            source = eventSource,
             type = EventType.FILE,
             level = LogLevel.INFO,
             data = mapOf(
@@ -103,6 +104,7 @@ open class ScanLogger() {
 
     fun reportNoFilesFound(config: ScannerConfiguration, sourceDirectories: List<File>) {
         EventStore.log(
+            source = eventSource,
             type = EventType.FILE,
             level = LogLevel.WARN,
             data = mapOf(
@@ -115,27 +117,9 @@ open class ScanLogger() {
         }
     }
 
-    fun reportAnalysisStartForDirectory(directory: File, fileCount: Int) {
-        EventStore.log(
-            type = EventType.CONTAINER,
-            level = LogLevel.INFO,
-            data = mapOf(
-                "directory" to directory,
-                "fileCount" to fileCount
-            )
-        ) {
-            addEmpty()
-            add(
-                "{} Starting analysis of {} file in {}",
-                LoggerColors.SCANNER_ICON,
-                LoggerColors.boldYellow(fileCount.toString()),
-                LoggerColors.blue(directory.absolutePath)
-            )
-        }
-    }
-
     fun reportFileAnalysisStart(file: File, fileIndex: Int, totalFiles: Int, config: ScannerConfiguration) {
         EventStore.log(
+            source = eventSource,
             type = EventType.ANALYSE,
             level = LogLevel.INFO,
             data = mapOf(
@@ -156,6 +140,7 @@ open class ScanLogger() {
 
     fun reportChunk(file: File, chunkCount: Int, config: ScannerConfiguration) {
         EventStore.log(
+            source = eventSource,
             type = EventType.CHUNK,
             level = LogLevel.INFO,
             data = mapOf(
@@ -178,6 +163,7 @@ open class ScanLogger() {
 
     fun reportChunkAnalysis(chunk: FileChunk, fileType: String) {
         EventStore.log(
+            source = eventSource,
             type = EventType.CHUNK,
             level = LogLevel.INFO,
             data = mapOf(
@@ -202,8 +188,9 @@ open class ScanLogger() {
 
     fun reportLLMRequest(parameters: Map<String, Any?>) {
         EventStore.log(
+            source = eventSource,
             type = EventType.LLM,
-            level = LogLevel.DEBUG,
+            level = LogLevel.INFO,
             data = mapOf("parameters" to parameters)
         ) {
             add("              {} Sending LLM request", LoggerColors.REQUEST_ICON)
@@ -212,6 +199,7 @@ open class ScanLogger() {
 
     fun reportLLMTimeout(config: ScannerConfiguration, error: Throwable) {
         EventStore.log(
+            source = eventSource,
             type = EventType.LLM,
             level = LogLevel.ERROR,
             data = mapOf("timeoutSeconds" to config.chunkAnalysisTimeout),
@@ -227,8 +215,9 @@ open class ScanLogger() {
 
     fun reportLLMResponse(responseBody: String, analysisTime: Duration) {
         EventStore.log(
+            source = eventSource,
             type = EventType.LLM,
-            level = LogLevel.DEBUG,
+            level = LogLevel.INFO,
             data = mapOf(
                 "responseBody" to responseBody,
                 "responseBodyLength" to responseBody.length,
@@ -241,8 +230,9 @@ open class ScanLogger() {
 
     fun reportJsonParse(content: String) {
         EventStore.log(
+            source = eventSource,
             type = EventType.JSON,
-            level = LogLevel.DEBUG,
+            level = LogLevel.INFO,
             data = mapOf(
                 "content" to content,
                 "contentLength" to content.length
@@ -254,6 +244,7 @@ open class ScanLogger() {
 
     fun reportJsonParseError(rawResponse: String, error: Throwable) {
         EventStore.log(
+            source = eventSource,
             type = EventType.JSON,
             level = LogLevel.ERROR,
             data = mapOf(
@@ -262,12 +253,13 @@ open class ScanLogger() {
             ),
             error = error
         ) {
-            add("       {} JSON parse error", LoggerColors.ERROR_ICON)
+            add("             {} JSON parse error", LoggerColors.ERROR_ICON)
         }
     }
 
     fun reportFileIssues(file: File, issues: List<Issue>, analysisTime: Duration, fileIndex: Int, totalFiles: Int) {
         EventStore.log(
+            source = eventSource,
             type = EventType.ANALYSE,
             level = LogLevel.INFO,
             data = mapOf(
@@ -286,15 +278,13 @@ open class ScanLogger() {
             )
 
             issues.forEachIndexed { index, issue ->
-                val issueColor = getIssueTypeColor(issue.issueType)
                 val secretDisplay = truncateSecret(issue.secretValue)
 
                 add(
-                    "       {} #{} | Line {} | {} | {}",
+                    "       {} #{} | Line {} | {}",
                     LoggerColors.ISSUE_ICON,
                     LoggerColors.yellow((index + 1).toString()),
                     LoggerColors.blue(issue.lineNumber.toString()),
-                    issueColor,
                     secretDisplay
                 )
             }
@@ -303,6 +293,7 @@ open class ScanLogger() {
 
     fun reportScanComplete(fileScanResults: List<FileScanResult>, totalFiles: Int, totalTime: Duration) {
         EventStore.log(
+            source = eventSource,
             type = EventType.SCANNER,
             level = LogLevel.INFO,
             data = mapOf(
@@ -325,24 +316,4 @@ open class ScanLogger() {
         }
     }
 
-    fun reportWarning(message: String, data: Any? = null) {
-        EventStore.log(
-            type = EventType.SCANNER,
-            level = LogLevel.WARN,
-            data = mapOf("message" to message, "data" to data)
-        ) {
-            add("       {} {}", LoggerColors.WARNING_ICON, LoggerColors.yellow(message))
-        }
-    }
-
-    fun reportError(message: String, exception: Throwable? = null) {
-        EventStore.log(
-            type = EventType.SCANNER,
-            level = LogLevel.ERROR,
-            data = mapOf("message" to message),
-            error = exception
-        ) {
-            add("{} {}", LoggerColors.ERROR_ICON, LoggerColors.boldRed(message))
-        }
-    }
 }

@@ -10,5 +10,5 @@ data class DetectionResults(
     val correctIssues: List<Issue>,
     val incorrectIssues: List<Issue>,
 
-    val falsePositiveIssues: List<FileScanResult>
+    val falsePositiveIssues: List<Issue>
 )

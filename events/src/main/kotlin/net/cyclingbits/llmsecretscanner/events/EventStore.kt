@@ -7,10 +7,12 @@ import org.slf4j.helpers.MessageFormatter as Slf4jFormatter
 
 object EventStore {
     private val events = ConcurrentLinkedQueue<ScanEvent>()
-    private val logger: Logger = LoggerFactory.getLogger("ScanLogger")
     private const val MAX_EVENTS = 1_000_000
+    private var enabledLogSources: Set<EventSource> = EventSource.entries.toSet()
+    private var minLogLevel: LogLevel = LogLevel.DEBUG
 
     fun log(
+        source: EventSource,
         type: EventType,
         level: LogLevel = LogLevel.INFO,
         data: Map<String, Any?> = emptyMap(),
@@ -19,21 +21,24 @@ object EventStore {
     ) {
         val builder = MessageBuilder().apply(messageBuilder)
         val event = scanEvent(
+            source = source,
             type = type,
             level = level,
             messages = builder.build(),
             data = data,
             error = error
         )
-        add(event)
+        add(event, source)
     }
 
-    fun add(event: ScanEvent) {
-        when (event.level) {
-            LogLevel.DEBUG -> event.messages.forEach { logger.debug(it) }
-            LogLevel.INFO -> event.messages.forEach { logger.info(it) }
-            LogLevel.WARN -> event.messages.forEach { logger.warn(it) }
-            LogLevel.ERROR -> event.messages.forEach { logger.error(it) }
+    fun add(event: ScanEvent, source: EventSource) {
+        if (source in enabledLogSources && isLogLevelEnabled(event.level)) {
+            when (event.level) {
+                LogLevel.DEBUG -> event.messages.forEach { getLoggerForSource(source).debug(it) }
+                LogLevel.INFO -> event.messages.forEach { getLoggerForSource(source).info(it) }
+                LogLevel.WARN -> event.messages.forEach { getLoggerForSource(source).warn(it) }
+                LogLevel.ERROR -> event.messages.forEach { getLoggerForSource(source).error(it) }
+            }
         }
         events.offer(event)
         while (events.size > MAX_EVENTS) {
@@ -48,6 +53,21 @@ object EventStore {
     }
 
     fun size(): Int = events.size
+
+    fun setEnabledLogSources(sources: Set<EventSource>) {
+        enabledLogSources = sources
+    }
+    
+    fun setMinLogLevel(level: LogLevel) {
+        minLogLevel = level
+    }
+    
+    private fun isLogLevelEnabled(level: LogLevel): Boolean {
+        return level.ordinal >= minLogLevel.ordinal
+    }
+
+    fun getLoggerForSource(source: EventSource): Logger =
+        LoggerFactory.getLogger(source.name.padEnd(9))
 }
 
 class MessageBuilder {

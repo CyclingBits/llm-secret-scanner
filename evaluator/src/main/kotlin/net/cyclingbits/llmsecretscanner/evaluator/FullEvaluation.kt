@@ -49,6 +49,7 @@ private fun getAllModels(): List<String> = listOf(
 //    "ai/deepseek-r1-distill-llama:latest",
 //    "ai/mistral:latest",
 //    "ai/smollm2:latest"
+//    "ai/smollm3:latest"
 )
 
 private fun getAllIncludesPatterns(): List<String> = listOf(

@@ -1,0 +1,71 @@
+[ {
+  "timestamp" : "2025-07-13 20:11:51.824",
+  "source" : "OPTIMIZER",
+  "level" : "INFO",
+  "type" : "ITERATION_START",
+  "rawMessages" : [ "", "Iteration 1" ],
+  "data" : {
+    "iteration" : 1
+  },
+  "error" : null
+}, {
+  "timestamp" : "2025-07-13 20:11:51.824",
+  "source" : "OPTIMIZER",
+  "level" : "INFO",
+  "type" : "ITERATION_START",
+  "rawMessages" : [ "", "Iteration 1" ],
+  "data" : {
+    "iteration" : 1
+  },
+  "error" : null
+}, {
+  "timestamp" : "2025-07-13 20:12:38.457",
+  "source" : "OPTIMIZER",
+  "level" : "INFO",
+  "type" : "ITERATION_START",
+  "rawMessages" : [ "", "Iteration 2" ],
+  "data" : {
+    "iteration" : 2
+  },
+  "error" : null
+}, {
+  "timestamp" : "2025-07-13 20:14:45.006",
+  "source" : "OPTIMIZER",
+  "level" : "INFO",
+  "type" : "ITERATION_START",
+  "rawMessages" : [ "", "Iteration 3" ],
+  "data" : {
+    "iteration" : 3
+  },
+  "error" : null
+}, {
+  "timestamp" : "2025-07-13 20:16:06.531",
+  "source" : "OPTIMIZER",
+  "level" : "INFO",
+  "type" : "ITERATION_START",
+  "rawMessages" : [ "", "Iteration 4" ],
+  "data" : {
+    "iteration" : 4
+  },
+  "error" : null
+}, {
+  "timestamp" : "2025-07-13 20:17:43.875",
+  "source" : "OPTIMIZER",
+  "level" : "INFO",
+  "type" : "ITERATION_START",
+  "rawMessages" : [ "", "Iteration 5" ],
+  "data" : {
+    "iteration" : 5
+  },
+  "error" : null
+}, {
+  "timestamp" : "2025-07-13 20:19:20.589",
+  "source" : "OPTIMIZER",
+  "level" : "INFO",
+  "type" : "ITERATION_START",
+  "rawMessages" : [ "", "Iteration 6" ],
+  "data" : {
+    "iteration" : 6
+  },
+  "error" : null
+} ]

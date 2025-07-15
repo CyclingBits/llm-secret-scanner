@@ -231,11 +231,158 @@ For more control, you can customize the plugin configuration:
 
 ## 🏗️ Architecture
 
-This project consists of three modules:
+This project consists of five modules with three distinct usage patterns:
 
-- **🔧 core** - Core scanning engine and Docker container management
-- **📦 maven-plugin** - Maven plugin integration for build pipelines  
-- **📈 evaluator** - Performance benchmarking tools for testing LLM models
+### 📦 Modules
+
+- **📊 events** - Event-driven logging and observability system with thread-safe event storage
+- **🔧 core** - Core scanning engine with file chunking, Docker container management, and issue deduplication
+- **📦 maven-plugin** - Maven plugin integration for build pipelines
+- **📈 evaluator** - Performance benchmarking tools with comprehensive model evaluation
+- **🎯 optimizer** - AI-powered configuration optimization using external LLMs (OpenAI, Anthropic, Google)
+
+### 🔄 Module Dependencies
+
+```mermaid
+graph TD
+    A[Plugin] --> B[Core]
+    C[Evaluator] --> B[Core]
+    D[Optimizer] --> B[Core]
+    D[Optimizer] --> C[Evaluator]
+    B[Core] --> E[Events]
+    C[Evaluator] --> E[Events]
+    D[Optimizer] --> E[Events]
+    
+    style A fill:#2196f3,stroke:#333,stroke-width:4px,color:#fff
+    style B fill:#ff9800,stroke:#333,stroke-width:4px,color:#fff
+    style C fill:#9c27b0,stroke:#333,stroke-width:4px,color:#fff
+    style D fill:#4caf50,stroke:#333,stroke-width:4px,color:#fff
+    style E fill:#e91e63,stroke:#333,stroke-width:4px,color:#fff
+```
+
+### 🚀 Three Usage Patterns
+
+#### 1. 🔧 Standard Usage - Maven Plugin
+**Use Case**: Integrate secret scanning into your build pipeline
+
+```mermaid
+graph LR
+    A[Source<br/>Code] --> B[Maven<br/>Plugin]
+    B --> C[Core<br/>Scanner]
+    C --> D[Docker<br/>Runner]
+    D --> E[Local<br/>LLM]
+    E --> F[Issues<br/>Report]
+    
+    style A fill:#2196f3,stroke:#333,stroke-width:4px,color:#fff
+    style B fill:#4caf50,stroke:#333,stroke-width:4px,color:#fff
+    style C fill:#ff9800,stroke:#333,stroke-width:4px,color:#fff
+    style D fill:#9c27b0,stroke:#333,stroke-width:4px,color:#fff
+    style E fill:#e91e63,stroke:#333,stroke-width:4px,color:#fff
+    style F fill:#f44336,stroke:#333,stroke-width:4px,color:#fff
+```
+
+**Flow**:
+1. Maven plugin reads project configuration
+2. Core scanner discovers files using configured patterns
+3. Files are chunked for optimal LLM processing
+4. Docker containers are managed automatically
+5. Local LLM analyzes code chunks for secrets
+6. Issues are deduplicated and reported with colorized output
+
+```bash
+mvn llm-secret-scanner:scan
+```
+
+#### 2. 📊 Evaluator - Model Performance Testing
+**Use Case**: Test and compare different local LLM models for secret detection accuracy
+
+```mermaid
+graph TB
+    A[Test Cases<br/>43 secrets] --> B[Evaluator<br/>Service]
+    B --> C[Core<br/>Scanner]
+    C --> D[Docker<br/>Models]
+    D --> E[Detection<br/>Results]
+    E --> F[Metrics<br/>Calculation]
+    F --> G[Performance<br/>Reports]
+    
+    style A fill:#2196f3,stroke:#333,stroke-width:4px,color:#fff
+    style B fill:#9c27b0,stroke:#333,stroke-width:4px,color:#fff
+    style C fill:#ff9800,stroke:#333,stroke-width:4px,color:#fff
+    style D fill:#4caf50,stroke:#333,stroke-width:4px,color:#fff
+    style E fill:#e91e63,stroke:#333,stroke-width:4px,color:#fff
+    style F fill:#f44336,stroke:#333,stroke-width:4px,color:#fff
+    style G fill:#795548,stroke:#333,stroke-width:4px,color:#fff
+```
+
+**Flow**:
+1. Evaluator loads test cases with known secrets
+2. Multiple LLM models are tested systematically
+3. Each model's detection accuracy is measured
+4. Performance metrics are calculated and compared
+5. Comprehensive reports are generated for model selection
+
+```bash
+# Quick evaluation (single model, Java files)
+mvn exec:java -Dexec.mainClass="net.cyclingbits.llmsecretscanner.evaluator.QuickEvaluation" -pl evaluator
+
+# Full evaluation (all models, all file types)
+mvn exec:java -Dexec.mainClass="net.cyclingbits.llmsecretscanner.evaluator.FullEvaluation" -pl evaluator
+```
+
+#### 3. 🎯 Optimizer - AI-Powered Configuration Tuning
+**Use Case**: Automatically optimize system prompts for specific file types and local models using external LLMs
+
+```mermaid
+graph TB
+    A[Base<br/>Config] --> B[Optimizer<br/>Engine]
+    B --> C[Evaluator<br/>Service]
+    C --> D[External<br/>LLM]
+    D --> E[Optimization<br/>Suggestions]
+    E --> F[Core<br/>Scanner]
+    F --> G[Performance<br/>Comparison]
+    G --> H{Better<br/>Results?}
+    H -->|Yes| I[Update<br/>Config]
+    H -->|No| J[Keep<br/>Previous]
+    I --> K[Next<br/>Iteration]
+    J --> K[Next<br/>Iteration]
+    K --> L[Final<br/>Config]
+    
+    style A fill:#2196f3,stroke:#333,stroke-width:4px,color:#fff
+    style B fill:#4caf50,stroke:#333,stroke-width:4px,color:#fff
+    style C fill:#9c27b0,stroke:#333,stroke-width:4px,color:#fff
+    style D fill:#ff9800,stroke:#333,stroke-width:4px,color:#fff
+    style E fill:#e91e63,stroke:#333,stroke-width:4px,color:#fff
+    style F fill:#ff9800,stroke:#333,stroke-width:4px,color:#fff
+    style G fill:#f44336,stroke:#333,stroke-width:4px,color:#fff
+    style H fill:#795548,stroke:#333,stroke-width:4px,color:#fff
+    style I fill:#4caf50,stroke:#333,stroke-width:4px,color:#fff
+    style J fill:#607d8b,stroke:#333,stroke-width:4px,color:#fff
+    style K fill:#2196f3,stroke:#333,stroke-width:4px,color:#fff
+    style L fill:#8bc34a,stroke:#333,stroke-width:4px,color:#fff
+```
+
+**Flow**:
+1. Optimizer starts with baseline configuration
+2. Current performance is evaluated using test cases
+3. External LLM analyzes results and suggests improvements
+4. New system prompt is tested with local model
+5. Performance is compared with previous iteration
+6. Best configuration is selected and process repeats
+7. Final optimized configuration is saved
+
+```bash
+# Run optimization with Anthropic Claude
+export ANTHROPIC_API_KEY="your-key"
+mvn exec:java -Dexec.mainClass="net.cyclingbits.llmsecretscanner.optimizer.QuickOptimization" -pl optimizer
+```
+
+### 🔍 Information Flow Summary
+
+- **Events Module**: Provides centralized logging and observability across all components
+- **Core Module**: Central scanning engine used by all three usage patterns
+- **Maven Plugin**: Wraps core functionality for build integration
+- **Evaluator**: Uses core for systematic model testing and performance measurement
+- **Optimizer**: Combines evaluator and external LLMs for automated configuration improvement
 
 ## 🛠️ Development
 

@@ -9,8 +9,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 object JsonSupport {
     val objectMapper: ObjectMapper = ObjectMapper().apply {
@@ -22,11 +20,8 @@ object JsonSupport {
 }
 
 private class InstantSerializer : JsonSerializer<Instant>() {
-    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-        .withZone(ZoneId.systemDefault())
-
     override fun serialize(value: Instant, gen: JsonGenerator, serializers: SerializerProvider) {
-        gen.writeString(formatter.format(value))
+        gen.writeString(Formatter.formatForJson(value))
     }
 }
 

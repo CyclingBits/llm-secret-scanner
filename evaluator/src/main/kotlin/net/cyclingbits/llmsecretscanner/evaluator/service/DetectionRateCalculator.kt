@@ -55,7 +55,7 @@ class DetectionRateCalculator(
             expectedIssues = expectedPositiveFileScanResult,
             correctIssues = correctIssues,
             incorrectIssues = incorrectIssues,
-            falsePositiveIssues = negativeFileScanResult
+            falsePositiveIssues = negativeFileScanResult.flatMap { it.issues }
         )
 
         logger.reportDetectionResults(detectionResults)

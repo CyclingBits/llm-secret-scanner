@@ -24,7 +24,6 @@
         <dependency>
             <groupId>net.cyclingbits</groupId>
             <artifactId>llm-secret-scanner-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!--    kotlin    -->
@@ -36,7 +35,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.19.1</version>
         </dependency>
 
         <!-- Test dependencies -->

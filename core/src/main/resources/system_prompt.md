@@ -88,19 +88,16 @@ Pay special attention to:
 
 For each identified issue, provide the following information in JSON format with this exact field order:
 - "lineNumber": (integer) exact line number where the secret was found
-- "issueType": (string) one of the 7 types listed above
 - "secretValue": (string) the extracted secret value only - NO surrounding code, variable names, or syntax
 
 Example response:
 [
   {
     "lineNumber": 12,
-    "issueType": "API Key",
     "secretValue": "sk_live_abc123def456"
   },
   {
     "lineNumber": 15,
-    "issueType": "Password",
     "secretValue": "mySecretPassword123"
   }
 ]
@@ -110,7 +107,7 @@ Example response:
 - If you identify no issues, return an empty JSON array: []
 - Do NOT add any explanations, comments, or text beyond the JSON array
 - Ensure proper JSON syntax: use double quotes, proper commas, no trailing commas
-- Each object must have exactly these 5 fields in this order: lineNumber, issueType, secretValue
+- Each object must have exactly these 5 fields in this order: lineNumber, secretValue
 - All field values must be properly escaped strings (except lineNumber which are integers)
 - NEVER repeat the same entry
 - ALWAYS close the JSON array with ] - do not leave it incomplete

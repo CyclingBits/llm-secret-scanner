@@ -46,6 +46,12 @@ object LoggerColors {
     const val REQUEST_ICON = "📤"
     const val RESPONSE_ICON = "📥"
     const val JSON_ICON = "📄"
+    const val PROCESS_ICON = "⚙️"
+    const val AI_ICON = "🤖"
+    const val GEAR_ICON = "⚙️"
+    const val METRICS_ICON = "📊"
+    const val OPTIMIZER_ICON = "⚡"
+    const val BASELINE_ICON = "📋"
 
     // Helper functions
     fun red(text: String) = "$RED$text$RESET"

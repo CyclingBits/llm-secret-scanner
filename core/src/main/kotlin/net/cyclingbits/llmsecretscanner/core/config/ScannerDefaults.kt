@@ -1,6 +1,6 @@
 package net.cyclingbits.llmsecretscanner.core.config
 
-import java.io.FileNotFoundException
+import net.cyclingbits.llmsecretscanner.events.Utils
 
 object ScannerDefaults {
     const val MAX_FILE_SIZE_BYTES = 100 * 1024
@@ -9,7 +9,7 @@ object ScannerDefaults {
     const val MAX_TOKENS = 16_000
     const val TEMPERATURE = 0.0
     const val CONNECTION_TIMEOUT = 1
-    const val CHUNK_ANALYSIS_TIMEOUT = 60
+    const val CHUNK_ANALYSIS_TIMEOUT = 600
     const val MAX_CHUNK_SIZE = 1000
     const val MAX_CHUNK_ANALYSIS_TIMEOUT = 3600
     const val MAX_CONNECTION_TIMEOUT = 30
@@ -35,9 +35,7 @@ object ScannerDefaults {
     const val ENABLE_CHUNKING = true
 
     fun loadSystemPrompt(): String {
-        return this::class.java.classLoader.getResourceAsStream("system_prompt.md")?.use { stream ->
-            stream.bufferedReader().use { it.readText() }
-        } ?: throw FileNotFoundException("system_prompt.md not found in resources")
+        return Utils.loadResource("system_prompt.md")
     }
 
 

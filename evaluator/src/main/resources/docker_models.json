@@ -630,5 +630,37 @@
     "context_window": "33K tokens",
     "vram": "8.81 GiB",
     "size": "12.79 GB"
+  },
+  {
+    "model_name": "ai/smollm3:latest",
+    "parameters": "3.08B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "",
+    "vram": "",
+    "size": "1.8 GB"
+  },
+  {
+    "model_name": "ai/smollm3:Q8_0",
+    "parameters": "3.08B",
+    "quantization": "Q8_0",
+    "context_window": "",
+    "vram": "",
+    "size": "3.1 GB"
+  },
+  {
+    "model_name": "ai/smollm3:Q4_K_M",
+    "parameters": "3.08B",
+    "quantization": "IQ2_XXS/Q4_K_M",
+    "context_window": "",
+    "vram": "",
+    "size": "1.8 GB"
+  },
+  {
+    "model_name": "ai/smollm3:F16",
+    "parameters": "3.08B",
+    "quantization": "F16",
+    "context_window": "",
+    "vram": "",
+    "size": "5.7 GB"
   }
 ]
